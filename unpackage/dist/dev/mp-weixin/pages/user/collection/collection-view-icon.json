@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "collection-view-icon": "/pages/user/collection/collection-view-icon"
+  }
+}

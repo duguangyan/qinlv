@@ -1,0 +1,87 @@
+.dialog .mask.data-v-ef9e59ec {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 99;
+}
+.dialog .mask-bg.data-v-ef9e59ec {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.dialog .body.data-v-ef9e59ec {
+  position: fixed;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 5px;
+  width: 250px;
+  padding: 38px 15px 15px;
+  text-align: center;
+}
+.dialog .body .title.data-v-ef9e59ec {
+    font-size: 15px;
+    color: #000;
+    margin-bottom: 48px;
+}
+.dialog .body .footer.data-v-ef9e59ec {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.dialog .body .btn.data-v-ef9e59ec {
+    width: 100px;
+    line-height: 40px;
+    border-radius: 20px;
+}
+.dialog .body .btn.cancel.data-v-ef9e59ec {
+      color: #333;
+      -webkit-box-shadow: 0 0 0 1px #d9d9d9 inset;
+              box-shadow: 0 0 0 1px #d9d9d9 inset;
+}
+.dialog .body .btn.confirm.data-v-ef9e59ec {
+      background-color: #fc2d2d;
+      color: #fff;
+}
+.dialog .mask-enter-active.data-v-ef9e59ec,
+.dialog .body-enter-active.data-v-ef9e59ec {
+  -webkit-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform-origin: left;
+      -ms-transform-origin: left;
+          transform-origin: left;
+}
+.dialog .mask-enter.data-v-ef9e59ec,
+.dialog .body-enter.data-v-ef9e59ec {
+  opacity: 0;
+}
+.dialog .body-enter.data-v-ef9e59ec {
+  -webkit-transform: scale(0.5) translate(-50%, -50%);
+      -ms-transform: scale(0.5) translate(-50%, -50%);
+          transform: scale(0.5) translate(-50%, -50%);
+}
+.dialog .body-enter-to.data-v-ef9e59ec {
+  -webkit-transform: scale(1) translate(-50%, -50%);
+      -ms-transform: scale(1) translate(-50%, -50%);
+          transform: scale(1) translate(-50%, -50%);
+}
+.dialog .mask-enter-to.data-v-ef9e59ec,
+.dialog .body-enter-to.data-v-ef9e59ec {
+  opacity: 1;
+}
+

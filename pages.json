@@ -1,0 +1,129 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页,
+		{
+			"path": "pages/main/main",
+			"style": {
+				"navigationBarTitleText": "沁绿农业"
+			}
+		}, {
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		}, {
+			"path": "pages/reg/reg",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		}, {
+			"path": "pages/pwd/pwd",
+			"style": {
+				"navigationBarTitleText": "找回密码"
+			}
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}, {
+            "path" : "pages/order/order",
+            "style" : {
+				"navigationBarTitleText": "进货单"
+			}
+        }, {
+            "path" : "pages/user/setting/setting",
+            "style" : {
+				"navigationBarTitleText": "设置"
+			}
+        }, {
+            "path" : "pages/user/protocal/protocal",
+            "style" : {
+				"navigationBarTitleText": "服务条款与协议"
+			}
+        }, {
+            "path" : "pages/user/about/about",
+            "style" : {
+				"navigationBarTitleText": "关于我们"
+			}
+        }, {
+            "path" : "pages/user/info/info",
+            "style" : {
+				"navigationBarTitleText": "个人信息"
+			}
+        }, {
+            "path" : "pages/user/nickname/nickname",
+            "style" : {
+				"navigationBarTitleText": "修改昵称"
+			}
+        }, {
+            "path" : "pages/user/addlist/addlist",
+            "style" : {
+				"navigationBarTitleText": "管理收货地址"
+			}
+        }, {
+            "path" : "pages/user/addedit/addedit",
+            "style" : {
+				"navigationBarTitleText": "添加地址" 
+			}
+        }, {
+            "path" : "pages/user/collection/collection",
+            "style" : {
+				"navigationBarTitleText": "收藏" 
+			}
+        }, {
+            "path" : "pages/user/order/list",
+            "style" : {
+				"navigationBarTitleText": "我的订单" 
+			}
+        }, {
+            "path" : "pages/user/order/finish",
+            "style" : {
+				"navigationBarTitleText": "订单完成" 
+			}
+        }, {
+            "path" : "pages/user/order/freight",
+            "style" : {
+				"navigationBarTitleText": "物流详情" 
+			}
+        }, {
+            "path" : "pages/user/order/detail",
+            "style" : {
+				"navigationBarTitleText": "订单详情" 
+			}
+        }, {
+            "path" : "pages/user/order/success",
+            "style" : {
+				"navigationBarTitleText": "订单完成" 
+			}
+        }
+    ],
+	"tabBar": {
+		"color": "#D9D9D9",
+		"selectedColor": "#FC2D2D",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/main/main",
+			"text": "首页",
+			"iconPath": "static/img/1.1.png",
+			"selectedIconPath": "static/img/1.2.png"
+		}, {
+			"pagePath": "pages/order/order",
+			"text": "进货单",
+			"iconPath": "static/img/2.1.png",
+			"selectedIconPath": "static/img/2.2.png"
+		}, {
+			"pagePath": "pages/user/user",
+			"text": "我的",
+			"iconPath": "static/img/3.1.png",
+			"selectedIconPath": "static/img/3.2.png"
+		}]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "沁绿农业APP",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF",
+		// "enablePullDownRefresh": true,
+		"onReachBottomDistance": 151
+	}
+}

@@ -1,0 +1,33 @@
+.finish.data-v-50e351c6 {
+  text-align: center;
+}
+.finish .body.data-v-50e351c6 {
+    background-color: #fff;
+}
+.finish ._img.data-v-50e351c6 {
+    margin-top: 50px;
+}
+.finish .title.data-v-50e351c6 {
+    margin-top: 10px;
+}
+.finish .operator.data-v-50e351c6 {
+    margin-top: 10px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-left: auto;
+    right: auto;
+}
+.finish .operator .btn.data-v-50e351c6 {
+      width: 80px;
+      line-height: 30px;
+      border: 1px solid #f0f0f0;
+      border-radius: 15px;
+      color: #333;
+      font-size: 12px;
+}
+.finish .operator .btn.data-v-50e351c6:first-child {
+        margin-right: 10px;
+}
+

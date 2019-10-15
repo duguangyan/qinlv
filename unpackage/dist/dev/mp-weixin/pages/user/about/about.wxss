@@ -1,0 +1,25 @@
+.about.data-v-a3a844ae {
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+}
+.about .img.data-v-a3a844ae {
+    width: 100rpx;
+    height: 100rpx;
+    margin: 0 auto;
+    margin-top: 200rpx;
+}
+.about .img > ._img.data-v-a3a844ae {
+      width: 100%;
+      height: 100%;
+}
+.about > ._img.data-v-a3a844ae {
+    margin-top: 360rpx;
+}
+.about .text.data-v-a3a844ae {
+    margin-top: 72rpx;
+}
+.about .text.data-v-a3a844ae:last-child {
+      margin-top: 26rpx;
+}
+
