@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "订单详情",
-  "usingComponents": {}
+  "usingComponents": {
+    "good": "/components/order/Good",
+    "pay": "/components/common/Pay"
+  }
 }

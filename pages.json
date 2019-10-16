@@ -11,16 +11,6 @@
 				"navigationBarTitleText": "登录"
 			}
 		}, {
-			"path": "pages/reg/reg",
-			"style": {
-				"navigationBarTitleText": "注册"
-			}
-		}, {
-			"path": "pages/pwd/pwd",
-			"style": {
-				"navigationBarTitleText": "找回密码"
-			}
-		}, {
 			"path": "pages/user/user",
 			"style": {
 				"navigationBarTitleText": "我的"
@@ -94,6 +84,11 @@
             "path" : "pages/user/order/success",
             "style" : {
 				"navigationBarTitleText": "订单完成" 
+			}
+        }, {
+            "path" : "pages/user/pay/success",
+            "style" : {
+				"navigationBarTitleText": "支付完成" 
 			}
         }
     ],

@@ -1,1 +1,0 @@
-<view data-event-opts="{{[['tap',[['edit',['$event']]]]]}}" class="icon _div" bindtap="__e">{{isEdit?'完成':'管理'}}</view>

@@ -68,14 +68,14 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
-    border-radius: 5px;
-    width: 250px;
-    padding: 38px 15px 15px;
+    border-radius: 10upx;
+    width: 500upx;
+    padding: 76upx 30upx 30upx;
     text-align: center;
     .title {
-      font-size: 15px;
+      font-size: 40upx;
       color: #000;
-      margin-bottom: 48px;
+      margin-bottom: 96upx;
     }
     .footer {
       display: flex;
@@ -83,12 +83,13 @@ export default {
       justify-content: space-between;
     }
     .btn {
-      width: 100px;
-      line-height: 40px;
-      border-radius: 20px;
+      width: 200upx;
+      line-height: 80upx;
+      border-radius: 40upx;
+	  font-size: 40upx;
       &.cancel {
         color: #333;
-        box-shadow: 0 0 0 1px #d9d9d9 inset;
+        box-shadow: 0 0 0 1upx #d9d9d9 inset;
       }
       &.confirm {
         background-color: #fc2d2d;

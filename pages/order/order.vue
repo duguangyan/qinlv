@@ -26,8 +26,11 @@
 				</div>
 				<ul>
 					<li class="cf" v-for="(it,idx) in item.items" :key="idx">
-						<div class="fll icon" @click="checkChildrenIcon(index,idx)">
+						<div class="fll icon" @click="checkChildrenIcon(index,idx)"  v-if="it.status !== 4 || isEdit">
 							<img :src="it.checked !== 0 ? Checked : Uncheck" alt="icon">
+						</div>
+						<div class="fll icon" v-if="it.status === 4 && !isEdit">
+						  <div class="yuan"></div>
 						</div>
 						<div class="fll img" @click="goDetail(item.shopId, it.goodsId)">
 							<img :src="it.imgUrl || defaultUrl" alt="图片">
@@ -39,7 +42,7 @@
 							<p v-if="it.status !== 4" class="text-red fs-14 p2">￥ <span class="fs-18">{{it.price}}</span></p>
 							<p v-if="it.status === 4" class="text-red fs-14 p3"> <span>下架商品</span></p>
 							<!-- 数量操作 -->
-							<div class="count" v-if="!isEdit">
+							<div class="count" v-if="!isEdit && it.status !== 4">
 								<span :class="{ 'text-999' : it.isColor999 }" @click="doCalculation(0,index,idx)">-</span>
 								<!--                <img src="@/asset/images/icon-min.png" alt width="15" height="15" @click="doCalculation(0,index,idx)"-->
 								<!--                />-->

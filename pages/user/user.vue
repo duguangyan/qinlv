@@ -102,7 +102,7 @@
             // 去订单页面
 			goOrderList(index) {
 			  let i = index === '' ? '' : index + 1
-			  uni.setStorageSync(]'orderNavIndex', i)
+			  uni.setStorageSync('orderNavIndex', i)
 			  uni.navigateTo({
 			  	url:'/pages/user/order/list'
 			  })

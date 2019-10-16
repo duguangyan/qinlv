@@ -2,8 +2,6 @@
   "pages": [
     "pages/main/main",
     "pages/login/login",
-    "pages/reg/reg",
-    "pages/pwd/pwd",
     "pages/user/user",
     "pages/order/order",
     "pages/user/setting/setting",
@@ -18,7 +16,8 @@
     "pages/user/order/finish",
     "pages/user/order/freight",
     "pages/user/order/detail",
-    "pages/user/order/success"
+    "pages/user/order/success",
+    "pages/user/pay/success"
   ],
   "subPackages": [],
   "window": {
@@ -53,5 +52,6 @@
       }
     ]
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap61.json"
 }

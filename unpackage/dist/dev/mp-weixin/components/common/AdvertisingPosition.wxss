@@ -1,0 +1,20 @@
+.advertising.data-v-58646e16 {
+  height: 70px;
+  padding: 0 15px;
+  overflow: hidden;
+  width: 100%;
+  margin-top: 20px;
+}
+.advertising .flex .img.data-v-58646e16 {
+    width: 160px;
+    height: 70px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.advertising .flex .img > ._img.data-v-58646e16 {
+      width: 100%;
+}
+.advertising .flex.data-v-58646e16 :first-child {
+    margin-right: 20px;
+}
+

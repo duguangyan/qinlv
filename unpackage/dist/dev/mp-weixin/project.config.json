@@ -10,6 +10,8 @@
 	"libVersion": "2.7.0",
 	"appid": "touristappid",
 	"projectname": "app-ql",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -32,8 +34,8 @@
 			"list": [
 				{
 					"id": -1,
-					"name": "pages/user/collection/collection",
-					"pathName": "pages/user/collection/collection",
+					"name": "pages/user/order/list",
+					"pathName": "pages/user/order/list",
 					"scene": null
 				}
 			]

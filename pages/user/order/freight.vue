@@ -1,19 +1,11 @@
 <template>
   <div class="freight">
     <div class="top">
-      <Head bg="#fff">
-        <img
-          slot="tag"
-          class="tag"
-          width="20"
-          height="20"
-          src="../../asset/images/tag-back.png"
-          @click="$router.go(-1)"
-        />
-        <div slot="title" class="title">物流详情</div>
-      </Head>
       <div class="title" v-if="info !== ''">
-        <img src="../../asset/images/icon-bus.png" width="50" height="50" alt />
+		  <div class="icon-50">
+			<img src="@/static/img/icon-bus.png" width="50" height="50" alt />  
+		  </div>
+        
         <div>
           <div class="type">物流快递：{{info.name}}</div>
           <div class="code">物流单号：{{info.num}}</div>
@@ -22,48 +14,41 @@
     </div>
     <div class="river"></div>
     <div class="body" v-if="info !== ''">
-      <li v-for="(item,index) in info.traceList" :key="this">
+      <li v-for="(item,index) in info.traceList" :key="index">
         <div class="l">
-          <div class="point"></div>
+          <div class="point">
+			  <img v-if="index === 0" src="@/static/img/icon-finish.png" alt="">
+		  </div>
         </div>
         <div class="r">
           <div class="time">{{item.time}}</div>
           <div class="status" :class="{ 'text-red': index === 0 }">{{item.context}}</div>
         </div>
       </li>
-<!--      <li>-->
-<!--        <div class="l">-->
-<!--          <div class="point"></div>-->
-<!--        </div>-->
-<!--        <div class="r">-->
-<!--          <div class="time">2016-08-25 11:22:20</div>-->
-<!--          <div class="status">已发货</div>-->
-<!--        </div>-->
-<!--      </li>-->
     </div>
   </div>
 </template>
 
 <script>
-import Head from '@/components/common/Head'
-import { postOrderLogisticsQuery } from '@/api/mine'
-import { MessageBox } from 'mint-ui';
-import { Toast } from 'mint-ui'
+import { postOrderLogisticsQuery } from '@/api/userApi.js'
 export default {
   name: 'freight',
   components: {
-    Head
+
   },
   data() {
     return {
       info: ''
     }
   },
-  mounted() {
-    console.log(this.$route.query)
+  onLoad(options) {
+    let data = {
+		orderId: options.orderId,
+		shopId:options.shopId
+	}
     let _this = this
-    if (this.$route.query) {
-      postOrderLogisticsQuery(this.$route.query).then(res => {
+    if (options.orderId && options.shopId) {
+      postOrderLogisticsQuery(data).then(res => {
         if (res.code === '1000') {
           this.info = res.data
         } else {
@@ -79,13 +64,15 @@ export default {
   },
   methods: {
     goBack(_this) {
-      MessageBox({
-        title: '提示',
-        message: '数据错误，返回上一页?',
-        confirmButtonText: '返回'
-      }).then(action => {
-        _this.$router.go(-1)
-      })
+      uni.showModal({
+      	title: '提示',
+      	content: '数据错误，返回上一页?',
+      	success: res => {
+			uni.navigateBack({
+				delta:1
+			})
+		}
+      });
     }
   }
 }
@@ -93,101 +80,117 @@ export default {
 
 <style lang="scss" scoped>
 .freight {
+	.icon-50{
+		width: 100upx;
+		height: 100upx;
+		margin-right: 20upx;
+		>img{
+			width: 100%;
+			height: 100%;
+		}
+	}
   .top{
     position: fixed;
     top: 0;
     width: 100%;
     background: #fff;
     z-index: 99999;
-    border-bottom: 10px solid #f0f0f0;
+    border-bottom: 20upx solid #f0f0f0;
     & > .title {
-      border-top: 1px solid #e6e6e6;
-      height: 70px;
-      padding: 0 8px;
+      border-top: 1upx solid #e6e6e6;
+      height: 140upx;
+      padding: 0 16upx;
       background-color: #fff;
       display: flex;
       justify-content: flex-start;
       align-items: center;
 
       img {
-        margin-right: 10px;
+        margin-right: 20upx;
       }
       .type {
         color: #000;
-        font-size: 14px;
+        font-size: 28upx;
       }
       .code {
         color: #999;
-        font-size: 12px;
-        margin-top: 3px;
+        font-size: 24upx;
+        margin-top: 6upx;
       }
     }
   }
 
   /*.river {*/
-  /*  height: 10px;*/
+  /*  height: 10upx;*/
   /*  background-color: #f0f0f0;*/
   /*  width: 100%;*/
   /*}*/
   .body {
-    margin-top: 120px;
-    padding-bottom: 80px;
+    margin-top: 160upx;
+    padding-bottom: 160upx;
+	padding-right: 30upx;
     position: relative;
     &::after {
       content: '';
       display: block;
       position: absolute;
-      width: 1px;
-      height: calc(100% - 152px);
+      width: 1upx;
+      height: calc(100% - 290upx);
       background-color: #d9d9d9;
-      top: 28px;
-      left: 22px;
+      top: 56upx;
+      left: 44upx;
       z-index: 0;
     }
     li {
       list-style: none;
       display: flex;
-      padding-top: 15px;
+      padding-top: 30upx;
       width: 100%;
       position: relative;
 
       .l {
-        padding: 0 23px;
+        padding: 0 46upx;
         position: relative;
         z-index: 2;
       }
       .r {
-        border-bottom: 1px solid #d9d9d9;
+        border-bottom: 1upx solid #d9d9d9;
         color: #999;
         word-break: break-all;
         flex-grow: 1;
       }
       .time {
-        font-size: 10px;
+        font-size: 20upx;
       }
       .status {
-        font-size: 12px;
+        font-size: 24upx;
         line-height: 2;
-        margin-top: 4px;
-        padding-bottom: 10px;
+        margin-top: 8upx;
+        padding-bottom: 20upx;
       }
       .point {
-        width: 8px;
-        height: 8px;
+        width: 16upx;
+        height: 16upx;
         border-radius: 50%;
         background-color: #999;
-        margin-top: 10px;
+        margin-top: 20upx;
         margin-left: auto;
         margin-right: auto;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+		>img{
+			width: 100%;
+			height: 100%;
+			position: relative;
+			top: -10upx;
+		}
       }
       &:first-child .point {
-      width: 15px;
-      height: 15px;
-      background: url(../../asset/images/icon-finish.png) 50% 50% no-repeat;
+      width: 30upx;
+      height: 30upx;
       background-size: cover;
+	  background-color: #FFFFFF;
     }
     }
 

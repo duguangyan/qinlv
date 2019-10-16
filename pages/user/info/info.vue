@@ -40,7 +40,7 @@
 </template>
 
 <script>
-	import { postUserImgUpload, postUserHeadImg, postUpdateNickname } from '@/api/mineApi.js'
+	import { postUserImgUpload, postUserHeadImg, postUpdateNickname } from '@/api/userApi.js'
 	import T from '@/utils/tips.js'
 	export default {
 		data() {

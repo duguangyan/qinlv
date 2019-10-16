@@ -1,39 +1,27 @@
 <template>
   <div class="ordlist">
     <div class="top-warp">
-      <Head bg="#fff">
-        <img
-          slot="tag"
-          class="tag"
-          width="20"
-          height="20"
-          src="../../asset/images/tag-back.png"
-          @click="$router.go(-1)"
-        />
-        <div slot="title" class="title">我的订单</div>
-      </Head>
 
       <div class="tags-con">
-        <div class="tabs" ref="tabs">
-          <li v-for="(item,index) in tabs" :key="this" @click="changePosi(index)">{{item.name}}</li>
+        <div class="tabs cf">
+          <div class="fll li" :class="{navActive : navIndex==index}" v-for="(item,index) in tabs" :key="index" @click="changePosi(index)">{{item.name}}</div>
         </div>
-        <div class="flag" ref="flag"></div>
       </div>
 
     </div>
     <div class="order-no-data" v-if="orders.length<=0">
-      <img src="@/asset/images/icon-order-no.png" alt="图片">
+      <img src="@/static/img/icon-order-no.png" alt="图片">
       <div class="text-999 fs-12">您还没有相关订单</div>
     </div>
     <div class="list" v-if="orders.length>0">
 
-      <ul
-        v-infinite-scroll="loadBottom"
-        infinite-scroll-disabled="loading"
-        infinite-scroll-distance="10">
+      <ul>
         <li v-for="(item, index) in orders" :key="item.id">
           <div class="title">
-            <img src="../../asset/images/icon-plat.png" width="15" height="15" alt />
+			  <div class="icon">
+				  <img src="@/static/img/icon-plat.png" width="15" height="15" alt />
+			  </div>
+            
             <span class="platform">{{item.shopName}}</span>
             <span class="status">
             <span v-if="item.status === -1">已取消</span>
@@ -46,9 +34,9 @@
           <Good v-for="good in item.orderDetailList" :key="good.id" :item="good"></Good>
           <div class="accu">共{{item.orderDetailList.length}}件商品&nbsp;合计:￥<span>{{item.payMoney}}</span></div>
           <div class="operator">
-            <router-link tag="div" class="check-phy" v-if="item.status === 3" :to="`/freight?orderId=${item.orderId}&shopId=${item.shopId}`">查看物流</router-link>
-            <router-link tag="div" class="check-ord" :to="`/orddetail?orderId=${item.orderId}&shopId=${item.shopId}`">查看订单</router-link>
-            <div class="receive" v-if="item.status === 3" @click="postOrderConfirm(index, item.orderId, item.shopId)">确认收货</div>
+            <div tag="div" class="check-phy" v-if="item.status === 3" @click="goFreight(index)">查看物流</div>
+            <div tag="div" class="check-ord" @click="goDetail(index)">查看订单</div>
+            <div class="receive" v-if="item.status === 3" @click="postOrderConfirm(index)">确认收货</div>
             <div class="receive" v-if="item.status === 0" @click="showPay(index)">去支付</div>
 <!--            <div class="receive" @click="goFinshPage(index)"></div>-->
           </div>
@@ -58,7 +46,7 @@
 <!--      <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :auto-fill="false" :bottomDistance="10" ref="loadmore">-->
 <!--        -->
 <!--      </mt-loadmore>-->
-      <div class="ts-center text-999 fs-12 load-text">{{loadText}}</div>
+      <div class="ts-center text-999 fs24 load-text">{{loadText}}</div>
     </div>
     <!--    // orderId：支付订单-->
     <!--    // show：支付上拉框是否弹起-->
@@ -67,19 +55,24 @@
     <!--    // function payClose：关闭支付弹窗-->
     <!--    // function doPay: 点击支付按钮事件-->
     <Pay :orderId="payOrderId" :show="isPayShow"  v-on:close="payClose" v-on:doPay="doPay" :price="nowIndexPrice"></Pay>
+	<Dialog :title='title' :isShow='isShow' @doConfirm="doConfirm" @doCancel="doCancel"> </Dialog>
   </div>
 </template>
 
 <script>
-import Head from '@/components/common/Head'
-import Good from '@/components/order/Good'
-import Pay from '@/components/common/Pay'
-import { getOrderPageMyOrder, postOrderConfirm } from '@/api/mine'
-import { Toast } from 'mint-ui'
+import Good from '@/components/order/Good.vue'
+import Pay from '@/components/common/Pay.vue'
+import Dialog from '@/components/common/Dialog.vue'
+import { getOrderPageMyOrder, postOrderConfirm } from '@/api/userApi.js'
+import T from '@/utils/tips.js'
 export default {
   name: 'ordlist',
   data() {
     return {
+		title: '确认收货吗?',
+		isShow: false,
+		orderId: '',
+		shopId: '',
       orders: [],
       tabs: [
         {
@@ -112,31 +105,72 @@ export default {
       nowIndexPrice: 0,
       isWx: true,
       payOrderId: '',
+	  navIndex:0
     }
   },
   components: {
-    Head,
     Good,
-    Pay
+    Pay,
+	Dialog
   },
-  mounted() {
-    // this.isWx = false
-    // 个人中心跳转订单页面显示订单状态
-    let orderNavIndex = localStorage.getItem('orderNavIndex')
-    if (orderNavIndex) {
-      this.status = orderNavIndex === '1' ? 0 : orderNavIndex
-      this.$refs.tabs.style.backgroundPosition = `${75 * orderNavIndex - 300}px 0%`
-      this.$refs.flag.style.left = `${75 * orderNavIndex + 29}px`
-    }
-    // 获取订单列表
-    this.getOrders()
+  onReachBottom() {
+  	this.loadBottom()
   },
-
+  onLoad() {
+  	
+  },
+  onShow() {
+    let orderNavIndex = uni.getStorageSync('orderNavIndex')
+	if (orderNavIndex) {
+	  this.status = orderNavIndex === '1' ? 0 : orderNavIndex
+	  this.navIndex = orderNavIndex
+	}
+	// 获取订单列表
+	this.getOrders()
+  },
   methods: {
+	  doConfirm(){
+		  let data = {
+		    orderId:this.orderId,
+		    shopId: this.shopId
+		  }
+		  if (this.orderId && this.shopId) {
+		    postOrderConfirm(data).then(res => {
+		      if (res.code === '1000') {
+		        // 去收货成功页面
+				this.isShow = false
+		        this.goFinshPage()
+		      } else {
+		        T.tips(res.message || '确认收货失败')
+		      }
+		    }).catch(err => {
+		      T.tips(err.message || '确认收货失败')
+		    })
+		  } else {
+		    T.tips('确认收货失败')
+		  }
+	  },
+	  doCancel(){
+		  this.isShow = false
+	  },
+	  goDetail(index,orderId,shopId){
+		  let item = this.orders[index]
+		  uni.navigateTo({
+		  	url:'/pages/user/order/detail?orderId='+item.orderId+'&shopId='+item.shopId
+		  })
+	  },
+	goFreight(index){
+		let item = this.orders[index]
+		uni.navigateTo({
+			url:'/pages/user/order/freight?orderId='+item.orderId+'&shopId='+item.item.shopId
+		})
+	},
     // 去收货完成页面
     goFinshPage(index) {
       // orderId, shopId
-      this.$router.push({ path: 'paysuccess', query: {orderId: this.orders[index].orderId, shopId: this.orders[index].shopId}})
+	  uni.navigateTo({
+	  	url:'/pages/user/order/success?orderId='+this.orders[index].orderId+'&shopId='+this.orders[index].shopId
+	  })
     },
     // 去支付
     doPay(params) {
@@ -145,32 +179,12 @@ export default {
 
     },
     // 确认收货
-    postOrderConfirm(index, orderId, shopId) {
-      let _this = this
-      let data = {
-        orderId,
-        shopId
-      }
-      this.$dialog({
-        title: '确认收货吗?',
-        confirmText: '确认',
-        callback: () => {
-          if (orderId && shopId) {
-            postOrderConfirm(data).then(res => {
-              if (res.code === '1000') {
-                // 去收货成功页面
-                _this.goFinshPage()
-              } else {
-                Toast(res.message || '确认收货失败')
-              }
-            }).catch(err => {
-              Toast(err.message || '确认收货失败')
-            })
-          } else {
-            Toast('确认收货失败')
-          }
-        }
-      })
+    postOrderConfirm(index) {
+		
+		this.isShow  = true;
+		this.orderId = this.orders[index].orderId;
+		this.shopId  = this.orders[index].shopId;
+
     },
     // 显示支付弹窗
     showPay(index) {
@@ -184,9 +198,10 @@ export default {
     },
     // nav订单状态切换
     changePosi(index) {
-      localStorage.setItem('orderNavIndex',index)
-      this.$refs.tabs.style.backgroundPosition = `${75 * index - 300}px 0%`
-      this.$refs.flag.style.left = `${75 * index + 29}px`
+		this.navIndex = index
+      uni.setStorageSync('orderNavIndex',index)
+      // this.$refs.tabs.style.backgroundPosition = `${75 * index - 300}upx 0%`
+      // this.$refs.flag.style.left = `${75 * index + 29}upx`
       this.status = this.tabs[index].status
       this.orders = []
       this.pageIndex = 1
@@ -196,14 +211,12 @@ export default {
     },
     // 下拉加载更多
     loadBottom(){
-      // this.$refs.loadmore.onBottomLoaded()
       setTimeout(() => {
         if (!this.allLoaded) {
           this.pageIndex++
           this.getOrders()
         }
-
-      },1000)
+      },500)
     },
     // 获取订单列表
     getOrders() {
@@ -212,7 +225,7 @@ export default {
         status: this.status,
         pageSize: this.pageSize
       }
-      this.$loading.open('加载中...')
+      
       getOrderPageMyOrder(data).then((res) => {
         if (res.code === '1000') {
           this.orders = this.orders.concat(res.data.records)
@@ -221,12 +234,11 @@ export default {
             this.loadText  = '数据已经加载完毕'
           }
         } else {
-          Toast(res.message || '获取订单列表失败')
+          T.tips(res.message || '获取订单列表失败')
         }
-        this.$loading.close()
+       
       }).catch(err => {
-        Toast(err.message || '获取订单列表失败')
-        this.$loading.close()
+        T.tips(err.message || '获取订单列表失败')
       })
     }
   }
@@ -235,6 +247,9 @@ export default {
 
 <style lang="scss" scoped>
 .ordlist {
+	.ts-center{
+		text-align: center;
+	}
   .top-warp{
     position: fixed;
     top: 0;
@@ -243,14 +258,14 @@ export default {
     z-index: 99999;
   }
   .load-text{
-    padding: 10px 0;
+    padding: 20upx 0;
   }
   .order-no-data{
     text-align: center;
-    padding-top: 120px;
+    padding-top: 240upx;
     >img{
-      width: 120px;
-      height: 120px;
+      width: 240upx;
+      height: 240upx;
     }
   }
   min-height: 100vh;
@@ -263,62 +278,54 @@ export default {
     background-color: #fff;
     position: relative;
     .tabs {
-      // padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      line-height: 35px;
-      background-image: linear-gradient(
-        90deg,
-        #000 0%,
-        #000 300px,
-        #fc2d2d 300px,
-        #fc2d2d 375px,
-        #000 0
-      );
-      background-repeat: no-repeat;
-      background-position: -300px 0%;
-      background-size: 200% 100%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-box-decoration-break: clone;
-      box-decoration-break: clone;
-      color: transparent;
-      height: 35px;
-      transition: background-position 0.5s;
-      z-index: 2;
-      li {
-        width: 75px;
-        text-align: center;
-      }
+		height: 70upx;
+		line-height: 70upx;
+		.navActive{
+			border-bottom: 4upx solid #fc2d2d;
+			color: #fc2d2d;
+		}
+		.li{
+			text-align: center;
+			margin: 0 35upx;
+			font-size: 30upx;
+		}
+      
     }
     .flag {
-      width: 17px;
-      height: 3px;
+      width: 34upx;
+      height: 6upx;
       position: absolute;
       bottom: 0;
       background-color: #fc2d2d;
-      left: 29px;
+      left: 60upx;
       z-index: 2;
       transition: left 0.5s;
     }
   }
 
   .list {
-    margin-top: 100px;
+    margin-top: 100upx;
     li {
-      padding: 15px;
+      padding: 15upx;
       background-color: #fff;
-      margin-top: 10px;
+      margin-top: 10upx;
     }
     .title {
-      padding: 0 0 5px 0;
+      padding: 0 0 5upx 0;
       display: flex;
       justify-content: flex-start;
-      font-size: 12px;
+      font-size: 24upx;
+	  .icon{
+		  width: 30upx;
+		  height: 30upx;
+		  >img{
+			  width: 100%;
+			  height: 100%;
+		  }
+	  }
       .platform {
         color: #000;
-        margin-left: 5px;
+        margin-left: 5upx;
         font-weight: bold;
         flex-grow: 1;
       }
@@ -327,7 +334,7 @@ export default {
       }
     }
     .accu{
-      margin-top: -5px;
+      margin-top: -5upx;
       text-align: right;
       span{
         font-weight: bold;
@@ -336,19 +343,19 @@ export default {
     .operator{
       display: flex;
       justify-content: flex-end;
-      margin-top: 15px;
+      margin-top: 30upx;
       &>div{
-        width: 75px;
-        line-height: 30px;
-        border: 1px solid #d9d9d9;
-        border-radius: 15px;
+        width: 140upx;
+        line-height: 60upx;
+        border: 1upx solid #d9d9d9;
+        border-radius: 30upx;
         text-align: center;
-        margin-left: 10px;
-        font-size: 12px;
+        margin-left: 20upx;
+        font-size: 24upx;
         color: #666;
         &.receive{
           color: #FC2D2D;
-          border: 1px solid #FC2D2D;
+          border: 1upx solid #FC2D2D;
         }
       }
     }

@@ -1,18 +1,10 @@
 <template>
   <div class="finish">
-    <Head bg="#fff">
-      <img
-        slot="tag"
-        class="tag"
-        width="20"
-        height="20"
-        src="../../asset/images/tag-back.png"
-        @click="$router.go(-1)"
-      />
-      <div slot="title" style="color:#fff" class="title">订单完成</div>
-    </Head>
     <div class="body">
-      <img src="../../asset/images/icon-finish.png" width="40" height="40" alt />
+		<div class="icon-40">
+			<img src="@/static/img/icon-finish.png" width="40" height="40" alt />
+		</div>
+      
       <div class="title">交易完成</div>
       <div class="operator">
         <div class="btn">查看订单</div>
@@ -23,14 +15,13 @@
 </template>
 
 <script>
-import Head from '@/components/common.Head'
 export default {
   name: 'finish',
   data() {
     return {}
   },
   components: {
-    Head
+  
   }
 }
 </script>
@@ -38,29 +29,37 @@ export default {
 <style lang="scss" scoped>
 .finish {
   text-align: center;
+  .icon-40{
+	  width: 40upx;
+	  height: 40upx;
+	  >img{
+		  width: 100%;
+		  height: 100%;
+	  }
+  }
   .body{
     background-color: #fff;
   }
   img {
-    margin-top: 50px;
+    margin-top: 100upx;
   }
   .title {
-    margin-top: 10px;
+    margin-top: 20upx;
   }
   .operator {
-    margin-top: 10px;
+    margin-top: 20upx;
     display: flex;
     margin-left: auto;
     right: auto;
     .btn {
-      width: 80px;
-      line-height: 30px;
-      border: 1px solid #f0f0f0;
-      border-radius: 15px;
+      width: 160upx;
+      line-height: 60upx;
+      border: 1upx solid #f0f0f0;
+      border-radius: 30upx;
       color: #333;
-      font-size: 12px;
+      font-size: 24upx;
       &:first-child {
-        margin-right: 10px;
+        margin-right: 20upx;
       }
     }
   }

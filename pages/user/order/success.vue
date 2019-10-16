@@ -1,20 +1,8 @@
 <template>
   <div class="success">
-    <Head bg="#fff" class="top">
-      <img
-        slot="tag"
-        class="tag"
-        width="20"
-        height="20"
-        src="@/asset/images/tag-back.png"
-        @click="$router.go(-1)"
-      />
-      <div slot="title" class="title">订单完成</div>
-    </Head>
-
     <div class="content">
       <div class="img">
-        <img src="@/asset/images/icon-finsh-order.png" alt="图片">
+        <img src="@/static/img/icon-finsh-order.png" alt="图片">
       </div>
       <div class="d1 fs-20 text-333 mt-20">
         交易完成
@@ -30,24 +18,23 @@
 </template>
 
 <script>
-  import Head from '@/components/common/Head'
   import StrictlyGoods from '@/components/common/StrictlyGoods'
-  import { Toast } from 'mint-ui'
   export default {
     name: "success",
     data() {
       return {
         query: '', // 获取传递参数
         adPositione: '', // 获取广告位信息
+		orderId:'',
+		shopId:''
       }
     },
     components: {
-      Head,
       StrictlyGoods
     },
-    mounted() {
-      console.log(this.$route.query)
-      this.query = this.$route.query
+    onLoad(options) {
+      this.orderId = options.orderId;
+	  this.shopId  = options.shopId;
     },
     methods: {
       // 广告位url跳转
@@ -59,11 +46,15 @@
       // 查看订单详情
       checkOrderDetal() {
         // 详情需要 orderId, shopId
-        this.$router.push({path: 'orddetail', query: {orderId: this.query.orderId, shopId: this.query.shopId}})
+		uni.navigateTo({
+			url:'/pages/user/order/detail?orderId='+this.orderId + '&shopId='+this.shopId
+		})
       },
       // 返回首页
       goHome() {
-        this.$router.push({path: 'home'})
+		  uni.reLaunch({
+		  	url:'/pages/main/main'
+		  })
       }
     }
   }
@@ -77,27 +68,28 @@
     }
     .content{
       text-align: center;
-      margin-top: 100px;
+      margin-top: 200upx;
       .img{
-        width: 40px;
-        height: 40px;
+        width: 80upx;
+        height: 80upx;
         margin: 0 auto;
         >img{
           width: 100%;
+		  height: 100%;
         }
       }
       .d2{
-        width: 200px;
+        width: 400upx;
         margin: 0 auto;
-        margin-top: 20px;
+        margin-top: 40upx;
         >p{
           display: inline-block;
-          border: 1px solid #f0f0f0;
-          padding: 5px;
-          border-radius: 20px;
+          border: 1upx solid #f0f0f0;
+          padding: 10upx;
+          border-radius: 40upx;
         }
         :first-child{
-          margin-right: 10px;
+          margin-right: 20upx;
         }
       }
     }
