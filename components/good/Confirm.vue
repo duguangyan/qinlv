@@ -7,17 +7,17 @@
       <div v-show="show" class="body">
         <div class="good">
           <div class="photo">
-            <img :src="good.goods.imgUri" width="90" height="90" alt />
+            <img class="icon-90" :src="good.goods.imgUri" width="90" height="90" alt />
           </div>
           <div class="unit fg1">
-            {{totalPrice | toFix}}
+            {{totalPrice}}
             <span>/{{good.goods.unitName}}</span>
           </div>
-          <img src="../../asset/images/tag-close2.png" width="15" height="15" @click="close" />
+          <img class="icon-15 flr" src="@/static/img/tag-close2.png" width="15" height="15" @click="close" />
         </div>
 
         <!-- 多规格 -->
-        <div v-if="+good.goods.showStyle!==2" class="standard">
+        <div v-if="good.goods.showStyle!==2" class="standard">
           <div v-for="(spec,index) in good.goodsDetailSpecList" :key="spec.id">
             <div class="sta-name">{{spec.name}}</div>
             <div class="sta-item">
@@ -27,7 +27,7 @@
                     :class="[!getStatus(opt.value)&&curs[index]['key']===opt.value?'actived':'',getStatus(opt.value)?'disabled':'']"
                     :key="opt.id"
                     @click="getStatus(opt.value)?'':selOption(opt.value,index)"
-                  >{{opt.value}}</span>
+                  >{{opt.value}}{{good.sufName}}/{{good.goods.unitName}}</span>
                 </template>
                 <template v-else>
                   <span
@@ -43,13 +43,16 @@
 
         <div class="count">
           <span class="fg1">数量</span>
-          <div v-show="nums>startNum" class="icon-min" @click="--nums"></div>
-          <input v-model="nums" type="number" />
-          <div v-show="nums<stock" class="icon-plus" @click="++nums"></div>
+		  <div class="flr">
+			 <div v-show="nums>startNum" class="icon-min" @click="--nums"></div>
+			 <input v-model="nums" type="number" />
+			 <div v-show="nums<stock" class="icon-plus" @click="++nums"></div> 
+		  </div>
+          
         </div>
         <div class="money">
           <span class="fg1">商品金额</span>
-          <span class="price">{{payPrice | toFix}}</span>
+          <span class="price">{{payPrice}}</span>
         </div>
         <div class="btn" @click="navigate">确定</div>
       </div>
@@ -58,9 +61,10 @@
 </template>
 
 <script>
-import { addToCart, buyGood } from "@/api/good";
+import { addToCart } from "@/api/goodsApi.js";
+import util from '@/utils/util.js'
 
-var vm = {
+export default {
   name: "good-confirm",
   props: {
     show: {
@@ -76,10 +80,17 @@ var vm = {
     nav: {
       type: String,
       default: ""
-    }
+    },
+	goodsId:{
+		type: String,
+		default: ""
+	},
+	shopId:{
+		type: String,
+		default: ""
+	},
   },
   data() {
-    vm = this;
     return {
       curDisable: false,
       nums: /* 数量 */ 1,
@@ -91,151 +102,146 @@ var vm = {
       list: []
     };
   },
-  filters: {
-    toFix(val) {
-      return (+val).toFixed(2);
-    }
-  },
   computed: {
     payPrice() {
-      return vm.totalPrice * vm.nums;
+      return util.formatMoney((this.totalPrice * 100 * this.nums) / 100);
     }
   },
   watch: {
     good(val) {
-      vm.deep = val.goodsDetailSpecList.length;
+      this.deep = val.goodsDetailSpecList.length;
       val.goodsDetailSpecList.forEach(spec => {
-        vm.curs.push({
+        this.curs.push({
           key: spec.goodsDetailSpecValueList[0].value,
           disabled: undefined
         });
       });
 
-      vm.calcPrice();
+      this.calcPrice();
     },
     nums(val, oldval) {
-      if (+val > vm.stock) {
-        vm.nums = oldval;
-      } else if (+val < vm.startNum) {
-        if (!vm.curDisable) {
-          vm.nums = vm.startNum;
+      if (val > this.stock) {
+        this.nums = oldval;
+      } else if (val < this.startNum) {
+        if (!this.curDisable) {
+          this.nums = this.startNum;
         }
       } else {
-        vm.nums = val;
+        this.nums = val;
       }
-      vm.calcPrice(1);
+      this.calcPrice(1);
     }
   },
   methods: {
     getStatus(key) {
-      let node = vm.good.tree;
-      for (let i = 0; i < vm.deep; i++) {
-        if (i === vm.deep - 1) {
+      let node = this.good.tree;
+      for (let i = 0; i < this.deep; i++) {
+        if (i === this.deep - 1) {
           node = node[key];
           return node.disabled;
         } else {
-          node = node[vm.curs[i]["key"]];
+          node = node[this.curs[i]["key"]];
         }
       }
     },
     calcPrice(reset) {
-      let node = vm.good.tree;
-
-      if (+vm.good.goods.showStyle !== 2) {
-        vm.curs.forEach((cur, index) => {
+      let node = this.good.tree;
+      if (this.good.goods.showStyle !== 2) {
+        this.curs.forEach((cur, index) => {
           node = node[cur["key"]];
-          if (index === vm.curs.length - 1) {
-            vm.totalPrice = parseInt(node.price || 0);
-            vm.stock = node.stock;
-            !reset && (vm.nums = node.disabled ? 0 : node.startNum);
-            vm.startNum = node.startNum || 0;
-            cur.disabled = node.disabled;
-
-            vm.curDisable = node.disabled;
+          if (index ===  this.curs.length - 1) {
+			this.totalPrice = node.price || 0;
+			this.stock = node.stock;
+			!reset && (this.nums = node.disabled ? 0 : node.startNum);
+			this.startNum = node.startNum || 0;
+			cur.disabled = node.disabled;
+			this.curDisable = node.disabled;
           }
         });
       } else {
-        vm.curs.forEach((cur, index) => {
+        this.curs.forEach((cur, index) => {
           node = node[cur["key"]];
-          if (index === vm.curs.length - 1) {
-            vm.stock = node.stock;
-            !reset && (vm.nums = node.disabled ? 0 : node.startNum);
+          if (index === this.curs.length - 1) {
+            this.stock = node.stock;
+            !reset && (this.nums = node.disabled ? 0 : node.startNum);
             cur.disabled = node.disabled;
           }
         });
 
-        let list = [...vm.good.goodsList]
+        let list = [...this.good.goodsList];
         let first = list[0];
-        let last = list[list.length - 1]
+        let last = list[list.length - 1];
         list.push({
-          startNum: Math.pow(2,25),
+          startNum: Math.pow(2, 25),
           price: last.price
-        })
+        });
         list.unshift({
           startNum: first.startNum,
           price: first.price
-        })
+        });
 
-        vm.startNum = first.startNum;
-        for(let i=1,l=list.length - 1;i<l;i++){
-          if (vm.nums >= list[i].startNum && vm.nums < list[i+1].startNum) {
-            vm.totalPrice = list[i].price;
+        this.startNum = first.startNum;
+        for (let i = 1, l = list.length - 1; i < l; i++) {
+          if (this.nums >= list[i].startNum && this.nums < list[i + 1].startNum) {
+            this.totalPrice = list[i].price;
           }
         }
       }
     },
     selOption(data, index) {
-      let list = [...vm.curs];
+      let list = [...this.curs];
       list[index]["key"] = data;
-      vm.curs = list;
-      vm.calcPrice();
+      this.curs = list;
+      this.calcPrice();
     },
     close() {
-      vm.$emit("close", false);
+      this.$emit("close", false);
     },
     minNums() {},
     plusNums() {},
     navigate() {
       // 验证选项是否完整
       let isInvalid = false;
-      let node = vm.good.tree;
-      for (let i = 0; i < vm.deep; i++) {
-        node = node[vm.curs[i]["key"]];
-        if (i === vm.deep - 1) {
+      let node = this.good.tree;
+      for (let i = 0; i < this.deep; i++) {
+        node = node[this.curs[i]["key"]];
+        if (i === this.deep - 1) {
           isInvalid = node.disabled;
         }
       }
       if (isInvalid) {
-        return vm.$tips("请选择所有的项");
+        return this.$tips("请选择所有的项");
       }
-      if (vm.nav.match(/cart/)) {
+      if (this.nav.match(/cart/)) {
         addToCart({
           skuId: node.id,
-          num: vm.nums
+          num: this.nums
         }).then(data => {
-          vm.$router.push(vm.nav);
+          // this.$router.push(this.nav);
+          this.$emit("update");
         });
       } else {
-        buyGood({
-          addressId: "",
-          goodsCount: vm.nums,
-          goodsId: vm.$route.params.goodId,
-          shopId: vm.$route.params.shopId,
-          skuId: node.id,
-          // userId: localStorage.getItem("uid")
-        }).then(data => {
-          if(!!vm.nav.match(/submit/i)){
-            vm.$router.push({path: vm.nav,query: {submitData: JSON.stringify(data.data)}})
-          }else{
-
-            vm.$router.push(vm.nav);
-          }
-        });
+        if (!!this.nav.match(/submit/i)) {
+			let submitData = JSON.stringify({
+                addressId: "",
+                goodsCount: this.nums,
+                goodsId: this.goodsId,
+                shopId: this.shopId,
+                skuId: node.id
+                // userId: localStorage.getItem("uid")
+              })
+			uni.navigateTo({
+				url:'/pages/order/submit/submit?submitData='+submitData+'&isBuyNow='+1
+				
+			})
+    
+        } else {
+          this.$router.push(this.nav);
+        }
       }
     }
   }
 };
-export default vm;
 </script>
 
 <style lang="scss" scoped>
@@ -246,36 +252,36 @@ export default vm;
   right: 0;
   bottom: 0;
   z-index: 99;
-  max-height: 500px;
+
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   .standard {
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 2upx solid #f0f0f0;
   }
   .sta-name {
     color: #333;
-    font-size: 15px;
-    margin-top: 15px;
+    font-size: 30upx;
+    margin-top: 30upx;
   }
   .sta-item {
     span {
       display: inline-block;
-      margin-right: 30px;
-      margin-top: 15px;
-      width: 75px;
-      line-height: 25px;
-      border-radius: 12px;
+      margin-right: 60upx;
+      margin-top: 30upx;
+      width: 150upx;
+      line-height: 50upx;
+      border-radius: 24upx;
       text-align: center;
       color: #666;
-      font-size: 12px;
-      box-shadow: 0 0 0 1px #666;
+      font-size: 24upx;
+      box-shadow: 0 0 0 1upx #666;
       transition: all 0.5s;
       &.actived {
-        box-shadow: 0 0 0 1px #fc2d2d;
+        box-shadow: 0 0 0 1upx #fc2d2d;
         color: #fc2d2d;
       }
       &.disabled {
-        box-shadow: 0 0 0 1px #bebebe;
+        box-shadow: 0 0 0 1upx #bebebe;
         color: #bebebe;
       }
     }
@@ -286,40 +292,52 @@ export default vm;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 2;
     background-color: rgba(0, 0, 0, 0.3);
   }
   .body {
     background-color: #fff;
-    padding: 10px;
+    padding: 20upx;
     position: fixed;
-    z-index: 2;
     width: 100%;
-    left: 0;
+    max-height: 1000upx;
     bottom: 0;
+    z-index: 5;
+	.icon-15{
+		width: 30upx;
+		height: 30upx;
+		position: absolute;
+		right: 40upx;
+		top: 0upx;
+	}
+	.icon-90{
+		width: 180upx;
+		height: 180upx;
+	}
     .good {
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
+	  position: relative;
       .photo {
-        width: 90px;
-        height: 90px;
+        width: 180upx;
+        height: 180upx;
       }
       .unit {
-        margin-top: 14px;
-        font-size: 20px;
+        margin-top: 28upx;
+        font-size: 40upx;
         color: #f5222d;
         line-height: 1;
-        margin-left: 10px;
+        margin-left: 20upx;
         span {
           color: #000;
-          font-size: 12px;
+          font-size: 24upx;
         }
         &::before {
           content: "￥";
           display: inline-block;
           color: #f5222d;
-          font-size: 10px;
+          font-size: 20upx;
         }
       }
     }
@@ -327,20 +345,25 @@ export default vm;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      padding-bottom: 23px;
-      border-bottom: #f0f0f0 solid 1px;
-      font-size: 15px;
-      padding-top: 12px;
-      margin-top: 37px;
+      padding-bottom: 46upx;
+      border-bottom: #f0f0f0 solid 1upx;
+      font-size: 30upx;
+      padding-top: 24upx;
+      margin-top: 74upx;
+	  position: relative;
+	  .flr{
+		  position: absolute;
+		  right: 90upx;
+	  }
       input {
-        margin-left: 10px;
-        margin-right: 10px;
-        width: 42px;
-        height: 22px;
+        margin-left: 20upx;
+        margin-right: 20upx;
+        width: 84upx;
+        height: 44upx;
         background-color: #f5f5f5;
-        border-radius: 3px;
+        border-radius: 6upx;
         text-align: center;
-        font-size: 14px;
+        font-size: 28upx;
         color: #333;
         border: none;
         outline: none;
@@ -350,25 +373,27 @@ export default vm;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 24px;
-      font-size: 15px;
+      margin-top: 48upx;
+      font-size: 30upx;
       .price {
         color: #f5222d;
+		position: relative;
+		left: -30upx;
         &::before {
           content: "￥";
           display: inline-block;
-          font-size: 12px;
+          font-size: 24upx;
         }
       }
     }
     .btn {
-      margin-top: 48px;
-      width: 320px;
-      line-height: 40px;
+      margin-top: 96upx;
+      width: 640upx;
+      line-height: 80upx;
       background-color: #fc2d2d;
       color: #fff;
-      border-radius: 20px;
-      font-size: 16px;
+      border-radius: 40upx;
+      font-size: 32upx;
       text-align: center;
       margin-left: auto;
       margin-right: auto;

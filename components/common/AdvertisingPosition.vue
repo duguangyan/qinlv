@@ -1,8 +1,8 @@
 <template>
   <!--  广告位  -->
   <div class="advertising">
-    <div class="flex">
-        <div class="flex-1 img" v-for="(item,index) in adSets" :key="index">
+    <div class="div cf">
+        <div class="img fll" v-for="(item,index) in adSets" :key="index">
           <img @click="goPath(item.url)" :src="item.path" alt="广告">
         </div>
     </div>
@@ -51,23 +51,26 @@ export default {
 
 <style lang="scss" scoped>
   .advertising{
-    height: 70px;
-    padding: 0 15px;
+    height: 140upx;
+    padding: 0 30upx;
     overflow: hidden;
     width: 100%;
-    margin-top: 20px;
-    .flex{
-      .img{
-        width: 160px;
-        height: 70px;
-        border-radius: 5px;
-        overflow: hidden;
-        >img{
-          width: 100%;
-        }
-      }
-      :first-child{
-        margin-right: 20px;
+    margin-top: 40upx;
+	
+    .div{
+		.img:last-child{
+		  margin-left: 50upx;
+		}
+		.img{
+		  width: 320upx;
+		  height: 140upx;
+		  border-radius: 10upx;
+		  overflow: hidden;
+		  >img{
+		    width: 100%;
+			height: 100%;
+		  }
+      
       }
     }
 

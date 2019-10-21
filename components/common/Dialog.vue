@@ -26,12 +26,18 @@ export default {
 	isShow:{
 		type: Boolean,
 		default: false
+	},
+	cancelText:{
+		type: String,
+		default: '取消'
+	},
+	confirmText:{
+		type: String,
+		default: '确认'
 	}
   },
   data() {
     return {
-      cancelText: '取消',
-      confirmText: '确认',
       isMask: true,
       callback: null
     }

@@ -1,8 +1,8 @@
 <template>
 	<view class="login">
-		<view class="close">
+		<!-- <view class="close">
 			<image src="../../static/img/tag-close.png" mode=""></image>
-		</view>
+		</view> -->
 		<view class="body">
 			<view class="welcome">您好！</view>
 			<view class="subwel">欢迎来到垚润农业，立即登录</view>
@@ -32,6 +32,7 @@
 
 <script>
 	import validator from '../../utils/validator.js'
+	import T from '@/utils/tips.js'
 	import { postUserLogin, getUserInfo, postUserSms } from '@/api/userApi.js'
 	export default {
 		data() {
@@ -73,10 +74,10 @@
 		      // 手机验证
 		      if (validator.isPhone(this.phone)) {
 		        if (this.phone === '') {
-				  uni.showToast('手机号不能为空');
+				  T.tips('手机号不能为空');
 		          return false
 		        }
-				uni.showToast('手机号码不正确');
+				T.tips('手机号码不正确');
 		        return false
 		      }
 			  
@@ -88,7 +89,7 @@
 		        deviceId: this.deviceId
 		      }
 		      postUserSms(data).then((res) => {
-				uni.showToast(res.message)
+				T.tips(res.message)
 		        if (res.code === '1000') {
 		          this.codeText = '重新发送'
 		          this.codeNum = 59
@@ -102,7 +103,7 @@
 		          }, 1000)
 		        }
 		      }).catch((err) => {
-				uni.showToast(err.message || '错误')
+				T.tips(err.message || '错误')
 		      })
 		    },
 		    // 登录
@@ -122,13 +123,14 @@
 		        // let dates = this.$qs.stringify(data)
 		        postUserLogin(data).then((res) => {
 					uni.setStorageSync('access_token', res.access_token)
+					//uni.setStorageSync('access_token', res.refresh_token)
 					uni.setStorageSync('uid', res.id)
 					uni.setStorageSync('phone', this.phone)
 		          clearInterval(this.setCodeInterval)
 		          // 获取用户信息
 		          this.getUserInfo()
 		        }).catch((err) => {
-					uni.showToast(err.message || '登录错误')
+					T.tips(err.message || '登录错误')
 		        })
 		      }
 		    },
@@ -143,7 +145,7 @@
 				  })
 		        }
 		      }).catch((err) => {
-				uni.showToast(err.message || '获取用户信息错误')
+				T.tips(err.message || '获取用户信息错误')
 		      })
 		    },
 		    getUUID() {

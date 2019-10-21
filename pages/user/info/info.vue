@@ -109,7 +109,6 @@
 							filePath: tempFilePaths[0],
 							name: 'file',
 							success: (uploadFileRes) => {
-								debugger
 								console.log(uploadFileRes.data);
 								let res = JSON.parse(uploadFileRes.data)
 								if (res.code === '1000') {

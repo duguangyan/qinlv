@@ -3,6 +3,9 @@ a{
 	color: #333;
 	display: block;
 }
+.fs-w{
+	font-weight: 600;
+}
 .bg-theme {
     background-color: #FC2D2D !important;
 }
@@ -17,6 +20,10 @@ a{
 .bg-eee{
 	background: #eee;
 }
+.bg-000{
+	background: #000;
+}
+
 .bg-333{
 	background: #333;
 }
@@ -215,14 +222,17 @@ a{
 
 .lh100 {
     line-height: 100upx;
+	height: 100upx;
 }
 
 .lh110 {
     line-height: 110upx;
+	height: 110upx;
 }
 
 .lh120 {
     line-height: 120upx;
+	height: 120upx;
 }
 /*元素显示 */
 
@@ -809,19 +819,19 @@ a{
 }
 /* 下边框 */
 .bb-20{
-  border-bottom: 20upx solid #eee; 
+  border-bottom: 20upx solid #F0F0F0; 
 }
 .bb-1{
-  border-bottom: 1upx solid #eee;
+  border-bottom: 1upx solid #F0F0F0;
 }
 .bb-2{
-  border-bottom: 2upx solid #eee;
+  border-bottom: 2upx solid #F0F0F0;
 }
 .bt-1{
-  border-top: 1upx solid #eee;
+  border-top: 1upx solid #F0F0F0;
 }
 .bt-2{
-  border-top: 2upx solid #eee;
+  border-top: 2upx solid #F0F0F0;
 }
 .wt-30{
   display: inline-block;

@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "进货单",
-  "usingComponents": {}
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "dialog": "/components/common/Dialog"
+  }
 }

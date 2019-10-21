@@ -1,8 +1,10 @@
 
-const apiUrl = 'http://192.168.0.202:8000'; // 开发
+ // const apiUrl = 'http://192.168.0.202:7000'; // 开发
+ const apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
+// const apiUrl = 'http://m.qinlvny.com'; // 正式
 const versionNumber = 'v1.0.0'; //版本号
 
-if (apiUrl == 'http://192.168.0.202:8000') {
+if (apiUrl == 'http://192.168.0.202:7000') {
 	uni.setStorageSync('v', versionNumber + ' 开发');
 	uni.setStorageSync('s', '开发');
 } else {
@@ -49,11 +51,19 @@ const request = function(params = {}) {
 		})
 		
 		let newUrl = params.url;
-		// #ifdef MP-WEIXIN 
+		// #ifdef MP-WEIXIN || APP-PLUS
 		if (params.url.indexOf('/api') != -1) {
 			newUrl = newUrl.split('/api')[1]
 		}  
 		// #endif
+		uni.onNetworkStatusChange(function (res) {
+			if(!res.isConnected) {
+				uni.navigateTo({
+					url:'/pages/common/err/err?from=unonline'
+				})
+			}
+		});
+		
 		
 		uni.request({
 			url: apiUrl + newUrl,
@@ -88,6 +98,28 @@ const request = function(params = {}) {
 						});
 						
 					}
+					// else{
+					// 	params.url = newUrl;
+					// 	// #ifdef MP-WEIXIN
+					// 	let pages = getCurrentPages(); // 当前页面
+					// 	let beforePage = pages[pages.length - 2]; // 前一个页面
+					// 	let url = beforePage.route
+					// 	if(url =! '/pages/common/err/err'){
+					// 		uni.navigateTo({
+					// 			url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
+					// 		})
+					// 	}
+					// 	// #endif
+					// 	// #ifdef MP-WEIXIN
+					// 	console.log('params===>>')
+					// 	console.log(params)
+					// 	uni.navigateTo({
+					// 		url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
+					// 	})
+					// 	// #endif
+						
+						
+					// }
 					resolve(res);
 				}
 			},
@@ -100,10 +132,10 @@ const request = function(params = {}) {
 						title:'网络请求超时'
 					})
 				} else {
-					uni.showToast({
-						icon:'none',
-						title:res.message || '网络请求超时'
-					})
+					// uni.showToast({
+					// 	icon:'none',
+					// 	title:res.message || '网络请求超时'
+					// })
 				}
 				 reject(err)
 			},

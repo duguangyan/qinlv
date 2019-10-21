@@ -86,7 +86,8 @@ checkPayNav
 				way: 0,
 				resPayFrom: '',
 				wxHref: '',
-				checkIndex: 0
+				checkIndex: 0,
+				clock: true
 			}
 		},
 		created() {
@@ -105,54 +106,190 @@ checkPayNav
 			close() {
 				vm.$emit('close', false)
 			},
-			doPay() {
-				if (this.checkIndex === 0) { // 微信网页支付
-					if (this.orderId !== '') {
-						let data = {
-							payChannelEnum: 'WEIXIN_PAY',
-							orderId: this.orderId
-						}
-						payAlipayByWap(data).then(res => {
-							if (res.code === '1000') {
-								location.href = res.data;
-								this.resPayFrom = ''
-							} else {
-								T.tips(res.message || '调用支付失败')
-
-							}
-						}).catch(err => {
-							T.tips(err.message || '调用支付失败')
-
-						})
-					} else {
-						T.tips('订单ID不存在')
+			h5WXpay(){
+				if (this.orderId !== '') {
+					let data = {
+						payChannelEnum: 'WEIXIN_PAY',
+						payWay:'WAP_PAY',
+						orderId: this.orderId
 					}
-
-				} else { // 支付宝网页支付
-					if (this.orderId !== '') {
-						let data = {
-							payChannelEnum: 'ALI_PAY',
-							orderId: this.orderId
-						}
-						payAlipayByWap(data).then(res => {
-							if (res.code === '1000') {
-								this.wxHref = '';
-								this.resPayFrom = res.data
-								setTimeout(() => {
-									document.forms["punchout_form"].submit()
-								}, 300)
-							} else {
-								T.tips(res.message || '调用支付失败')
-								this.resPayFrom = ''
-							}
-						}).catch(err => {
-							T.tips(err.message || '调用支付失败')
+					payAlipayByWap(data).then(res => {
+						if (res.code === '1000') {
+							location.href = res.data.wxPayResp.payUrl;
 							this.resPayFrom = ''
-						})
-					} else {
-						T.tips('订单ID不存在')
+							this.clock = true
+						} else {
+							T.tips(res.message || '调用支付失败')
+							this.clock = true
+						}
+					}).catch(err => {
+						T.tips(err.message || '调用支付失败')
+						this.clock = true
+					})
+				} else {
+					T.tips('订单ID不存在')
+					this.clock = true
+				}
+			},
+			h5Alipay(){
+				if (this.orderId !== '') {
+					let data = {
+						payChannelEnum: 'ALI_PAY',
+						payWay:'WAP_PAY',
+						orderId: this.orderId
 					}
-
+					payAlipayByWap(data).then(res => {
+						if (res.code === '1000') {
+							this.wxHref = '';
+							this.resPayFrom = res.data.returnHtml
+							this.clock = true
+							setTimeout(() => {
+								document.forms["punchout_form"].submit()
+							}, 300)
+						} else {
+							T.tips(res.message || '调用支付失败')
+							this.resPayFrom = ''
+							this.clock = true
+						}
+					}).catch(err => {
+						T.tips(err.message || '调用支付失败')
+						this.resPayFrom = ''
+						this.clock = true
+					})
+				} else {
+					T.tips('订单ID不存在')
+					this.clock = true
+				}
+			},
+			// 微信App支付
+			AppWXpay(){
+				let _this = this
+				if (this.orderId !== '') {
+					let data = {
+						payChannelEnum: 'WEIXIN_PAY',
+						payWay:'APP_PAY',
+						orderId: this.orderId
+					}
+					payAlipayByWap(data).then(res => {
+						if (res.code === '1000') {
+							console.log(JSON.stringify(res))
+							let wxPayResp = res.data.wxPayResp;
+							let obj = {
+								appid: wxPayResp.appId,
+								noncestr: wxPayResp.noncestr,
+								package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+								partnerid: wxPayResp.partnerId,
+								prepayid: wxPayResp.prepayId,
+								timestamp: wxPayResp.timestamp,
+								sign: wxPayResp.sign // 根据签名算法生成签名
+							}
+							let orderInfo = JSON.stringify(obj);
+							console.log('orderInfo',orderInfo)
+							uni.requestPayment({
+							    provider: 'wxpay',
+							    orderInfo, //微信、支付宝订单数据
+							    success: function (res) {
+									_this.clock = true
+							        console.log('success:' + JSON.stringify(res));
+									uni.showModal({
+										content:JSON.stringify(res),
+										success() {
+											
+										}
+									})
+							    },
+							    fail: function (err) {
+									_this.clock = true
+							        console.log('fail:' + JSON.stringify(err));
+									uni.showModal({
+										content:JSON.stringify(err),
+										success() {
+											
+										}
+									})
+							    }
+							});
+						} else {
+							T.tips(res.message || '调用支付失败')
+							this.clock = true
+						}
+					}).catch(err => {
+						T.tips(err.message || '调用支付失败')
+						this.clock = true
+					})
+				} else {
+					T.tips('订单ID不存在')
+					this.clock = true
+				}
+			},
+			// 支付宝App支付
+			AppAlipay(){
+				let _this = this
+				if (this.orderId !== '') {
+					let data = {
+						payChannelEnum: 'ALI_PAY',
+						payWay:'APP_PAY',
+						orderId: this.orderId
+					}
+					payAlipayByWap(data).then(res => {
+						if (res.code === '1000') {
+							console.log(JSON.stringify(res));
+							let wxPayResp = res.data.wxPayResp;
+							let obj = {
+								appid: wxPayResp.appId,
+								noncestr: wxPayResp.noncestr,
+								package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+								partnerid: wxPayResp.partnerId,
+								prepayid: wxPayResp.prepayId,
+								timestamp: wxPayResp.timestamp,
+								sign: wxPayResp.sign // 根据签名算法生成签名
+							}
+							let orderInfo = JSON.stringify(obj);
+							
+							
+							uni.requestPayment({
+							    provider: 'alipay',
+							    orderInfo, //微信、支付宝订单数据
+							    success: function (res) {
+									_this.clock = true
+							        console.log('success:' + JSON.stringify(res));
+							    },
+							    fail: function (err) {
+									_this.clock = true
+							        console.log('fail:' + JSON.stringify(err));
+							    }
+							});
+						} else {
+							T.tips(res.message || '调用支付失败')
+							this.clock = true
+						}
+					}).catch(err => {
+						T.tips(err.message || '调用支付失败')
+						this.clock = true
+					})
+				} else {
+					T.tips('订单ID不存在')
+					this.clock = true
+				}
+			},
+			doPay() {
+				if(!this.clock) return
+				this.clock = false
+				if (this.checkIndex === 0) { // 微信网页支付
+					// #ifdef H5
+					this.h5WXpay()
+					// #endif
+					// #ifdef APP-PLUS || MP-WEIXIN
+					this.AppWXpay()
+					// #endif
+				} else { // 支付宝网页支付
+					
+					// #ifdef H5
+					this.h5Alipay()
+					// #endif
+					// #ifdef APP-PLUS || MP-WEIXIN
+					this.AppAlipay()
+					// #endif
 				}
 				this.$emit('doPay', this.way)
 			}

@@ -5,7 +5,7 @@
     </transition>
     <transition name="body">
       <div v-show="show" class="body">
-        <img src="../../asset/images/tag-close2.png" width="15" height="15" @click="close" />
+        <img src="@/static/img/tag-close2.png" width="15" height="15" @click="close" />
         <li v-for="(item,index) in list" :key="index">
           <span v-for="sta in item" :key="sta">{{sta}}</span>
         </li>
@@ -30,7 +30,6 @@ var vm = {
     }
   },
   mounted(){
-    debugger
   },
   methods: {
     close() {
@@ -60,13 +59,13 @@ export default vm;
   }
   .body {
     background-color: #fff;
-    padding: 37px 15px;
+    padding: 74upx 30upx;
     position: fixed;
     z-index: 2;
     width: 100%;
     left: 0;
     bottom: 0;
-    font-size: 14px;
+    font-size: 28upx;
     text-align: center;
     color: #333;
     &::before{
@@ -78,19 +77,19 @@ export default vm;
     }
     img{
       position: absolute;
-      right: 15px;
-      top: 15px;
+      right: 30upx;
+      top: 30upx;
     }
     li {
-      line-height: 40px;
-      font-size: 12px;
+      line-height: 80upx;
+      font-size: 24upx;
       color: #999;
       display: flex;
       justify-content: space-between;
       position: relative;
       &::after {
         content: "";
-        height: 1px;
+        height: 1upx;
         display: block;
         position: absolute;
         bottom: 0;

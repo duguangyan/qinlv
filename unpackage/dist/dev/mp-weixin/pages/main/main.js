@@ -275,9 +275,11 @@ var _default = { data: function data() {return { homeList: {}, banner: [], // �
       navs: [], // 导航nav
       advs: [], // 广告
       seles: [], // 精选
-      indicatorDots: false, autoplay: true, interval: 3000, duration: 500 };}, computed: (0, _vuex.mapState)(['forcedLogin', 'hasLogin', 'userName']), onLoad: function onLoad() {// 获取首页banner
-    this.getHomeList();}, methods: { // 获取首页banner
-    getHomeList: function getHomeList() {var _this = this;(0, _mainApi.getHomeList)({ parentId: 1 }).then(function (res) {if (res.code == '1000') {_this.homeList = res.data;}});}, goNextPage: function goNextPage(url) {if (url) {uni.navigateTo({ url: url });}} } };exports.default = _default;
+      indicatorDots: false, autoplay: true, interval: 3000, duration: 500 };}, computed: (0, _vuex.mapState)(['forcedLogin', 'hasLogin', 'userName']), onLoad: function onLoad() {}, onShow: function onShow() {// 获取首页banner
+    this.getHomeList();}, methods: { // nav 去搜索页面
+    goSearchPage: function goSearchPage(name) {uni.navigateTo({ url: '/pages/order/goodsList/goodsList?search=' + name });}, // 去搜索页面
+    goSearch: function goSearch() {uni.navigateTo({ url: '/pages/main/search/search' });}, // 获取首页banner
+    getHomeList: function getHomeList() {var _this = this;(0, _mainApi.getHomeList)({ parentId: 1 }).then(function (res) {if (res.code == '1000') {_this.homeList = res.data;}});}, goNextPage: function goNextPage(url) {if (url) {uni.navigateTo({ url: url });}}, goGoodsDetail: function goGoodsDetail(shopId, goodsId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + goodsId });} } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

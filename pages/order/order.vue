@@ -36,18 +36,17 @@
 							<img :src="it.imgUrl || defaultUrl" alt="图片">
 						</div>
 						<div class="fll ml-10 info">
-							<p class="fs-14 p1 ellipsis ellipsis-line2">{{it.goodsName || ''}}</p>
-							<p class="p4 text-666 fs-12 ellipsis ellipsis-line3">{{it.skuDesc || '--'}}</p>
+							<p class="fs28 p1 ellipsis ellipsis-line2">{{it.goodsName || ''}}</p>
+							<p class="p4 text-666 fs20 ellipsis ellipsis-line3">{{it.skuDesc || '--'}}</p>
 							<!--              status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")-->
 							<p v-if="it.status !== 4" class="text-red fs-14 p2">￥ <span class="fs-18">{{it.price}}</span></p>
 							<p v-if="it.status === 4" class="text-red fs-14 p3"> <span>下架商品</span></p>
 							<!-- 数量操作 -->
 							<div class="count" v-if="!isEdit && it.status !== 4">
 								<span :class="{ 'text-999' : it.isColor999 }" @click="doCalculation(0,index,idx)">-</span>
-								<!--                <img src="@/asset/images/icon-min.png" alt width="15" height="15" @click="doCalculation(0,index,idx)"-->
-								<!--                />-->
+								
 								<input type="text" v-model="it.num" @click="clickInput(index,idx)" @change="changInput($event,index,idx)" />
-								<!--                <img src="@/asset/images/icon-plus.png" alt width="15" height="15" @click="doCalculation(1,index ,idx)"/>-->
+								
 								<span @click="doCalculation(1,index,idx)">+</span>
 							</div>
 
@@ -73,6 +72,7 @@
 				<div class="settle flr" @click="goPay" :class="{'bg-999': totalMoney <= 0}">结算</div>
 			</div>
 		</div>
+		<Dialog :title='title' :confirmText='confirmText' :cancelText='cancelText' :isShow='isShow' @doConfirm="doConfirm" @doCancel="doCancel"> </Dialog>
 	</div>
 </template>
 
@@ -80,6 +80,9 @@
 	import Checked from '../../static/img/icon-checked.png'
 	import Uncheck from '../../static/img/icon-uncheck.png'
 	import Plat from '../../static/img/icon-plat.png'
+	import Dialog from '@/components/common/Dialog.vue'
+	import util from '@/utils/util.js'
+	import T from '@/utils/tips.js'
 	import {
 		getCartOrderList,
 		getCartCheck,
@@ -91,6 +94,10 @@
 	export default {
 		data() {
 			return {
+				title:'您确定删除商品吗?',
+				confirmText:'删除',
+				cancelText:'再想想',
+				isShow: false,
 				list: [],
 				defaultUrl: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2180358788,168891397&fm=26&gp=0.jpg',
 				isEdit: false,
@@ -104,10 +111,11 @@
 				clickNum: 0, //点击商品当前数量
 				isColor999: false, // 数量减法最低颜色
 				isclock: false, // 锁
+				clock: true
 			}
 		},
 		components: {
-
+			Dialog
 		},
 		onLoad() {
 
@@ -117,6 +125,12 @@
 			this.getCartOrderList()
 		},
 		methods: {
+			doConfirm(){
+				this.doDel()
+			},
+			doCancel(){
+				this.isShow = false
+			},
 			// 去详情
 			goDetail(shopId, orderId) {
 				this.$router.push({
@@ -125,6 +139,8 @@
 			},
 			// 结算
 			submit() {
+				if(!this.clock) return false
+				this.clock = false
 				let cartIdList = []
 				this.list.forEach(item => {
 					item.items.forEach(it => {
@@ -133,24 +149,24 @@
 						}
 					})
 				})
-				let userId = localStorage.getItem('uid')
+				let userId = uni.getStorageSync('uid')
 				let data = {
 					userId,
 					cartIdList
 				}
 				getOrderCart(data).then(res => {
 					if (res.code === '1000') {
-						this.$router.push({
-							path: 'submit',
-							query: {
-								submitData: JSON.stringify(res.data)
-							}
+						this.clock = true
+						uni.navigateTo({
+							url:'/pages/order/submit/submit?submitData='+JSON.stringify(res.data)
 						})
 					} else {
-						Toast(res.message || '结算失败')
+						T.tips(res.message || '结算失败')
+						this.clock = true
 					}
 				}).catch(err => {
-					Toast(err.message || '结算失败')
+					T.tips(err.message || '结算失败')
+					this.clock = true
 				})
 			},
 			// 去结算
@@ -159,7 +175,7 @@
 				if (this.totalMoney > 0) {
 					this.submit()
 				} else {
-					Toast('请选择进货单商品')
+					T.tips('请选择进货单商品')
 				}
 			},
 			// 计算总价格 totalMoney
@@ -168,8 +184,8 @@
 				this.validTotal = 0
 				this.list.forEach(item => {
 					item.items.forEach(it => {
-						if (it.checked === 1) {
-							this.totalMoney += it.totalPrice
+						if (it.checked === 1 && it.status!==4) {
+							 this.totalMoney =  util.accAdd(this.totalMoney,it.totalPrice)
 							this.validTotal++
 						}
 					})
@@ -179,24 +195,29 @@
 				this.clickNum = this.list[index].items[idx].num
 			},
 			// 数量input改变
-			changInput(e, index, idx) {
-				let val = e.target.value
-				if (validator.isNumber(val)) {
-					if (val < 1) {
-						Toast('数量不能小于1')
-						this.changeNum(index, idx, this.list[index].items[idx].skuId, this.clickNum)
-					} else {
-						this.changeNum(index, idx, this.list[index].items[idx].skuId, val)
-					}
-				} else {
-					Toast('请输入正确的数量')
-					this.changeNum(index, idx, this.list[index].items[idx].skuId, this.clickNum)
-				}
-			},
+			    changInput(e,index,idx) {
+			      let val = e.target.value
+			      if (validator.isNumber(val)) {
+			        if (val < this.list[index].items[idx].startNum) {
+			          Toast('数量不能小于起批量:'+this.list[index].items[idx].startNum)
+			          this.list[index].items[idx].num = this.list[index].items[idx].startNum
+			          this.changeNum(index,idx,this.list[index].items[idx].skuId, this.list[index].items[idx].startNum)
+			        } else if(val > this.list[index].items[idx].stock){
+			          Toast('数量不能超过库存量:'+this.list[index].items[idx].stock)
+			          this.list[index].items[idx].num = this.list[index].items[idx].stock
+			          this.changeNum(index,idx,this.list[index].items[idx].skuId, this.list[index].items[idx].stock)
+			        }else {
+			          this.changeNum(index,idx,this.list[index].items[idx].skuId, val)
+			        }
+			      } else {
+			        Toast('请输入正确的数量')
+			        this.changeNum(index,idx,this.list[index].items[idx].skuId, this.list[index].items[idx].startNum)
+			      }
+			    },
 			// 改变数量
 			changeNum(index, idx, skuId, num) {
 				if (this.isclock) {
-					// Toast('数据正在请求中,请稍等')
+					// T.tips('数据正在请求中,请稍等')
 					return
 				}
 				let data = {
@@ -212,34 +233,39 @@
 						this.calculationTotalMoney()
 						this.isclock = false
 					} else {
-						Toast(res.message || '修改数量失败')
+						T.tips(res.message || '修改数量失败')
 						this.list[index].items[idx].isColor999 = true
 						this.isclock = false
 						console.log(this.list);
 					}
 				}).catch(err => {
-					Toast(err.message || '修改数量失败')
+					T.tips(err.message || '修改数量失败')
 					this.isColor999 = true
 					this.isclock = false
 				})
 			},
 			// 购买数量计算  isCalculation: 0为减法 1为加法
-			doCalculation(isCalculation, index, idx) {
-				if (isCalculation === 0) {
-					if (this.list[index].items[idx].num > 1) {
-						let num = this.list[index].items[idx].num
-						num--
-						console.log(this.clickNum)
-						this.changeNum(index, idx, this.list[index].items[idx].skuId, num)
-					} else {
-						Toast('数量不能小于1')
-					}
-				} else {
-					let num = this.list[index].items[idx].num
-					num++
-					this.changeNum(index, idx, this.list[index].items[idx].skuId, num)
-				}
-			},
+			    doCalculation(isCalculation, index, idx) {
+			      if (isCalculation === 0) {
+			        if (this.list[index].items[idx].num > this.list[index].items[idx].startNum) {
+			          let num = this.list[index].items[idx].num
+			          num--
+			          console.log(this.clickNum)
+			          this.changeNum(index,idx,this.list[index].items[idx].skuId,num)
+			        } else {
+			          Toast('数量不能小于起批量:'+this.list[index].items[idx].startNum)
+			        }
+			      } else {
+			        if(this.list[index].items[idx].num < this.list[index].items[idx].stock){
+			          let num = this.list[index].items[idx].num
+			          num++
+			          this.changeNum(index,idx,this.list[index].items[idx].skuId,num)
+			        } else {
+			          Toast('购买数量不能超过库存量:'+this.list[index].items[idx].stock)
+			        }
+			
+			      }
+			    },
 			// 选中SKU
 			getCartHasCheck(m, index, idx) {
 				let data = {
@@ -254,7 +280,7 @@
 						})
 						this.hasCheckedAll()
 					}).catch(err => {
-						Toast(err.message || '选中失败')
+						T.tips(err.message || '选中失败')
 					})
 				} else {
 					getCartUncheck(data).then(res => {
@@ -265,7 +291,7 @@
 						})
 						this.hasCheckedAll()
 					}).catch(err => {
-						Toast(err.message || '选中失败')
+						T.tips(err.message || '选中失败')
 					})
 				}
 			},
@@ -332,8 +358,8 @@
 			},
 			// 去首页
 			goHome() {
-				this.$router.push({
-					path: '/'
+				uni.switchTab({
+					url:'/pages/main/main'
 				})
 			},
 			getCartOrderList() {
@@ -350,24 +376,11 @@
 							}
 
 						}
-					} else {
-						if (res.code === '1011') {
-							Toast(res.message || '请先登录')
-						} else {
-							Toast(res.message || '获取进货单列表错误')
-						}
 					}
-				}).catch(err => {
-					Toast(err.message || '获取进货单列表错误')
 				})
 			},
 			preDel() {
-				vm.$dialog({
-					title: '您确定删除商品吗?',
-					cancelText: '再想想',
-					confirmText: '删除',
-					callback: vm.doDel
-				})
+				this.isShow = true
 			},
 			doDel() {
 				let rmskuIds = []
@@ -386,35 +399,38 @@
 				let data = {
 					skuIds
 				}
-
 				// 发送请求
 				getCartRemove(data).then(res => {
 					if (res.code === '1000') {
+						this.isShow = false;
 						if (rmskuIds.length > 0) {
-							rmskuIds.forEach((t1, i1) => {
-								this.list.forEach((t2, i2) => {
-									if (t2.items.length > 0) {
-										t2.items.forEach((t3, i3) => {
-											if (t1 === t3.skuId) {
-												this.list[i2].items.splice(i3, 1);
-												if (this.list[i2].items.length <= 0) {
-													this.list.splice(i2, 1);
-												}
-												Toast('删除成功')
-												this.calculationTotalMoney()
-											}
-										})
-									}
-								})
-							})
+							// rmskuIds.forEach((t1, i1) => {
+							// 	this.list.forEach((t2, i2) => {
+							// 		if (t2.items.length > 0) {
+							// 			t2.items.forEach((t3, i3) => {
+							// 				if (t1 === t3.skuId) {
+							// 					this.list[i2].items.splice(i3, 1);
+							// 					if (this.list[i2].items.length <= 0) {
+							// 						this.list.splice(i2, 1);
+							// 					}
+							// 					T.tips('删除成功')
+							// 					this.calculationTotalMoney()
+							// 				}
+							// 			})
+							// 		}
+							// 	})
+							// })
+							// 获取进货单列表
+							this.list = []
+							this.getCartOrderList()
 						} else {
-							Toast('请选择有效进货单')
+							T.tips('请选择有效进货单')
 						}
 					} else {
-						Toast(res.message || '删除进货单失败')
+						T.tips(res.message || '删除进货单失败')
 					}
 				}).catch(err => {
-					Toast(err.message || '删除进货单失败')
+					T.tips(err.message || '删除进货单失败')
 				})
 
 			}
@@ -426,23 +442,42 @@
 		min-height: 100vh;
 		padding-bottom: 140upx;
 		background-color: #f0f0f0;
-
+		.yuan{
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background: #e2e2e2;
+		  }
 		.edit {
 			text-align: right;
 			background-color: #fff;
 			padding: 10upx 30upx 10upx 10upx;
 			position: relative;
-
+			margin-top: 60upx;
 			.title {
 				text-align: center;
 				width: 100%;
 			}
-
+			/* #ifdef MP-WEIXIN */  
+			.icon {
+				position: absolute;
+				top: 10upx;
+				right: 215upx;
+				text-underline: underline ;
+				font-size: 24upx;
+				border: 1upx solid #e2e2e2;
+				border-radius: 10upx;
+				padding: 10upx;
+			}
+			/* #endif */
+			/* #ifdef APP-PLUS || H5 */
 			.icon {
 				position: absolute;
 				top: 10upx;
 				right: 60upx;
+				text-underline: underline ;
 			}
+			/* #endif */
 		}
 
 		.list {
@@ -543,7 +578,9 @@
 					.info {
 						width: 400upx;
 						margin-left: 20upx;
-
+						.p1{
+							height: 80upx;
+						}
 						.p2 {
 							position: absolute;
 							bottom: 20upx;

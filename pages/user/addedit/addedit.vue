@@ -47,7 +47,7 @@
 <script>
 	import RaBtn from '@/components/common/RaBtn'
 	import Dialog from '@/components/common/Dialog'
-	import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
+	import mpvueCityPicker from '@/components/common/mpvue-citypicker/mpvueCityPicker.vue'
 	import validator from '@/utils/validator.js'
 	import T from '@/utils/tips.js'
 	import {

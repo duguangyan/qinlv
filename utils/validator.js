@@ -3,14 +3,16 @@
  * @returns {Boolean}
  */
 let isPhone = function (phone) {
-  return !(/^1[34578]\d{9}$/.test(phone))
+  return !(/^1[2345789]\d{9}$/.test(phone))
 }
 /**
  * @param {string} str  判断用户昵称为英文字母或者汉字，限4-30个字符
  * @returns {Boolean}
  */
 let isNickName = function (nickName) {
-  return (/^[\u4e00-\u9fa5\w]{2,20}$/.test(nickName))
+  // 去掉前后空格
+    let name = nickName.replace(/^\s+|\s+$/g,"")
+    return name.length>2 && name.length<21
 }
 
 /**

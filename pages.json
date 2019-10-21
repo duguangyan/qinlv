@@ -3,7 +3,11 @@
 		{
 			"path": "pages/main/main",
 			"style": {
-				"navigationBarTitleText": "沁绿农业"
+				"navigationBarTitleText": "沁绿农业",
+				"navigationStyle":"custom",
+				"app-plus":{
+					"titleView":false
+				}
 			}
 		}, {
 			"path": "pages/login/login",
@@ -13,12 +17,20 @@
 		}, {
 			"path": "pages/user/user",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"navigationStyle":"custom",
+				"app-plus":{
+					"titleView":false
+				}
 			}
 		}, {
             "path" : "pages/order/order",
             "style" : {
-				"navigationBarTitleText": "进货单"
+				"navigationBarTitleText": "进货单",
+				"navigationStyle":"custom",
+				"app-plus":{
+					"titleView":false
+				}
 			}
         }, {
             "path" : "pages/user/setting/setting",
@@ -89,6 +101,54 @@
             "path" : "pages/user/pay/success",
             "style" : {
 				"navigationBarTitleText": "支付完成" 
+			}
+        }
+        ,{
+            "path" : "pages/order/goodsDetail/goodsDetail",
+            "style" : {
+				"navigationBarTitleText": "商品详情" 
+			}
+        }
+        ,{
+            "path" : "pages/order/prompt/prompt",
+            "style" : {
+				"navigationBarTitleText": "运费说明" 
+			}
+        }
+        ,{
+            "path" : "pages/order/submit/submit",
+            "style" : {
+				"navigationBarTitleText": "提交订单" 
+			}
+        }
+        ,{
+            "path" : "pages/order/paySuccess/paySuccess",
+            "style" : {
+				"navigationBarTitleText": "支付成功" 
+			}
+        }
+        ,{
+            "path" : "pages/order/orderSuccess/orderSuccess",
+            "style" : {
+				"navigationBarTitleText": "订单完成" 
+			}
+        }
+        ,{
+            "path" : "pages/main/search/search",
+            "style" : {
+				"navigationBarTitleText": "搜索商品" 
+			}
+        }
+        ,{
+            "path" : "pages/order/goodsList/goodsList",
+            "style" : {
+				"navigationBarTitleText": "商品列表" 
+			}
+        }
+        ,{
+            "path" : "pages/common/err/err",
+            "style" : {
+				"navigationBarTitleText": "异常" 
 			}
         }
     ],

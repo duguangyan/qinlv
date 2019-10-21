@@ -15,7 +15,7 @@
 		        </div>
 		      </div>
 		    </div>
-		    <div class="exit" @click="showDialog">退出登录</div>
+		    <div class="exit" @click="showDialog" v-if="isLogin">退出登录</div>
 		  </div>
 	</view>
 </template>
@@ -24,8 +24,11 @@
 	export default {
 		data() {
 			return {
-				
+				isLogin: false
 			};
+		},
+		onShow() {
+			this.isLogin = localStorage.getItem('access_token')
 		},
 		methods:{
 			showDialog() {

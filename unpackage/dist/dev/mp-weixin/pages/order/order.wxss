@@ -4,11 +4,18 @@
   padding-bottom: 140rpx;
   background-color: #f0f0f0;
 }
+.cart .yuan.data-v-109e8254 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #e2e2e2;
+}
 .cart .edit.data-v-109e8254 {
     text-align: right;
     background-color: #fff;
     padding: 10rpx 30rpx 10rpx 10rpx;
     position: relative;
+    margin-top: 60rpx;
 }
 .cart .edit .title.data-v-109e8254 {
       text-align: center;
@@ -17,7 +24,12 @@
 .cart .edit .icon.data-v-109e8254 {
       position: absolute;
       top: 10rpx;
-      right: 60rpx;
+      right: 215rpx;
+      text-underline: underline;
+      font-size: 24rpx;
+      border: 1rpx solid #e2e2e2;
+      border-radius: 10rpx;
+      padding: 10rpx;
 }
 .cart .list.data-v-109e8254 {
     margin-top: 100rpx;
@@ -109,6 +121,9 @@
 .cart .list ._ul ._li .info.data-v-109e8254 {
           width: 400rpx;
           margin-left: 20rpx;
+}
+.cart .list ._ul ._li .info .p1.data-v-109e8254 {
+            height: 80rpx;
 }
 .cart .list ._ul ._li .info .p2.data-v-109e8254 {
             position: absolute;

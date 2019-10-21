@@ -1,7 +1,7 @@
 <template>
 	
     <view class="main">
-		<view class="seach">
+		<view class="seach" @click="goSearch">
 			<view class="bg"></view>
 			<view class="img">
 				<image src="../../static/img/icon-search.png"></image>
@@ -28,7 +28,7 @@
        </view>	
        <!-- nav导航 -->
 	   <view class="nav cf">
-		   <view class="li fll" v-for="(item,index) in homeList.list[1].list[0].list" :key="index">
+		   <view class="li fll" v-for="(item,index) in homeList.list[1].list[0].list" :key="index" @click="goSearchPage(item.name)">
 			   <view class="img">
 				   <image :src="item.imgPath"></image>
 			   </view>
@@ -45,7 +45,7 @@
 			   <image :src="homeList.list[3].list[0].list[0].imgPath" mode=""></image>
 		   </view>
 		   <view class="content cf">
-			   <view class="item fll" v-for="(item,index) in homeList.list[3].list[1].goodsDetailRespList" :key="index">
+			   <view class="item fll" v-for="(item,index) in homeList.list[3].list[1].goodsDetailRespList" :key="index" @click="goGoodsDetail(item.shopId,item.id)">
 				  <view class="img">
 					  <image :src="item.imgUri" mode=""></image>
 				  </view>
@@ -85,10 +85,26 @@
 		},
         computed: mapState(['forcedLogin', 'hasLogin', 'userName']),
         onLoad() {
+			
+        },
+		onShow() {
 			// 获取首页banner
 			this.getHomeList()
-        },
+			
+		},
 		methods:{
+			// nav 去搜索页面
+			goSearchPage(name){
+				uni.navigateTo({
+					url:'/pages/order/goodsList/goodsList?search='+name
+				})
+			},
+			// 去搜索页面
+			goSearch(){
+				uni.navigateTo({
+					url:'/pages/main/search/search'
+				})
+			},
 			// 获取首页banner
 			getHomeList(){
 				getHomeList({ parentId: 1 }).then((res) => {
@@ -103,6 +119,11 @@
 					    url
 					});
 				}
+			},
+			goGoodsDetail(shopId,goodsId){
+				uni.navigateTo({
+					url:'/pages/order/goodsDetail/goodsDetail?shopId='+shopId + '&goodsId='+goodsId
+				})
 			}
 		}
     }
@@ -116,7 +137,7 @@
 			height:60upx;
 			margin: 0 auto;
 			position: fixed;
-			top: 30upx;
+			top: 130upx;
 			left: 40upx;
 			z-index: 99999;
 			.bg{
@@ -144,6 +165,8 @@
 				}
 			}
 		}
+		
+		
 		.seles{
 			.content{
 				margin: 0 30upx;
@@ -170,7 +193,7 @@
 				}
 				.item:nth-child(even){
 					position: relative;
-					left: 10upx;
+					left: 20upx;
 				}
 			}
 		}
@@ -219,15 +242,15 @@
 			overflow: hidden;
 			background: #fff;
 			swiper {
-				height: 360upx
+				height: 460upx
 			}
 			swiper-item {
-				height: 360upx //这里可以设置比上面高度小（留出大标语位置）或者设置一样大
+				height: 460upx //这里可以设置比上面高度小（留出大标语位置）或者设置一样大
 			}
 			.swiper-item {
 				image {
 					width: 100%;
-					height: 360upx;
+					height: 460upx;
 				}
 			}
 			.nav {
@@ -259,6 +282,29 @@
 			}
 		
 	}
-    
+	
+	/* #ifdef MP-WEIXIN */
+	.seach{
+		top: 45upx;
+		width: 500upx;
+		.name{
+			left: 225upx;
+		}
+		.img{
+			left: 190upx;
+		}
+	}
+	/* #endif */
+    /* #ifdef APP-PLUS || H5 */
+    .seach{
+    	top: 80upx !important;
+		.name{
+			top: 14upx!important;
+		}
+		.img{
+			top: 12upx!important;
+		}
+    }
+    /* #endif */
     }
 </style>

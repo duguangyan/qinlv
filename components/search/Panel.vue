@@ -12,7 +12,7 @@
               v-for="area in list"
               :class="{actived:filter.place==area}"
               :key="area"
-              @click="filter.place=area"
+              @click="getAreas(area)"
             >{{area}}</li>
           </section>
         </div>
@@ -37,10 +37,11 @@
 </template>
 
 <script>
-import Aimup from "@/asset/images/icon-aimup.png";
-import Aimdown from "@/asset/images/icon-aimdown.png";
-import { getArea } from "@/api/area";
-var vm = {
+import Aimup from "@/static/img/icon-aimup.png";
+import Aimdown from "@/static/img/icon-aimdown.png";
+import { getArea } from "@/api/areaApi.js";
+import T from '@/utils/tips.js'
+export default {
   name: "panel",
   props: {
     show: {
@@ -55,22 +56,10 @@ var vm = {
       d.forEach(item => {
         item !== null && res.push(item);
       });
-      vm.list = res;
-    });
-  },
-  watch: {
-    "filter.priceBegin"(newVal, oldVal) {},
-    "filter.priceEnd"(newVal, oldVal) {}
-  },
-  updated() {
-    vm.$nextTick().then(() => {
-      setTimeout(() => {
-        vm.$refs.area.offsetHeight > 100 && (vm.isMoreBtn = true);
-      }, 0);
+      this.list = res;
     });
   },
   data() {
-    vm = this;
     return {
       list: [],
       isMoreLocat: false,
@@ -89,47 +78,50 @@ var vm = {
     };
   },
   methods: {
+	  getAreas(area){
+		  this.filter.place=area
+	  },
     close() {
-      vm.$emit("close", false);
+      this.$emit("close", false);
     },
     valiPriceBegin() {
-      let val = vm.filter.priceBegin;
-      if (vm.filter.priceBegin !== "") {
+      let val = this.filter.priceBegin;
+      if (this.filter.priceBegin !== "") {
         if (!val.match(/^(^[1-9]\d+|^[0-9])(\.(\d{1,2}$))?$/)) {
-          vm.isMinOk = false;
-          return vm.$tips("请输入0-9999.99的数字");
+          this.isMinOk = false;
+          return T.tips("请输入0-9999.99的数字");
         }
-        vm.isMinOk = true;
+        this.isMinOk = true;
       }
     },
     valiPriceEnd() {
-      let val = vm.filter.priceEnd;
+      let val = this.filter.priceEnd;
 
-      if (vm.filter.priceEnd !== "") {
+      if (this.filter.priceEnd !== "") {
         if (!val.match(/^(^[1-9]\d+|^[0-9])(\.(\d{1,2}$))?$/)) {
-          vm.isMaxOk = false;
-          return vm.$tips("请输入0-9999.99的数字");
+          this.isMaxOk = false;
+          return T.tips("请输入0-9999.99的数字");
         }
-        vm.isMaxOk = true;
+        this.isMaxOk = true;
       }
     },
     reset() {
-      vm.filter = {
+      this.filter = {
         place: "",
         priceBegin: "",
         priceEnd: ""
       };
     },
     submit() {
-      if (vm.isMinOk && vm.isMaxOk) {
-        vm.$emit('filter',vm.filter)
+      if (this.isMinOk && this.isMaxOk) {
+        this.$emit('filter',this.filter)
       } else {
-        vm.$tips("请确认输入数据无误");
+        this.$tips("请确认输入数据无误");
       }
     }
   }
 };
-export default vm;
+
 </script>
 
 <style lang="scss" scoped>
@@ -143,38 +135,40 @@ export default vm;
   .price-area {
     text-align: center;
     position: relative;
-    padding-top: 25px;
+    padding-top: 50upx;
     &::before {
       content: "价格区间";
       display: block;
       color: #000;
-      font-size: 12px;
-      // margin-left: 31px;
+      font-size: 24upx;
+      // margin-left: 31upx;
       font-weight: bold;
       text-align: left;
-      margin-bottom: 10px;
+      margin-bottom: 20upx;
       position: absolute;
-      // left: 15px;
+      // left: 15upx;
       top: 0;
     }
     input {
       border: none;
       outline: none;
-      height: 24px;
-      border-radius: 12px;
+      height: 48upx;
+      border-radius: 24upx;
       background-color: #f5f5f5;
-      width: 100px;
+      width: 200upx;
       display: inline-block;
-      padding: 0 12px;
-      font-size: 12px;
+      padding: 0 24upx;
+      font-size: 24upx;
       text-align: center;
       &::placeholder {
         color: #cccccc;
       }
     }
     span {
-      margin-left: 8px;
-      margin-right: 8px;
+      margin-left: 16upx;
+      margin-right: 16upx;
+	  position: relative;
+	  top: -15upx;
     }
   }
   .mask {
@@ -188,48 +182,47 @@ export default vm;
   }
   .more {
     text-align: center;
-    padding: 10px 0;
+    padding: 20upx 0;
   }
   .body {
     background-color: #fff;
-    padding: 27px 12px 10px 12px;
+    padding: 54upx 24upx 20upx 24upx;
     position: fixed;
     z-index: 2;
-    width: 290px;
+    width: 580upx;
     right: 0;
     top: 0;
     bottom: 0;
     overflow: scroll;
-    padding-bottom: 60px;
+    padding-bottom: 120upx;
     -webkit-overflow-scrolling: touch;
     .operator {
       display: flex;
       justify-content: space-between;
       text-align: center;
-      font-size: 15px;
-      line-height: 40px;
+      font-size: 30upx;
+      line-height: 80upx;
       position: fixed;
       bottom: 0;
-      width: 260px;
+      width: 520upx;
       background-color: #fff;
-      padding-bottom: 15px;
+      padding-bottom: 30upx;
     }
     .reset {
-      width: 100px;
-      box-shadow: 0 0 0 1px #e6e6e6 inset;
+      width: 200upx;
+      box-shadow: 0 0 0 1upx #e6e6e6 inset;
       color: #000;
-      border-radius: 20px;
+      border-radius: 40upx;
     }
     .confirm {
       color: #fff;
       background-color: #fc2d2d;
-      width: 150px;
-      border-radius: 20px;
+      width: 300upx;
+      border-radius: 40upx;
     }
     .location {
-      height: 180px;
-      overflow-x: hidden;
-      overflow-y: hidden;
+      margin: 50upx 0;
+      overflow-y: auto;
       transition: height 0.5s;
       & > section {
         display: flex;
@@ -246,21 +239,21 @@ export default vm;
         content: "产地";
         display: block;
         color: #000;
-        font-size: 12px;
-        margin-left: 31px;
+        font-size: 24upx;
+        margin-left: 62upx;
         font-weight: bold;
       }
-      margin-left: -31px;
+      margin-left: -62upx;
       li {
-        // width: 42px;
-        padding: 4px 10px;
-        line-height: 22px;
-        border-radius: 11px;
+        // width: 42upx;
+        padding: 8upx 20upx;
+        line-height: 44upx;
+        border-radius: 22upx;
         background-color: #f5f5f5;
-        margin-top: 10px;
-        margin-left: 31px;
+        margin-top: 20upx;
+        margin-left: 62upx;
         color: #666;
-        font-size: 12px;
+        font-size: 24upx;
         text-align: center;
         white-space: nowrap;
         transition: all 0.5s;

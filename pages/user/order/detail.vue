@@ -329,11 +329,6 @@ export default {
   }
   background-color: #f5f5f5;
   min-height: 100vh;
-  /*background-position: 100% 36px, 0% 0%;*/
-  /*background-image: url(../../asset/images/bg-order.png),*/
-  /*  linear-gradient(180deg, #fc2d2d 0%, #fc2d2d 130px, transparent 0);*/
-  /*background-repeat: no-repeat;*/
-  /*background-size: 128px 95px, 100% auto;*/
   padding-bottom: 70px;
   .annoc {
     color: #fefefe;

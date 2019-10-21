@@ -1,22 +1,28 @@
 <template>
     <view class="mine">
-		<view class="setting" @click="goSettingPage">
-			<image src="../../static/img/icon-setting.png" mode=""></image>
-		</view>
-        <!-- 我的状态 -->
-        <view class="status">
+		<view class="top">
 			<view class="img">
-				<image :src="headimageUrl" @click="goInfo"/>
+				<image src="../../static/img/bg-mine.png" mode=""></image>
 			</view>
-          <view class="content">
-            <view v-if="isLogin" @click="goInfo">
-              <view class="uid fs28" v-if="nickName">{{nickName}}</view>
-              <view class="uid fs28" v-if="!nickName">ID:{{uid}}</view>
-              <view class="phone fs24">{{dPhone}}</view>
-            </view>
-            <view class="fs30 mgl-20" v-else @click="goLogin">点击登录</view>
-          </view>
-        </view>
+			<view class="setting" @click="goSettingPage">
+				<image src="../../static/img/icon-setting.png" mode=""></image>
+			</view>
+			<!-- 我的状态 -->
+			<view class="status">
+				<view class="img">
+					<image :src="headimageUrl" @click="goInfo"/>
+				</view>
+			  <view class="content">
+			    <view v-if="isLogin" @click="goInfo">
+			      <view class="uid fs28" v-if="nickName">{{nickName}}</view>
+			      <view class="uid fs28" v-if="!nickName">ID:{{uid}}</view>
+			      <view class="phone fs24">{{dPhone}}</view>
+			    </view>
+			    <view class="fs30 mgl-20" v-else @click="goLogin">点击登录</view>
+			  </view>
+			</view>
+		</view>
+		
 		
         <!-- 我的订单 -->
         <view class="order">
@@ -134,40 +140,101 @@
   flex-grow: 1;
 }
 .mine {
-  background-position: 0% 50%;
-  background-image: url(../../static/img/bg-mine.png);
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  height: 260upx;
-  .setting{
-	  width: 48upx;
-	  height: 48upx;
-	  position: absolute;
-	  right: 30upx;
-	  top: 30upx;
-	  >image{
-		  width: 100%;
-		  height: 100%;
-	  }
-  }
-  .status {
-    padding: 0upx 20upx 33upx 20upx;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
 	position: relative;
-	top: 110upx;
-	.img{
-		width: 90upx;
-		height: 90upx;
-		position: relative;
-		z-index: 999999;
-		>image{
-		  border-radius: 50%;
-		  width: 100%;
-		  height: 100%;
+	/* #ifdef APP-PLUS || H5 */  
+	.top{
+		width: 100%;
+		height: 300upx;
+		.img{
+			width: 100%;
+			height: 300upx;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+			>image{
+				width: 100%;
+				height: 100%;
+			}
 		}
-	}
+		.setting{
+			  width: 48upx;
+			  height: 48upx;
+			  position: absolute;
+			  right: 30upx;
+			  top: 100upx;
+			  >image{
+				  width: 100%;
+				  height: 100%;
+			  }
+		}
+		.status {
+		  padding: 0upx 20upx 33upx 40upx;
+		  display: flex;
+		  justify-content: flex-start;
+		  align-items: center;
+			position: relative;
+			top: 160upx;
+			.img{
+				width: 90upx;
+				height: 90upx;
+				position: relative;
+				z-index: 999999;
+				>image{
+				  border-radius: 50%;
+				  width: 100%;
+				  height: 100%;
+				}
+			}
+	} 
+	/* #endif */
+	/* #ifdef MP-WEIXIN */
+	.top{
+		width: 100%;
+		height: 300upx;
+		.img{
+			width: 100%;
+			height: 300upx;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+			>image{
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.setting{
+			  width: 48upx;
+			  height: 48upx;
+			  position: absolute;
+			  right: 30upx;
+			  top: 130upx;
+			  >image{
+				  width: 100%;
+				  height: 100%;
+			  }
+		}
+		.status {
+		  padding: 0upx 20upx 33upx 40upx;
+		  display: flex;
+		  justify-content: flex-start;
+		  align-items: center;
+			position: relative;
+			top: 160upx;
+			.img{
+				width: 90upx;
+				height: 90upx;
+				position: relative;
+				z-index: 999999;
+				>image{
+				  border-radius: 50%;
+				  width: 100%;
+				  height: 100%;
+				}
+			}
+	} 
+	/* #endif */
+  
+  
     
     .content {
       margin-left: 8upx;
@@ -183,7 +250,6 @@
   }
   .order {
     padding: 14upx 20upx 20upx 20upx;
-	margin-top: 160upx;
     .title {
 		border-bottom: 1upx solid #F5F5F5;
 		padding-bottom: 20upx;

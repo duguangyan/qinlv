@@ -20,7 +20,7 @@
 						</div>
 						<div class="fll ml-10 info" v-bind:class="{ 'info-edit' : !isEdit }">
 							<p class="fs-14 p1 ellipsis ellipsis-line4">{{item.name}}</p>
-							<p class="p4 text-666 fs-12">{{item.skuDesc || 'xxx'}}</p>
+							<p class="p4 text-666 fs-12">{{item.skuDesc || ''}}</p>
 							<p v-if="item.status !== 4" class="text-red fs-14 p2">￥ <span class="fs-18">{{item.price}}</span></p>
 							<p v-if="item.status === 4" class="p3">下架商品</p>
 						</div>

@@ -3,7 +3,7 @@
 		<div class="nickname">
 		    <div class="sub-btn" @click="saveNickName">确定</div>
 		    <div class="input">
-		      <input v-model="nickName" />
+		      <input v-model="nickName" placeholder="请输入昵称" />
 		    </div>
 		  </div>
 	</view>
