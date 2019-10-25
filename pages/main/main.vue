@@ -4,7 +4,7 @@
 		<view class="seach" @click="goSearch">
 			<view class="bg"></view>
 			<view class="img">
-				<image src="../../static/img/icon-search.png"></image>
+				<image :class="{'platform':platform==2}" src="../../static/img/icon-search.png"></image>
 			</view>
 			<view class="name fs24 text-fff">
 				搜索商品名称
@@ -16,7 +16,7 @@
        		<view class="page-section swiper">
        			<view class="page-section-spacing">
        				<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-       					<swiper-item v-for="(item,index) in homeList.list[0].list[0].list[0].adPosition.adSet" :key="index" @click="goNextPage(item.url)">
+       					<swiper-item v-for="(item,index) in homeList.list[0].list[0].list[0].adPosition.adSet" :key="index" @click="goNextPage(item)">
        						<view class="swiper-item">
        							<image :src="item.path"></image>
        						</view>
@@ -35,8 +35,17 @@
 			   <view class="name fs24 text-333">{{item.name}}</view>
 		   </view>
 	   </view>
+	   
+	 
+	   <!-- <form bindsubmit="submitInfo" report-submit='true' > <button formType="submit"> 111111111111 </button> </form> -->
+	   <!-- <form @submit="submitInfo" report-submit="true">
+	   	formId
+	   	<button form-type="submit">Submit</button>
+	   	<button form-type="reset">Reset</button>
+	   </form> -->
+	   
        <!-- 广告 -->
-	   <view class="advs">
+	   <view class="advs" @click="goadSet(homeList.list[2].list[0].list[0].adPosition.adSet[0])">
 		   <image :src="homeList.list[2].list[0].list[0].adPosition.adSet[0].path" mode=""></image>
 	   </view>
 	   <!-- 精选 -->
@@ -68,7 +77,8 @@
 
 <script>
     import { mapState } from 'vuex'
-	import { getHomeList } from '../../api/mainApi.js'
+	import { getHomeList, addHit } from '../../api/mainApi.js'
+	import T from '@/utils/tips.js'
     export default {
 		data() {
 			return {
@@ -81,18 +91,41 @@
 				autoplay: true,
 				interval: 3000,
 				duration: 500,
+				platform: 0
 			}
 		},
-        computed: mapState(['forcedLogin', 'hasLogin', 'userName']),
         onLoad() {
 			
+			// 设备样式兼容
+			this.platform = uni.getStorageSync('platform');
         },
 		onShow() {
 			// 获取首页banner
 			this.getHomeList()
-			
+		},
+		onPullDownRefresh() {
+			//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+			console.log('refresh');
+			// 获取首页banner
+			this.getHomeList()
+			setTimeout(function () {
+				uni.stopPullDownRefresh();  //停止下拉刷新动画
+			}, 1000);
 		},
 		methods:{
+			// 去广告页面
+			goadSet(item){
+				addHit({ id: item.id })
+				if (item.type == 1) {
+					uni.navigateTo({
+						url:'/pages/common/webview/webview?url='+ item.url
+					})
+				}else if(item.type == 5){
+					uni.navigateTo({
+						url:'/pages/order/goodsDetail/goodsDetail?shopId=1&goodsId='+item.url
+					})
+				}
+			},
 			// nav 去搜索页面
 			goSearchPage(name){
 				uni.navigateTo({
@@ -113,11 +146,18 @@
 					}
 				})
 			},
-			goNextPage(url){
-				if(url){
+			goNextPage(item){
+				
+				addHit({ id: item.id })
+				
+				if(item.type == 5){
 					uni.navigateTo({
-					    url
+					    url:'/pages/order/goodsDetail/goodsDetail?shopId='+item.shopId + '&goodsId='+ item.id
 					});
+				}else if(item.type == 1){
+					uni.navigateTo({
+						url:'/pages/common/webview/webview?url='+item.url
+					})
 				}
 			},
 			goGoodsDetail(shopId,goodsId){
@@ -140,6 +180,7 @@
 			top: 130upx;
 			left: 40upx;
 			z-index: 99999;
+			
 			.bg{
 				width:100%;
 				height:100%;
@@ -147,22 +188,38 @@
 				opacity: .4;
 				border-radius:30upx;
 			}
+			
+			/* #ifdef MP-WEIXIN || H5 */
 			.name{
 				text-align: center;
 				position: absolute;
 				top: 15upx;
 				left: 300upx;
 			}
+			/* #endif */
+			/* #ifdef APP-PLUS || APP-PLUS-NVUE */  
+			.name{
+				text-align: center;
+				position: absolute;
+				top:6upx;
+				left: 300upx;
+			}
+			/* #endif */
+			
 			.img{
 				width: 30upx;
 				height: 30upx;
 				position: absolute;
 				left: 260upx;
-				top: 6upx;
+				top: 0upx;
 				>image{
 					width: 100%;
 					height: 100%;
 				}
+			}
+			.platform{
+				position: relative;
+				top: 4upx !important;
 			}
 		}
 		
@@ -199,7 +256,7 @@
 		}
 		.seles{
 			.title{
-				width: 300upx;
+				width: 240upx;
 				height: 40upx;
 				margin: 30upx auto;
 				>image{
@@ -236,21 +293,20 @@
 				}
 			}
 		}
-		
 		.index-top-warp {
 			width: 100%;
 			overflow: hidden;
 			background: #fff;
 			swiper {
-				height: 460upx
+				height: 360upx
 			}
 			swiper-item {
-				height: 460upx //这里可以设置比上面高度小（留出大标语位置）或者设置一样大
+				height: 360upx //这里可以设置比上面高度小（留出大标语位置）或者设置一样大
 			}
 			.swiper-item {
 				image {
 					width: 100%;
-					height: 460upx;
+					height: 360upx;
 				}
 			}
 			.nav {

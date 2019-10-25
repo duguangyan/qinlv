@@ -5,7 +5,7 @@
 		</view> -->
 		<view class="body">
 			<view class="welcome">您好！</view>
-			<view class="subwel">欢迎来到垚润农业，立即登录</view>
+			<view class="subwel">欢迎来到上上农夫，立即登录</view>
 			<view class="name">
 				<input class="fs30" v-model="phone" @input="doIsLogin" type="text" placeholder="请输入手机号码" />
 			</view>
@@ -20,20 +20,39 @@
 		</view>
 		<view :class="{'bg-theme':isRight}" @click="dologin" class="btn">立即登录</view>
 
-		<view class="footer" @click="wXLogin">
+		<!--  #ifdef  MP-WEIXIN -->
+		<view class="footer">
+			<!-- <view class="fs24">其他登录方式</view> -->
+			<button
+			class='testbutton'
+			open-type="getUserInfo"
+			@getuserinfo="getuserinfox"
+			withCredentials="true"
+			>
+			其他登录方式
+			<view class="img">
+				<image src="../../static/img/icon-wechat.png"></image>
+			</view>
+			</button>
+		</view>
+		<!--  #endif -->
+		<!--  #ifdef  APP-PLUS -->
+		<view class="footer" @click="wxLogin">
 			<view class="fs24">其他登录方式</view>
 			<view class="img">
 				<image src="../../static/img/icon-wechat.png"></image>
 			</view>
-			
+			</button>
 		</view>
+		<!--  #endif -->
+		
 	</view>
 </template>
 
 <script>
 	import validator from '../../utils/validator.js'
 	import T from '@/utils/tips.js'
-	import { postUserLogin, getUserInfo, postUserSms } from '@/api/userApi.js'
+	import { postUserLogin, getUserInfoData, postUserSms, weixinLogin } from '@/api/userApi.js'
 	export default {
 		data() {
 			return {
@@ -45,21 +64,125 @@
 				setCodeInterval: '', // 定时器
 				deviceId: '', // 数据传值deviceId
 				appID: 'wxb8afa388fa540c2a',
+				weixinCode:''
 			}
 		},
 		components: {
 		
 		},
+		onHide() {
+			if(this.setCodeInterval!=''){
+				clearInterval(this.setCodeInterval)
+			}
+		},
 		onLoad() {
 			
 		},
 		onShow() {
-
+			uni.setStorageSync('isLogin',0)	
 		},
 		methods: {
-		    // 微信登录
-		    wXLogin() {
-		
+			// APP微信登录
+			wxLogin(){
+				let _this = this
+				uni.getProvider({
+						service: 'oauth',
+						success: function(res) {
+							console.log(res.provider);
+							//支持微信、qq和微博等
+							if (~res.provider.indexOf('weixin')) {
+								uni.login({
+									provider: 'weixin',
+									success: function(res) {
+										console.log('-------获取openid(unionid)-----');
+										console.log(JSON.stringify(res));
+										let accessToken = res.authResult.access_token;
+										let openId       = res.authResult.openid;
+										
+										let data = {
+											grant_type: 'wx_app',
+											scope: 2,
+											client_id: 'cwap',
+											client_secret: 'xx',
+											systemId: 2,
+											deviceId: _this.getUUID(), 
+											accessToken,
+											openId
+										}
+										console.log('data->>',data)
+										postUserLogin(data).then(res=>{
+											console.log(JSON.stringify(res))
+											if(res.code == '9999'){
+												uni.getUserInfo({
+													provider: 'weixin',
+													success: function(infoRes) {
+														console.log('-------获取微信用户所有-----');
+														console.log(JSON.stringify(infoRes.userInfo));
+														data.userInfo = infoRes.userInfo
+														uni.navigateTo({
+															url:'/pages/login/binding/binding?data='+ JSON.stringify(data)
+														})
+													}
+												});
+											}else{
+												uni.setStorageSync('access_token', res.access_token)
+												//uni.setStorageSync('access_token', res.refresh_token)
+												uni.setStorageSync('uid', res.id)
+											
+												// 获取用户信息
+												_this.getUserInfoDates()
+											}
+										})
+										
+									}
+								});
+							}
+						}
+					});
+			},
+		    // 小程序微信登录
+		    getuserinfox(e) {
+				let _this = this;
+				console.log(e)
+				uni.login({
+				  provider: 'weixin',
+				  success: function (loginRes) {
+					console.log(loginRes);
+					let data = {
+						grant_type: 'mini_program',
+						scope: 2,
+						client_id: 'cwap',
+						client_secret: 'xx',
+						systemId: 2,
+						deviceId: _this.getUUID(), 
+						miniCode: loginRes.code
+					}
+					console.log('data->',data)
+					postUserLogin(data).then(res=>{
+						if(res.code == '9999'){
+							uni.getUserInfo({
+								provider: 'weixin',
+								success: function(infoRes) {
+									console.log('-------获取微信用户所有-----');
+									console.log(JSON.stringify(infoRes.userInfo));
+									data.userInfo = infoRes.userInfo
+									uni.navigateTo({
+										url:'/pages/login/binding/binding?data='+ JSON.stringify(data)
+									})
+								}
+							});
+						}else{
+							uni.setStorageSync('access_token', res.access_token)
+							//uni.setStorageSync('access_token', res.refresh_token)
+							uni.setStorageSync('uid', res.id)
+						
+							// 获取用户信息
+							_this.getUserInfoDates()
+						}
+					})
+				  }
+				});
+				
 		    },
 			doIsLogin() {
 				this.isRight = !validator.isPhone(this.phone) && this.code !== ''
@@ -109,7 +232,12 @@
 		    // 登录
 		    dologin: function () {
 		      if (this.isRight) {
-		        this.deviceId = this.getUUID()
+				  //#ifdef APP-PLUS  
+				  var uuid = plus.device.uuid;  
+				  //#endif
+				  //#ifdef MP-WEIXIN
+				  this.deviceId = this.getUUID()
+				  //#endif
 		        let data = {
 		          grant_type: 'sms_code',
 		          scope: '2',
@@ -126,22 +254,27 @@
 					//uni.setStorageSync('access_token', res.refresh_token)
 					uni.setStorageSync('uid', res.id)
 					uni.setStorageSync('phone', this.phone)
-		          clearInterval(this.setCodeInterval)
+					if(this.setCodeInterval!=''){
+						clearInterval(this.setCodeInterval)
+					}
 		          // 获取用户信息
-		          this.getUserInfo()
+		          this.getUserInfoDates()
 		        }).catch((err) => {
 					T.tips(err.message || '登录错误')
 		        })
 		      }
 		    },
-		    getUserInfo() {
-		      getUserInfo().then((res) => {
+		    getUserInfoDates() {
+		      getUserInfoData().then((res) => {
 		        if (res.code === '1000') {
+				  if(res.data.phone){
+					uni.setStorageSync('phone', res.data.phone)
+				  }	
 		          uni.setStorageSync('nickName', res.data.nickName)
 		          uni.setStorageSync('headImgUrl', res.data.headImgUrl)
 				  // 返回上一页
 				  uni.navigateBack({
-				  	delta:1
+					  delta:1
 				  })
 		        }
 		      }).catch((err) => {
@@ -218,7 +351,7 @@
 				font-size: 30upx;
 				color: #000;
 				position: absolute;
-				right: 56upx;
+				right: 0upx;
 				top: 50%;
 				transform: translateY(-50%);
 				z-index: 99999;
@@ -250,6 +383,17 @@
 			bottom: 136upx;
 			text-align: center;
 			width: 100%;
+			button::after{
+				border:none;
+			}
+			button{
+				background: none;
+			}
+			input{
+			outline:none;
+			border:none;
+			list-style: none;
+			}
 			.img{
 				margin:  30upx auto;
 				width: 70upx;

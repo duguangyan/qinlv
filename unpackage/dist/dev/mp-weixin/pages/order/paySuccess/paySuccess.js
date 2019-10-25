@@ -132,7 +132,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var StrictlyGoods = function StrictlyGoods() {return Promise.all(/*! import() | components/common/StrictlyGoods */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/StrictlyGoods")]).then(__webpack_require__.bind(null, /*! @/components/common/StrictlyGoods.vue */ 304));};var AdvertisingPosition = function AdvertisingPosition() {return Promise.all(/*! import() | components/common/AdvertisingPosition */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/AdvertisingPosition")]).then(__webpack_require__.bind(null, /*! @/components/common/AdvertisingPosition.vue */ 311));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var StrictlyGoods = function StrictlyGoods() {return Promise.all(/*! import() | components/common/StrictlyGoods */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/StrictlyGoods")]).then(__webpack_require__.bind(null, /*! @/components/common/StrictlyGoods.vue */ 310));};var AdvertisingPosition = function AdvertisingPosition() {return Promise.all(/*! import() | components/common/AdvertisingPosition */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/AdvertisingPosition")]).then(__webpack_require__.bind(null, /*! @/components/common/AdvertisingPosition.vue */ 317));};var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
+
+
 
 
 
@@ -159,21 +161,37 @@ __webpack_require__.r(__webpack_exports__);
 {
   data: function data() {
     return {
-      orderSn: '' };
+      orderSn: '',
+      payPrice: '',
+      title: '请确认微信支付是否完成',
+      cancelText: '遇到问题',
+      confirmText: '已完成',
+      isShow: true };
 
   },
   components: {
     StrictlyGoods: StrictlyGoods,
-    AdvertisingPosition: AdvertisingPosition },
+    AdvertisingPosition: AdvertisingPosition,
+    Dialog: Dialog },
 
   onLoad: function onLoad(options) {
-    this.orderSn = options.orderSn;
+    this.orderSn = options.orderId;
+    this.payPrice = options.payPrice;
   },
   onShow: function onShow() {
 
 
   },
   methods: {
+    doConfirm: function doConfirm() {
+      this.isShow = false;
+
+    },
+    doCancel: function doCancel() {
+      uni.navigateTo({
+        url: '/pages/user/order/detail?orderId=' + this.orderSn });
+
+    },
     // 广告位url跳转
     goPath: function goPath(url) {
       if (url) {
@@ -184,7 +202,7 @@ __webpack_require__.r(__webpack_exports__);
     checkOrderDetal: function checkOrderDetal() {
       // 详情需要 orderId, shopId
       uni.navigateTo({
-        url: '/pages/order/goodsDetail/goodsDetail?orderId=' + this.orderSn });
+        url: '/pages/user/order/detail?orderId=' + this.orderSn });
 
     },
     // 返回首页

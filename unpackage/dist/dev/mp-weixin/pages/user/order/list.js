@@ -201,7 +201,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good.vue */ 287));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 294));};var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good.vue */ 293));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 300));};var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
 {
   name: 'ordlist',
   data: function data() {
@@ -242,7 +242,8 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
       nowIndexPrice: 0,
       isWx: true,
       payOrderId: '',
-      navIndex: 0 };
+      navIndex: 0,
+      platform: 0 };
 
   },
   components: {
@@ -253,8 +254,18 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
   onReachBottom: function onReachBottom() {
     this.loadBottom();
   },
+  onPullDownRefresh: function onPullDownRefresh() {
+    //监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+    console.log('refresh');
+    // 获取订单列表
+    this.orders = [];
+    this.getOrders();
+    setTimeout(function () {
+      uni.stopPullDownRefresh(); //停止下拉刷新动画
+    }, 1000);
+  },
   onLoad: function onLoad() {
-
+    this.platform = uni.getStorageSync('platform');
   },
   onShow: function onShow() {
     var orderNavIndex = uni.getStorageSync('orderNavIndex');
@@ -263,6 +274,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
       this.navIndex = orderNavIndex;
     }
     // 获取订单列表
+    this.orders = [];
     this.getOrders();
   },
   methods: {

@@ -4,7 +4,7 @@
 			<div class="top cf">
 				<div class="search fll">
 					<div class="icon-30">
-						<img src="@/static/img/icon-search2.png" width="15" height="15" alt />
+						<img :class="{'platform':platform==2}" src="@/static/img/icon-search2.png" />
 					</div>
 					<input class="fs28" v-model="search" placeholder="输入商品名称" />
 				</div>
@@ -41,14 +41,16 @@
 				search: "",
 				records: [],
 				loading: false,
-				index: ''
+				index: '',
+				platform: 0,
 			};
 		},
 		components:{
 			Dialog
 		},
 		onLoad() {
-			
+			// 设备样式兼容
+			this.platform = uni.getStorageSync('platform');
 		},
 		onShow() {
 			this.getRecord();
@@ -120,6 +122,8 @@
 
 <style lang="scss" scoped>
 	.search {
+		width: 750upx;
+		overflow-x: hidden;
 		li {
 			list-style: none;
 		}
@@ -169,6 +173,19 @@
 						width: 100%;
 						height: 100%;
 					}
+				}
+				
+				/* #ifdef APP-PLUS || APP-PLUS-NVUE */
+				.icon-30 {
+					width: 30upx;
+					height: 30upx;
+					top: 12upx;
+				}
+				/* #endif */
+				
+				.platform{
+					position: relative;
+					top: -10upx;
 				}
 			}
 

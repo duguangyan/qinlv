@@ -135,7 +135,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _request = __webpack_require__(/*! @/api/request.js */ 24);
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
@@ -146,10 +146,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
 //
 //
 //
-var _default = { data: function data() {return { title: '服务器出错了', img: '../../../static/img/icon-serveerr.png', text: '服务器崩溃了请等待下再刷新', from: '', redirect: '' };}, onBackPress: function onBackPress(options) {
-    debugger;
-  },
-  onLoad: function onLoad(options) {
+var _default = { data: function data() {return { title: '服务器出错了', img: '../../../static/img/icon-serveerr.png', text: '服务器崩溃了请等待下再刷新', from: '', redirect: '' };}, onLoad: function onLoad(options) {
     this.from = options.from;
     if (options.redirect) {
       this.redirect = options.redirect;
@@ -162,7 +159,7 @@ var _default = { data: function data() {return { title: '服务器出错了', im
     }
   },
   onShow: function onShow() {
-
+    uni.setStorageSync('err', 1);
   },
 
   methods: {

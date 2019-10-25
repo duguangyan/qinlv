@@ -12,7 +12,7 @@
 			</div>
 		</div>
 
-		<div class="sort-bar">
+		<div class="sort-bar" :class="{'platform':platform==2}">
 			<div :class="['general',curOpt==='gen-asc' || curOpt==='gen-desc'?'actived':'']" @click="doUniSort">
 				<span>综合排序</span>
 				<img class="upon" :src="curOpt==='gen-asc'?icon.UponAct:icon.Upon" />
@@ -55,12 +55,14 @@
 	import {
 		getList
 	} from "@/api/goodsApi.js";
+	import T from '@/utils/tips.js'
 	export default {
 		data() {
 			return {
 				loading: false,
 				search: {
 					// attrValueList: ["string"],
+					platform:0,
 					keywords: '',
 					pageIndex: 1,
 					pageSize: 10,
@@ -88,6 +90,8 @@
 		},
 		onLoad(options) {
 			this.search.keywords = options.search
+			// 设备样式兼容
+			this.platform = uni.getStorageSync('platform');
 			this.load();
 		},
 		onReachBottom() {
@@ -118,6 +122,7 @@
 				}
 				
 				this.search.pageIndex = 1;
+				this.list = [];
 				this.load();
 			},
 			doUniSort() {
@@ -131,6 +136,7 @@
 				}
 				
 				this.search.pageIndex = 1;
+				this.list = [];
 				this.load();
 			},
 			load() {
@@ -141,8 +147,13 @@
 					}
 				}
 				getList(params).then(data => {
-					this.list = this.list.concat(data.data.records)
-					this.loading = this.list.length < data.data.total
+					if(data.code == '1000'){
+						this.list = this.list.concat(data.data.records)
+						this.loading = this.list.length < data.data.total
+					}else{
+						T.tips(data.message || '操作失败')
+					}
+					
 				});
 			},
 			loadMore() {
@@ -204,8 +215,8 @@
 				}
 
 				.icon-30 {
-					width: 36upx;
-					height: 36upx;
+					width: 30upx;
+					height: 30upx;
 					position: absolute;
 					left: 30upx;
 					top: 8upx;
@@ -241,13 +252,13 @@
 		}
 
 		.sort-bar {
-			height: 80upx;
+			height: 120upx;
 			display: flex;
 			padding: 0 30upx;
 			align-items: center;
 			justify-content: space-between;
 			color: #999;
-			font-size: 24upx;
+			font-size: 28upx;
 			.icon-sx{
 				width: 16upx;
 				height: 20upx;
@@ -259,10 +270,10 @@
 
 				&.actived {
 					color: #000;
-					font-size: 26upx;
+					font-size: 28upx;
 				}
 
-				transition: font-size 0.2s;
+				// transition: font-size 0.2s;
 			}
 
 			.fil-price,
@@ -286,6 +297,27 @@
 				bottom: 10upx;
 			}
 			
+			
+			/* #ifdef APP-PLUS */  
+			// .upon {
+			// 	top: 8upx !important;
+			// }
+			
+			// .downon {
+			// 	bottom: 8upx !important;
+			// }
+			/* #endif */
+		
 		}
+		// .platform{
+		// 	.upon {
+		// 		top: 4upx !important;
+		// 	}
+			
+		// 	.downon {
+		// 		bottom: 4upx!important;
+		// 	}
+			
+		// }
 	}
 </style>

@@ -3,7 +3,7 @@
   <div class="advertising">
     <div class="div cf">
         <div class="img fll" v-for="(item,index) in adSets" :key="index">
-          <img @click="goPath(item.url)" :src="item.path" alt="广告">
+          <img @click="goPath(item)" :src="item.path" alt="广告">
         </div>
     </div>
   </div>
@@ -29,10 +29,16 @@ export default {
   },
   methods: {
     // 广告位url跳转
-    goPath(url) {
-      if (url) {
-        location.href = url
-      }
+    goPath(item) {
+      if (item.type === 1) {
+			  uni.navigateTo({
+			  	url:'/pages/common/webview/webview?url='+item.url
+			  })
+		}else if(item.type === 5){
+			uni.navigateTo({
+				url:'/pages/user/order/detail?shopId='+item.id+'&goodsId='+item.url
+			})
+		}
     },
     // 获取广告位数据
     getAdPositione() {

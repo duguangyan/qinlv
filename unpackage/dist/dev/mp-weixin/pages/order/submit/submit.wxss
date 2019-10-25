@@ -84,6 +84,9 @@
 .submit .list ._ul ._li .info.data-v-11fb24f7 {
         width: 460rpx;
 }
+.submit .list ._ul ._li .info .s1.data-v-11fb24f7 {
+          width: 350rpx;
+}
 .submit .list ._ul ._li .info .p1.data-v-11fb24f7 {
           height: 80rpx;
 }
@@ -303,5 +306,8 @@
 }
 .submit .operator .active.data-v-11fb24f7 {
       background-color: #fc2d2d;
+}
+.submit .operator .platform1.data-v-11fb24f7 {
+      top: 15rpx !important;
 }
 

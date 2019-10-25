@@ -5,12 +5,12 @@
     "iPad"
   ],
   "id": "__UNI__E3A114F",
-  "name": "沁绿农业",
+  "name": "上上农夫",
   "version": {
-    "name": "1.0.0",
-    "code": "100"
+    "name": "1.0.3",
+    "code": 103
   },
-  "description": "登录模板",
+  "description": "上上农夫专业的红薯销售平台，提供全国最优质的红薯",
   "launch_path": "__uniappview.html",
   "developer": {
     "name": "",
@@ -19,9 +19,10 @@
   },
   "permissions": {
     "Bluetooth": {},
+    "VideoPlayer": {},
     "Payment": {},
     "Share": {},
-    "VideoPlayer": {},
+    "OAuth": {},
     "UniNView": {
       "description": "UniNView原生渲染"
     }
@@ -107,23 +108,48 @@
           "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
         ]
       },
-      "apple": {},
+      "apple": {
+        "plistcmds": [
+          "Set :NSContactsUsageDescription 说明读取用户通讯录的原因",
+          "Set :NSMicrophoneUsageDescription 说明使用麦克风的原因",
+          "Set :NSPhotoLibraryUsageDescription 说明读取用户相册的原因",
+          "Set :NSCameraUsageDescription 说明使用用户相机的原因",
+          "Set :NSPhotoLibraryAddUsageDescription 说明向用户相册添加图片的原因",
+          "Set :NSLocationAlwaysUsageDescription 说明持续获取用户地理位置的原因",
+          "Set :NSLocationWhenInUseUsageDescription 说明使用用户地理位置的原因",
+          "Set :NSLocationAlwaysAndWhenInUseUsageDescription 说明使用用户地理位置的原因"
+        ],
+        "privacyDescription": {
+          "NSPhotoLibraryUsageDescription": "上上农业需要打开您的手机相册获取照片",
+          "NSPhotoLibraryAddUsageDescription": "上上农业需要打开您的手机相册保存照片",
+          "NSCameraUsageDescription": "上上农业需要打开您的手机摄像头获取照片",
+          "NSLocationWhenInUseUsageDescription": "上上农业需要打开您的地理位置获取地址定位信息",
+          "NSLocationAlwaysUsageDescription": "上上农业需要打开您的地理位置获取地址定位信息",
+          "NSLocationAlwaysAndWhenInUseUsageDescription": "上上农业需要打开您的地理位置获取地址定位信息"
+        }
+      },
       "plugins": {
         "push": {},
         "payment": {
-          "alipay": {},
           "weixin": {
             "appid": "wx26baf2267dd24e83",
-            "UniversalLinks": ""
-          }
+            "UniversalLinks": "https://m.qinlvny.com/static/apple-app-site-association"
+          },
+          "alipay": {}
         },
         "share": {
           "weixin": {
             "appid": "wx26baf2267dd24e83",
-            "UniversalLinks": ""
+            "UniversalLinks": "https://m.qinlvny.com/static/apple-app-site-association"
           }
         },
-        "oauth": {},
+        "oauth": {
+          "weixin": {
+            "appid": "wx26baf2267dd24e83",
+            "appsecret": "24be849c2cfc7e853dbc89e60d3a7a1c",
+            "UniversalLinks": "https://m.qinlvny.com/static/apple-app-site-association"
+          }
+        },
         "audio": {
           "mp3": {
             "description": "Android平台录音支持MP3格式文件"
@@ -139,7 +165,7 @@
       }
     },
     "uni-app": {
-      "compilerVersion": "2.3.6",
+      "compilerVersion": "2.3.7",
       "control": "v8",
       "nvueCompiler": "weex",
       "renderer": "auto"

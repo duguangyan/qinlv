@@ -61,7 +61,7 @@
     font-size: 30rpx;
     color: #000;
     position: absolute;
-    right: 56rpx;
+    right: 0rpx;
     top: 50%;
     -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
@@ -93,6 +93,17 @@
   bottom: 136rpx;
   text-align: center;
   width: 100%;
+}
+.login .footer button.data-v-e7c23868::after {
+    border: none;
+}
+.login .footer button.data-v-e7c23868 {
+    background: none;
+}
+.login .footer input.data-v-e7c23868 {
+    outline: none;
+    border: none;
+    list-style: none;
 }
 .login .footer .img.data-v-e7c23868 {
     margin: 30rpx auto;

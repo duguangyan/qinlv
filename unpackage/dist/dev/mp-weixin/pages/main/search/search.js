@@ -169,7 +169,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
 {
   data: function data() {
     return {
@@ -178,14 +178,16 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
       search: "",
       records: [],
       loading: false,
-      index: '' };
+      index: '',
+      platform: 0 };
 
   },
   components: {
     Dialog: Dialog },
 
   onLoad: function onLoad() {
-
+    // 设备样式兼容
+    this.platform = uni.getStorageSync('platform');
   },
   onShow: function onShow() {
     this.getRecord();

@@ -155,14 +155,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var StrictlyGoods = function StrictlyGoods() {return Promise.all(/*! import() | components/common/StrictlyGoods */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/StrictlyGoods")]).then(__webpack_require__.bind(null, /*! @/components/common/StrictlyGoods */ 304));};var AdvertisingPosition = function AdvertisingPosition() {return Promise.all(/*! import() | components/common/AdvertisingPosition */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/AdvertisingPosition")]).then(__webpack_require__.bind(null, /*! @/components/common/AdvertisingPosition */ 311));};var _default =
+
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var StrictlyGoods = function StrictlyGoods() {return Promise.all(/*! import() | components/common/StrictlyGoods */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/StrictlyGoods")]).then(__webpack_require__.bind(null, /*! @/components/common/StrictlyGoods */ 310));};var AdvertisingPosition = function AdvertisingPosition() {return Promise.all(/*! import() | components/common/AdvertisingPosition */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/AdvertisingPosition")]).then(__webpack_require__.bind(null, /*! @/components/common/AdvertisingPosition */ 317));};var _default =
 {
   name: "success",
   data: function data() {
     return {
       query: '', // 获取传递参数
       adPositione: '', // 获取广告位信息
-      orderid: '',
+      orderId: '',
       payPrice: '' };
 
   },
@@ -171,7 +172,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
     AdvertisingPosition: AdvertisingPosition },
 
   onLoad: function onLoad(options) {
-    this.orderid = options.orderSn;
+    this.orderId = options.orderId;
     this.payPrice = options.payPrice;
   },
   methods: {
@@ -185,12 +186,12 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
     checkOrderDetal: function checkOrderDetal() {
       // 详情需要 orderId, shopId
       uni.navigateTo({
-        url: '/pages/user/order/detail?orderid=' + this.orderid });
+        url: '/pages/user/order/detail?orderId=' + this.orderId });
 
     },
     // 返回首页
     goHome: function goHome() {
-      uni.navigateTo({
+      uni.switchTab({
         url: '/pages/main/main' });
 
     } } };exports.default = _default;

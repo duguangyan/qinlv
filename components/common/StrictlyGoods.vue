@@ -7,7 +7,7 @@
 
 		<div class="items">
 			<ul class="cf">
-				<li class="fll" @click="goGoodsDetail(item.id)" v-for="(item,index) in goodsObj.goodsDetailRespList" :key="index">
+				<li class="fll" @click="goGoodsDetail(item)" v-for="(item,index) in goodsObj.goodsDetailRespList" :key="index">
 					<div class="img">
 						<img :src="item.imgUri" alt="图片">
 					</div>
@@ -46,10 +46,17 @@
 			this.getPageLayoutList()
 		},
 		methods: {
-			goGoodsDetail(id) {
-				this.$router.push({
-					path: 'gooddetail/' + id
-				})
+			goGoodsDetail(item) {
+				if(item.type == 1){
+					uni.navigateTo({
+						url:'/pages/common/webview/webview?url='+item.url
+					})
+				} else {
+					uni.navigateTo({
+						url:'/pages/order/goodsDetail/goodsDetail?shopId='+item.shopId + '&goodsId='+ item.id
+					})
+				}
+				
 			},
 			// 获取严选好物列表
 			getPageLayoutList() {

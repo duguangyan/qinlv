@@ -4,6 +4,7 @@
 			"path": "pages/main/main",
 			"style": {
 				"navigationBarTitleText": "沁绿农业",
+				"enablePullDownRefresh": true,
 				"navigationStyle":"custom",
 				"app-plus":{
 					"titleView":false
@@ -75,7 +76,8 @@
         }, {
             "path" : "pages/user/order/list",
             "style" : {
-				"navigationBarTitleText": "我的订单" 
+				"navigationBarTitleText": "我的订单" ,
+				"enablePullDownRefresh": true
 			}
         }, {
             "path" : "pages/user/order/finish",
@@ -95,7 +97,7 @@
         }, {
             "path" : "pages/user/order/success",
             "style" : {
-				"navigationBarTitleText": "订单完成" 
+				"navigationBarTitleText": "交易已完成" 
 			}
         }, {
             "path" : "pages/user/pay/success",
@@ -149,6 +151,18 @@
             "path" : "pages/common/err/err",
             "style" : {
 				"navigationBarTitleText": "异常" 
+			}
+        }
+        ,{
+            "path" : "pages/common/webview/webview",
+            "style" : {
+				"navigationBarTitleText": "网络地址" 
+			}
+        }
+        ,{
+            "path" : "pages/login/binding/binding",
+            "style" : {
+				"navigationBarTitleText": "绑定手机号" 
 			}
         }
     ],

@@ -22,9 +22,9 @@
 
         <!-- 价格区间 -->
         <div class="price-area">
-          <input v-model="filter.priceBegin" type="text" placeholder="最低价" @blur="valiPriceBegin" />
+          <input v-model="filter.priceBegin" type="number" placeholder="最低价" @blur="valiPriceBegin" />
           <span>-</span>
-          <input v-model="filter.priceEnd" type="text" placeholder="最高价" @blur="valiPriceEnd" />
+          <input v-model="filter.priceEnd" type="number" placeholder="最高价" @blur="valiPriceEnd" />
         </div>
         <div class="weight"></div>
         <div class="operator">

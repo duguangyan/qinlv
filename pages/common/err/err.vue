@@ -22,9 +22,6 @@
 						redirect:''
 			};
 		},
-		onBackPress(options){
-			debugger
-		},
 		onLoad(options) {
 			this.from = options.from
 			if(options.redirect){
@@ -38,7 +35,7 @@
 			  }
 		},
 		onShow() {
-			
+			uni.setStorageSync('err',1)
 		},
 		
 		methods: {

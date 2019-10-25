@@ -5,27 +5,25 @@
 			<div class="body">
 				<div class="cf item">
 					<span class="fll">收货人姓名</span>
-					<input class="flr" placeholder="真实姓名" v-model="address.name" @change="getName" />
+					<input class="flr" maxlength='20' placeholder="真实姓名" v-model="address.name" @change="getName" />
 				</div>
 				
 				<div class="cf item">
 					<span class="fll">手机号码</span>
-					<input class="flr" placeholder="输入手机号码" v-model="address.phone" @change="getPhone" />
+					<input type="number" maxlength='12' class="flr" placeholder="输入手机号码" v-model="address.phone" @change="getPhone" />
 				</div>
 				
-
 				<div class="cf item" @click="showPicker">
 					<span class="fll">所在地区</span>
-					<input class="flr" disabled v-model="fullAddress" />
+					<input class="flr" placeholder="请选择地址" disabled v-model="fullAddress" />
 					<div class="tag-go">
 						<img src="@/static/img/tag-go.png" width="10" height="10" alt class="pr" />
 					</div>
-			
 				</div>
 				
 				<div class="cf item">
 					<span class="fll">详细地址</span>
-					<input class="flr" placeholder="如道路,小区门牌号等详细地址" v-model="address.address" @change="getAddressDetall"></input>
+					<input class="flr" maxlength='50' placeholder="如道路,小区门牌号等详细地址" v-model="address.address" @change="getAddressDetall"></input>
 				</div>
 				
 				<div class="mt10 cf set-default">

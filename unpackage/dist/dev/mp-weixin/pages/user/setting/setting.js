@@ -165,7 +165,7 @@ var _default =
 
   },
   onShow: function onShow() {
-    this.isLogin = localStorage.getItem('access_token');
+    this.isLogin = uni.getStorageSync('access_token');
   },
   methods: {
     showDialog: function showDialog() {
@@ -175,10 +175,12 @@ var _default =
         confirmText: '退出',
         success: function success(res) {
           if (res.confirm) {
-            var isPhone = localStorage.getItem('isPhone');
-            localStorage.clear(); // 清除缓存
-            localStorage.setItem('isPhone', isPhone);
-            self.$router.go(-1); // 返回上一层
+            var records = uni.getStorageSync('records');
+            uni.clearStorageSync(); // 清除缓存
+            uni.setStorageSync('records', records);
+            uni.switchTab({
+              url: '/pages/user/user' });
+
           } else if (res.cancel) {
             console.log('用户点击取消');
           }

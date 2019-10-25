@@ -25,8 +25,13 @@ var vm = {
   },
   watch:{
     src(val){
-      vm.$refs.player.src = val
-      vm.$refs.player.load()
+	  try{
+	  	vm.$refs.player.src = val
+	  	vm.$refs.player.load()
+	  }catch(e){
+	  	//TODO handle the exception
+	  }
+      
     }
   },
   data() {

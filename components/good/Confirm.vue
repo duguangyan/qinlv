@@ -217,7 +217,7 @@ export default {
           skuId: node.id,
           num: this.nums
         }).then(data => {
-          // this.$router.push(this.nav);
+      
           this.$emit("update");
         });
       } else {
@@ -236,7 +236,9 @@ export default {
 			})
     
         } else {
-          this.$router.push(this.nav);
+			uni.switchTab({
+				url:'/pages/order/order'
+			})
         }
       }
     }

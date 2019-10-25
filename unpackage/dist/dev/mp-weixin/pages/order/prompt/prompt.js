@@ -147,8 +147,10 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
+
 var _areaApi = __webpack_require__(/*! @/api/areaApi.js */ 209);
-var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200); //
+var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
+var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35); //
 //
 //
 //
@@ -163,23 +165,38 @@ var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200); //
 //
 //
 //
-var Provinces = function Provinces() {return Promise.all(/*! import() | components/common/Provinces */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Provinces")]).then(__webpack_require__.bind(null, /*! @/components/common/Provinces.vue */ 340));};var _default = { data: function data() {return { list: [], isShow: false, curAddress: '', prompt: '', id: '' };}, components: { Provinces: Provinces }, onLoad: function onLoad(options) {
+//
+var Provinces = function Provinces() {return Promise.all(/*! import() | components/common/Provinces */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Provinces")]).then(__webpack_require__.bind(null, /*! @/components/common/Provinces.vue */ 346));};var _default = { data: function data() {return { list: [], isShow: false, curAddress: '', prompt: '', id: '', promptFree: '' };}, components: { Provinces: Provinces }, onLoad: function onLoad(options) {
     this.id = options.id;
   },
   onShow: function onShow() {var _this = this;
-    (0, _areaApi.getArea)().then(function (res) {
-      _this.list = res.data;
+    // getArea().then(res=>{
+    //   this.list = res.data
+    // })
+    var data = {
+      parentId: 0 };
+
+    (0, _userApi.getChildrenByPId)(data).then(function (res) {
+      if (res.code === '1000') {
+        if (res.data.length > 0) {
+          res.data.forEach(function (item) {
+            _this.list.push(item.name);
+          });
+        }
+      }
     });
   },
   methods: {
     selArea: function selArea(data) {var _this2 = this;
       this.curAddress = data;
       this.isShow = false;
+
       (0, _goodsApi.getFreightPrompt)({
         id: this.id,
         province: data }).
       then(function (data) {
-        _this2.prompt = data.data || '无邮费项';
+        _this2.prompt = data.data ? data.data.PostSolutionItem : '无城市邮费项';
+        _this2.promptFree = data.data ? data.data.PostSolutionFreeItem : '无条件邮费项';
       });
     } } };exports.default = _default;
 

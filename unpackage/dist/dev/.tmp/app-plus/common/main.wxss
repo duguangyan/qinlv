@@ -37,6 +37,38 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*每个页面公共css */
 ._a{
 	text-decoration:none;
@@ -96,6 +128,9 @@
 }
 .text-gray {
     color: #666;
+}
+.text-000 {
+    color: #000;
 }
 .text-333 {
     color: #333;
@@ -819,5 +854,4 @@ word-spacing-30{
 }
 .cf:after{display:block;clear:both;content:"";visibility:hidden;height:0}
 .cf{zoom:1}
-
 

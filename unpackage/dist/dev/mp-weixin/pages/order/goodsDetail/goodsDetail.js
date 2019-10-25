@@ -121,7 +121,7 @@ var render = function() {
     }
 
     _vm.e2 = function($event) {
-      return _vm.$router.push("/")
+      _vm.isSure = false
     }
 
     _vm.e3 = function($event) {
@@ -129,18 +129,14 @@ var render = function() {
     }
 
     _vm.e4 = function($event) {
-      _vm.isSure = false
-    }
-
-    _vm.e5 = function($event) {
       _vm.isShare = false
     }
 
-    _vm.e6 = function($event) {
+    _vm.e5 = function($event) {
       _vm.isStandard = false
     }
 
-    _vm.e7 = function($event) {
+    _vm.e6 = function($event) {
       _vm.isPlayer = false
     }
   }
@@ -393,6 +389,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var _iconCollect = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-collect.png */ 198));
 var _iconCollect2 = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-collect2.png */ 199));
 var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
@@ -405,11 +430,13 @@ var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
 
 
 
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));
-var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var Share = function Share() {return Promise.all(/*! import() | components/good/Share */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/good/Share")]).then(__webpack_require__.bind(null, /*! @/components/good/Share */ 318));};var Player = function Player() {return __webpack_require__.e(/*! import() | components/common/Player */ "components/common/Player").then(__webpack_require__.bind(null, /*! @/components/common/Player.vue */ 326));};var Standard = function Standard() {return __webpack_require__.e(/*! import() | components/good/Standard */ "components/good/Standard").then(__webpack_require__.bind(null, /*! @/components/good/Standard */ 333));};var _default =
+var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));
+var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var Share = function Share() {return Promise.all(/*! import() | components/good/Share */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/good/Share")]).then(__webpack_require__.bind(null, /*! @/components/good/Share */ 324));};var Player = function Player() {return __webpack_require__.e(/*! import() | components/common/Player */ "components/common/Player").then(__webpack_require__.bind(null, /*! @/components/common/Player.vue */ 332));};var Standard = function Standard() {return __webpack_require__.e(/*! import() | components/good/Standard */ "components/good/Standard").then(__webpack_require__.bind(null, /*! @/components/good/Standard */ 339));};var _default =
 {
   data: function data() {
     return {
+      opt: false,
       indicatorDots: false,
       autoplay: true,
       interval: 3000,
@@ -472,152 +499,161 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
         _this.counter = data.data.itemNum;
       });
     }
-
     (0, _goodsApi.getDetail)({
       shopId: this.shopId,
       goodsId: this.goodsId }).
     then(function (data) {
-      var d = data.data.goodsDetail;
-      d.hasColletion = data.data.hasColletion;
-      d.standardList = [];
+      if (data.code == '1000') {
+        var d = data.data.goodsDetail;
+        d.hasColletion = data.data.hasColletion;
+        d.standardList = [];
 
-      //处理金额
-      d.goods.minPrice = _util.default.formatMoney(d.goods.minPrice, 2);
-      d.goods.maxPrice = _util.default.formatMoney(d.goods.maxPrice, 2);
+        //处理金额
+        d.goods.minPrice = _util.default.formatMoney(d.goods.minPrice, 2);
+        d.goods.maxPrice = _util.default.formatMoney(d.goods.maxPrice, 2);
 
-      // 处理视频和图片
-      var imageList = [];
-      d.goodsImgVOList.forEach(function (item) {
-        if (item.type != 2) {
-          imageList.push(item);
-        } else {
-          _this.videoObj[item.sort] = item.imgUrl;
-        }
-      });
-      _this.imageList = imageList;
-      _this.total = imageList.length;
-
-      if (d.goods.unitName == null) {
-        d.goods.unitName = d.goodsDetailSpecList[0].name;
-      }
-
-      var setNode = function setNode(node, key) {
-        node[key] = {};
-        return node[key];
-      };
-
-      // 生成规格树
-      var tree = {};
-      // let specLen = d.goodsDetailSpecList.length;
-      var parentNodes = [tree];
-
-      d.goodsDetailSpecList.forEach(function (spec) {
-        // 为每个父节点插入子节点
-        parentNodes.forEach(function (node) {
-          var nodes = [];
-          spec.goodsDetailSpecValueList.forEach(function (val, index) {
-            // 重置当前遍历的父节点
-            nodes[index] = setNode(node, val.value);
-          });
-          parentNodes = nodes;
-        });
-      });
-
-      var sufName;
-      var isSection =
-      d.goods.showStyle == 1 && d.goodsSkuList.length > 1 ? true : false;
-      // if (isSection) {
-      //   sufName = d.goodsDetailSpecList[0].valueSuffix;
-      // } else {
-      //   sufName = "";
-      // }
-      sufName = d.goodsDetailSpecList[0].valueSuffix || "";
-
-      var grades = JSON.parse(d.goodsSkuList[0].priceExp);
-      if (d.goods.showStyle == 2) {
-        d.goodsSkuList[0].price = grades[0].price;
-        d.goodsSkuList[0].startNum = grades[0].startQuantity;
-      }
-
-      // 配置节点
-      var isInvalid = /* 是否无效效商品 */true;
-      d.goodsSkuList.forEach(function (sku, exIndex) {
-        var curNode = tree;
-        var len = sku.attrValueList.length;
-        d.standardList[exIndex] = [];
-
-        sku.attrValueList.forEach(function (val, index) {
-          curNode = curNode[val.value];
-          if (len - 1 == index) {
-            // 配置参数
-            curNode.disabled = !!(sku.stock < sku.startNum);
-            curNode.price = sku.price;
-            curNode.stock = sku.stock;
-            curNode.id = sku.id;
-            curNode.startNum = sku.startNum;
-
-          }
-
-          // 顺便处理规格
-          if (isSection) {
-            d.standardList[exIndex].push("".concat(val.value).concat(d.goods.unitName, "\u8D77\u6279"));
-            d.standardList[exIndex].push("".concat(
-            val.value).concat(sufName, "/").concat(d.goods.unitName));
-
+        // 处理视频和图片
+        var imageList = [];
+        d.goodsImgVOList.forEach(function (item) {
+          if (item.type != 2) {
+            imageList.push(item);
           } else {
-            d.standardList[exIndex].push(val.value);
+            _this.videoObj[item.sort] = item.imgUrl;
           }
-
-          // 累计无效次
-          isInvalid = isInvalid && curNode.disabled;
         });
-        d.standardList[exIndex].push("\uFFE5".concat(sku.price, "/").concat(d.goods.unitName));
-      });
-      d.tree = tree;
-      d.isInvalid = isInvalid;
+        _this.imageList = imageList;
+        _this.total = imageList.length;
 
-      if (d.goods.status != 3) {
-        _tips.default.tips("商品已下架啦,看下其它的吧");
+        if (d.goods.unitName == null) {
+          d.goods.unitName = d.goodsDetailSpecList[0].name;
+        }
+
+        var setNode = function setNode(node, key) {
+          node[key] = {};
+          return node[key];
+        };
+
+        // 生成规格树
+        var tree = {};
+        // let specLen = d.goodsDetailSpecList.length;
+        var parentNodes = [tree];
+
+        d.goodsDetailSpecList.forEach(function (spec) {
+          // 为每个父节点插入子节点
+          parentNodes.forEach(function (node) {
+            var nodes = [];
+            spec.goodsDetailSpecValueList.forEach(function (val, index) {
+              // 重置当前遍历的父节点
+              nodes[index] = setNode(node, val.value);
+            });
+            parentNodes = nodes;
+          });
+        });
+
+        var sufName;
+        var isSection =
+        d.goods.showStyle == 1 && d.goodsSkuList.length > 1 ? true : false;
+        // if (isSection) {
+        //   sufName = d.goodsDetailSpecList[0].valueSuffix;
+        // } else {
+        //   sufName = "";
+        // }
+        sufName = d.goodsDetailSpecList[0].valueSuffix || "";
+
+        var grades = JSON.parse(d.goodsSkuList[0].priceExp);
+        if (d.goods.showStyle == 2) {
+          d.goodsSkuList[0].price = grades[0].price;
+          d.goodsSkuList[0].startNum = grades[0].startQuantity;
+        }
+
+        // 配置节点
+        var isInvalid = /* 是否无效效商品 */true;
+        d.goodsSkuList.forEach(function (sku, exIndex) {
+          var curNode = tree;
+          var len = sku.attrValueList.length;
+          d.standardList[exIndex] = [];
+
+          sku.attrValueList.forEach(function (val, index) {
+            curNode = curNode[val.value];
+            if (len - 1 == index) {
+              // 配置参数
+              curNode.disabled = !!(sku.stock < sku.startNum);
+              curNode.price = sku.price;
+              curNode.stock = sku.stock;
+              curNode.id = sku.id;
+              curNode.startNum = sku.startNum;
+            }
+            // 顺便处理规格
+            if (isSection) {
+              d.standardList[exIndex].push("".concat(val.value).concat(d.goods.unitName, "\u8D77\u6279"));
+              d.standardList[exIndex].push("".concat(
+              val.value).concat(sufName, "/").concat(d.goods.unitName));
+
+            } else {
+              d.standardList[exIndex].push(val.value);
+            }
+
+            // 累计无效次
+            isInvalid = isInvalid && curNode.disabled;
+          });
+          d.standardList[exIndex].push("\uFFE5".concat(sku.price, "/").concat(d.goods.unitName));
+        });
+        d.tree = tree;
+        d.isInvalid = isInvalid;
+
+        if (d.goods.status != 3) {
+          _tips.default.tips("商品已下架啦,看下其它的吧");
+        }
+
+        if (d.goods.showStyle == 2) {
+          var sku = d.goodsSkuList[0].attrValueList[0];
+          d.goodsList = [];
+          // let grades = JSON.parse(d.goodsSkuList[0].priceExp);
+
+          grades.forEach(function (item, index) {
+            d.goodsList.push({
+              startNum: item.startQuantity,
+              price: item.price,
+              unit: sku.name,
+              id: sku.skuId });
+
+          });
+        }
+
+        d.sufName = sufName;
+
+        _this.good = d || {};
+
+        // 商品购买面板
+        _this.deep = _this.good.goodsDetailSpecList.length;
+        _this.good.goodsDetailSpecList.forEach(function (spec) {
+          _this.curs.push({
+            key: spec.goodsDetailSpecValueList[0].value,
+            disabled: undefined });
+
+        });
+        _this.calcPrice();
+        _this.opt = true;
+        // 获得邮费方案
+        (0, _goodsApi.getPostItem)({
+          id: d.goods.postSettingId }).
+        then(function (data) {
+          _this.postType = data.data.type;
+        });
       }
 
-      if (d.goods.showStyle == 2) {
-        var sku = d.goodsSkuList[0].attrValueList[0];
-        d.goodsList = [];
-        // let grades = JSON.parse(d.goodsSkuList[0].priceExp);
-
-        grades.forEach(function (item, index) {
-          d.goodsList.push({
-            startNum: item.startQuantity,
-            price: item.price,
-            unit: sku.name,
-            id: sku.skuId });
-
-        });
-      }
-
-      d.sufName = sufName;
-
-      _this.good = d || {};
-
-      // 商品购买面板
-      _this.deep = _this.good.goodsDetailSpecList.length;
-      _this.good.goodsDetailSpecList.forEach(function (spec) {
-        _this.curs.push({
-          key: spec.goodsDetailSpecValueList[0].value,
-          disabled: undefined });
-
-      });
-      _this.calcPrice();
-
-      // 获得邮费方案
-      (0, _goodsApi.getPostItem)({
-        id: d.goods.postSettingId }).
-      then(function (data) {
-        _this.postType = data.data.type;
-      });
     });
   },
   methods: {
+    submitInfo: function submitInfo(e) {
+      console.log(e.detail.formId);
+
+    },
+    goHome: function goHome() {
+      uni.switchTab({
+        url: '/pages/main/main' });
+
+    },
     doIncrease: function doIncrease() {
       if (this.nums < this.stock) {
         // this.nums = oldval;
@@ -740,7 +776,7 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
           var submitData = JSON.stringify({
             addressId: "",
             goodsCount: this.nums,
-            goodsId: this.goodId,
+            goodsId: this.goodsId,
             shopId: this.shopId,
             skuId: node.id
             // userId: localStorage.getItem("uid")
@@ -789,10 +825,27 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     changeBanner: function changeBanner(index) {
       this.cur = index;
     },
-    showConfirm: function showConfirm(nav) {
+
+
+
+
+
+
+
+    showConfirm1: function showConfirm1(e, nav) {
+      var formId = e.detail.formId;
+      var data = {
+        userId: uni.getStorageSync('uid'),
+        appId: uni.getStorageSync('appid'),
+        formId: formId
+
+        // 获取formId
+      };(0, _userApi.getSetFormId)(data);
+      console.log('formId', formId);
       this.nav = nav;
       this.isSure = true;
     },
+
     changeCollect: function changeCollect() {
       this.good.hasColletion = !this.good.hasColletion;
 

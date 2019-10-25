@@ -191,16 +191,15 @@ var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35); //
 //
 //
 //
-var _default = { data: function data() {return { list: [], from: '' };}, onLoad: function onLoad(options) {this.from = options.from || ''; // 获取用户地址列表
-    this.getUserAddresList();}, onShow: function onShow() {// 获取用户地址列表
+var _default = { data: function data() {return { list: [], from: '', hasOrders: true };}, onLoad: function onLoad(options) {this.from = options.from || '';}, onShow: function onShow() {// 获取用户地址列表
     this.getUserAddresList();}, methods: { // 返回订单页面
     goBlack: function goBlack(item) {if (this.from === 'submit') {uni.setStorageSync('address', JSON.stringify(item));uni.navigateBack({ delta: 1 });}}, // 获取用户地址列表
-    getUserAddresList: function getUserAddresList() {var _this = this;(0, _userApi.getUserAddressList)().then(function (res) {
+    getUserAddresList: function getUserAddresList() {var _this = this;
+      (0, _userApi.getUserAddressList)().then(function (res) {
         if (res.code === '1000') {
           _this.list = res.data;
+          _this.hasOrders = _this.list.length > 0;
         }
-      }).catch(function (err) {
-        uni.showToast(err.message || '地址列表获取错误');
       });
     },
     goAddedit: function goAddedit(id) {

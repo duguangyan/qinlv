@@ -28,7 +28,7 @@
 			};
 		},
 		onShow() {
-			this.isLogin = localStorage.getItem('access_token')
+			this.isLogin = uni.getStorageSync('access_token')
 		},
 		methods:{
 			showDialog() {
@@ -38,10 +38,12 @@
 				  confirmText: '退出',
 			      success: function (res) {
 			          if (res.confirm) {
-			              let isPhone = localStorage.getItem('isPhone')
-			              localStorage.clear() // 清除缓存
-			              localStorage.setItem('isPhone', isPhone)
-			              self.$router.go(-1) // 返回上一层
+			              let records = uni.getStorageSync('records')
+			              uni.clearStorageSync() // 清除缓存
+						  uni.setStorageSync('records',records)
+			              uni.switchTab({
+			              	url:'/pages/user/user'
+			              })
 			          } else if (res.cancel) {
 			              console.log('用户点击取消');
 			          }

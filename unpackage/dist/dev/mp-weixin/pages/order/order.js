@@ -222,7 +222,7 @@ var _iconUncheck = _interopRequireDefault(__webpack_require__(/*! ../../static/i
 var _iconPlat = _interopRequireDefault(__webpack_require__(/*! ../../static/img/icon-plat.png */ 55));
 
 var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));
 var _cartApi = __webpack_require__(/*! @/api/cartApi.js */ 57);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
@@ -306,12 +306,12 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       isclock: false, // 锁
       clock: true };}, components: { Dialog: Dialog }, onLoad: function onLoad() {}, onShow: function onShow() {// 获取进货单列表
     this.getCartOrderList();}, methods: { doConfirm: function doConfirm() {this.doDel();}, doCancel: function doCancel() {this.isShow = false;}, // 去详情
-    goDetail: function goDetail(shopId, orderId) {this.$router.push({ path: '/gooddetail/' + shopId + '/' + orderId });}, // 结算
-    submit: function submit() {var _this = this;if (!this.clock) return false;this.clock = false;var cartIdList = [];this.list.forEach(function (item) {item.items.forEach(function (it) {if (it.checked === 1) {cartIdList.push(it.cartId);}});});var userId = uni.getStorageSync('uid');var data = { userId: userId, cartIdList: cartIdList };(0, _cartApi.getOrderCart)(data).then(function (res) {if (res.code === '1000') {_this.clock = true;uni.navigateTo({ url: '/pages/order/submit/submit?submitData=' + JSON.stringify(res.data) });} else {_tips.default.tips(res.message || '结算失败');_this.clock = true;}}).catch(function (err) {_tips.default.tips(err.message || '结算失败');_this.clock = true;});
+    goDetail: function goDetail(shopId, orderId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + orderId });}, // 结算
+    submit: function submit() {var _this = this;if (!this.clock) return false;this.clock = false;var cartIdList = [];this.list.forEach(function (item) {item.items.forEach(function (it) {if (it.checked == 1 && item.status != 4) {cartIdList.push(it.cartId);}});});var userId = uni.getStorageSync('uid');var data = { userId: userId, cartIdList: cartIdList };(0, _cartApi.getOrderCart)(data).then(function (res) {if (res.code === '1000') {_this.clock = true;uni.navigateTo({ url: '/pages/order/submit/submit?submitData=' + JSON.stringify(res.data) });} else {_tips.default.tips(res.message || '结算失败');_this.clock = true;}}).catch(function (err) {_tips.default.tips(err.message || '结算失败');_this.clock = true;
+      });
     },
     // 去结算
     goPay: function goPay() {
-      // this.$router.push('/submit')
       if (this.totalMoney > 0) {
         this.submit();
       } else {
@@ -339,18 +339,18 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       var val = e.target.value;
       if (validator.isNumber(val)) {
         if (val < this.list[index].items[idx].startNum) {
-          Toast('数量不能小于起批量:' + this.list[index].items[idx].startNum);
+          _tips.default.tips('数量不能小于起批量:' + this.list[index].items[idx].startNum);
           this.list[index].items[idx].num = this.list[index].items[idx].startNum;
           this.changeNum(index, idx, this.list[index].items[idx].skuId, this.list[index].items[idx].startNum);
         } else if (val > this.list[index].items[idx].stock) {
-          Toast('数量不能超过库存量:' + this.list[index].items[idx].stock);
+          _tips.default.tips('数量不能超过库存量:' + this.list[index].items[idx].stock);
           this.list[index].items[idx].num = this.list[index].items[idx].stock;
           this.changeNum(index, idx, this.list[index].items[idx].skuId, this.list[index].items[idx].stock);
         } else {
           this.changeNum(index, idx, this.list[index].items[idx].skuId, val);
         }
       } else {
-        Toast('请输入正确的数量');
+        _tips.default.tips('请输入正确的数量');
         this.changeNum(index, idx, this.list[index].items[idx].skuId, this.list[index].items[idx].startNum);
       }
     },
@@ -368,6 +368,7 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       (0, _cartApi.getCartChangeNum)(data).then(function (res) {
         if (res.code === '1000') {
           _this3.list[index].items[idx].num = res.data.num;
+          _this3.list[index].items[idx].price = res.data.price;
           _this3.list[index].items[idx].totalPrice = res.data.totalPrice;
           _this3.list[index].items[idx].isColor999 = false;
           _this3.calculationTotalMoney();
@@ -393,7 +394,7 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
           console.log(this.clickNum);
           this.changeNum(index, idx, this.list[index].items[idx].skuId, num);
         } else {
-          Toast('数量不能小于起批量:' + this.list[index].items[idx].startNum);
+          _tips.default.tips('数量不能小于起批量:' + this.list[index].items[idx].startNum);
         }
       } else {
         if (this.list[index].items[idx].num < this.list[index].items[idx].stock) {
@@ -401,7 +402,7 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
           _num++;
           this.changeNum(index, idx, this.list[index].items[idx].skuId, _num);
         } else {
-          Toast('购买数量不能超过库存量:' + this.list[index].items[idx].stock);
+          _tips.default.tips('购买数量不能超过库存量:' + this.list[index].items[idx].stock);
         }
 
       }
@@ -503,6 +504,7 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
 
     },
     getCartOrderList: function getCartOrderList() {var _this6 = this;
+      this.list = [];
       (0, _cartApi.getCartOrderList)().then(function (res) {
         if (res.code === '1000') {
           if (res.data.cartLines && res.data.cartLines.length > 0) {

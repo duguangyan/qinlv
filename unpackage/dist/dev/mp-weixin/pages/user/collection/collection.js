@@ -184,7 +184,7 @@ var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
 
 
 
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
@@ -229,9 +229,9 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
 //
 //
 //
-var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default = { data: function data() {return { currentPage: 1, list: [], isEdit: false, countChecked: 0 /* 选中的计数器 */, total: 0, Checked: _iconChecked.default, Uncheck: _iconUncheck.default, pageSize: 10, allLoaded: false, loadText: '上拉加载更多...', hasAllCheck: false, ids: [], isShow: false, title: '您确定从收藏夹删除吗?' };}, components: { Dialog: Dialog }, onLoad: function onLoad() {}, onShow: function onShow() {// status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")
-    this.getCollectionData();}, onReachBottom: function onReachBottom() {this.loadBottom();}, methods: { doConfirm: function doConfirm() {this.doDel();}, doCancel: function doCancel() {this.isShow = false;}, // 去详情
-    goDetail: function goDetail(shopId, orderId) {uni.navigateTo({ url: '/gooddetail/' + shopId + '/' + orderId });}, // 全选
+var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default = { data: function data() {return { currentPage: 1, list: [], isEdit: false, countChecked: 0 /* 选中的计数器 */, total: 0, Checked: _iconChecked.default, Uncheck: _iconUncheck.default, pageSize: 10, allLoaded: false, loadText: '上拉加载更多...', hasAllCheck: false, ids: [], isShow: false, title: '您确定从收藏夹删除吗?' };}, components: { Dialog: Dialog }, onLoad: function onLoad() {// status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")
+    this.getCollectionData();}, onShow: function onShow() {}, onReachBottom: function onReachBottom() {this.loadBottom();}, methods: { doConfirm: function doConfirm() {this.doDel();}, doCancel: function doCancel() {this.isShow = false;}, // 去详情
+    goDetail: function goDetail(shopId, orderId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + orderId });}, // 全选
     doCheckAll: function doCheckAll() {var _this = this;
       this.ids = [];
       if (this.hasAllCheck) {

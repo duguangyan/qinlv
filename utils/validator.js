@@ -12,7 +12,7 @@ let isPhone = function (phone) {
 let isNickName = function (nickName) {
   // 去掉前后空格
     let name = nickName.replace(/^\s+|\s+$/g,"")
-    return name.length>2 && name.length<21
+    return name.length>=2 && name.length<21
 }
 
 /**

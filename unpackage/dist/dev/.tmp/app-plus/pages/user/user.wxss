@@ -75,6 +75,7 @@
 .mine .order .title.data-v-5daecc58 {
       border-bottom: 1rpx solid #F5F5F5;
       padding-bottom: 20rpx;
+      height: 60rpx;
 }
 .mine .order .title .img.data-v-5daecc58 {
         width: 20rpx;
@@ -93,6 +94,8 @@
 .mine .order .title > .p1.data-v-5daecc58 {
         color: #333;
         font-weight: blod;
+        position: relative;
+        top: 10rpx;
 }
 .mine .order .title > image.data-v-5daecc58 {
         margin-left: 4rpx;
@@ -112,7 +115,7 @@
           -ms-flex-align: center;
               align-items: center;
       text-align: center;
-      padding-top: 20rpx;
+      padding-top: 45rpx;
 }
 .mine .order .tags .li.data-v-5daecc58 {
         list-style: none;

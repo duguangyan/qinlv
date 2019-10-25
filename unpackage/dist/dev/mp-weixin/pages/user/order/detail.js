@@ -251,8 +251,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));
-var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common/Dialog.vue */ 164));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good */ 287));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay */ 294));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));
+var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common/Dialog.vue */ 164));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good */ 293));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay */ 300));};var _default =
 {
   name: 'orddetail',
   data: function data() {
@@ -267,7 +267,9 @@ var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common
       statusText: '',
       status: '',
       nowIndexPrice: 0,
-      isOrderDialog: 0 };
+      isOrderDialog: 0,
+      isPay: 0,
+      platform: 0 };
 
   },
   components: {
@@ -276,18 +278,20 @@ var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common
 
   onLoad: function onLoad(options) {
     this.orderId = options.orderId;
-    this.shopId = options.shopId;
+    this.shopId = options.shopId || 1;
+    this.platform = uni.getStorageSync('platform');
   },
   onShow: function onShow() {
     // 获取参数
-
     if (this.orderId) {
       this.getOrderDetailById(this.orderId, this.shopId);
     } else {
       _tips.default.tips('订单ID或店铺ID不能为空');
-      uni.navigateBack({
-        delta: 1 });
+      setTimeout(function () {
+        uni.switchTab({
+          url: '/pages/main/main' });
 
+      }, 1500);
     }
   },
   methods: {
@@ -378,36 +382,38 @@ var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common
     // 取消订单
     postOrderCancel: function postOrderCancel() {
       this.isShow = true;
-      debugger;
       this.isOrderDialog = 0;
     },
     // 获取订单详情
     getOrderDetailById: function getOrderDetailById(orderId, shopId) {var _this2 = this;
       var data = {
-        orderId: orderId,
-        shopId: shopId };
+        orderId: orderId };
 
+      if (shopId) {
+        data.shopId = shopId;
+      }
       (0, _userApi.getOrderDetailById)(data).then(function (res) {
         if (res.code === '1000') {
           _this2.order = res.data[0];
           _this2.statusText = '';
           if (_this2.order.shopOrder) {
             _this2.status = _this2.order.shopOrder.status;
-            switch (_this2.order.shopOrder.status) {
+
+            switch (_this2.status) {
               case -1:
                 _this2.statusText = '已取消';
                 break;
               case 0:
-                _this2.statusText = '待支付';
+                _this2.statusText = '待付款';
                 break;
               case 1:
                 _this2.statusText = '已支付';
                 break;
               case 2:
-                _this2.statusText = '未发货';
+                _this2.statusText = '待发货';
                 break;
               case 3:
-                _this2.statusText = '已发货';
+                _this2.statusText = '待收货';
                 break;
               case 4:
                 _this2.statusText = '已完成';

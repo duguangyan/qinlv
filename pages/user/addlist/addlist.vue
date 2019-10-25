@@ -3,12 +3,12 @@
 		<div class="list">
 			<div slot="icon" v-if="list.length > 0" class="icon" @click="goAddedit(0)">添加地址</div>
 
-			<div class="no-data" v-if="list.length<=0">
+			<div class="no-data" v-if="!hasOrders">
 				<img src="@/static/img/icon-address-no.png" alt="图片">
-				<p class="text-999 fs-12">还没有收货地址哦 去添加一个吧</p>
+				<p class="text-999 fs24">还没有收货地址哦 去添加一个吧</p>
 				<div class="bg-red" @click="goAddedit(0)">添加新地址</div>
 			</div>
-			<div class="list" v-if="list.length>0">
+			<div class="list" v-if="hasOrders">
 				<li v-for="item in list" :key="item.id">
 					<div @click="goBlack(item)">
 						<div class="upon">
@@ -37,13 +37,13 @@
 				list: [
 
 				],
-				from: ''
+				from: '',
+				hasOrders: true
 			};
 		},
 		onLoad(options) {
 			this.from = options.from || ''
-			// 获取用户地址列表
-			this.getUserAddresList()
+			
 		},
 		onShow() {
 			// 获取用户地址列表
@@ -63,10 +63,9 @@
 			getUserAddresList() {
 				getUserAddressList().then(res => {
 					if (res.code === '1000') {
-						this.list = res.data
+						this.list = res.data;
+						this.hasOrders = this.list.length > 0;
 					}
-				}).catch(err => {
-					uni.showToast(err.message || '地址列表获取错误')
 				})
 			},
 			goAddedit(id) {

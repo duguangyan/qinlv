@@ -734,7 +734,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1177,6 +1177,8 @@ function parseBaseApp(vm, _ref3)
 
 
       this.$vm.$scope = this;
+      // vm 上也挂载 globalData
+      this.$vm.globalData = this.globalData;
 
       this.$vm._isMounted = true;
       this.$vm.__call_hook('mounted', args);
@@ -8219,7 +8221,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8240,14 +8242,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8323,7 +8325,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8768,7 +8770,7 @@ var getFreightPrompt = function getFreightPrompt(data) {
   return (0, _request.request)({
     url: '/api/goods/postSolution/selectSolution',
     method: 'post',
-    // type: 'form',
+    type: 'form',
     data: data });
 
 };exports.getFreightPrompt = getFreightPrompt;
@@ -8791,13 +8793,20 @@ var getPostItem = function getPostItem(data) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.getArea = void 0;var _request = __webpack_require__(/*! ./request.js */ 24);
+Object.defineProperty(exports, "__esModule", { value: true });exports.getProvinces = exports.getArea = void 0;var _request = __webpack_require__(/*! ./request.js */ 24);
 var getArea = function getArea(data) {
   return (0, _request.request)({
     url: '/api/goods/goods/provinces',
     data: data });
 
 };exports.getArea = getArea;
+
+var getProvinces = function getProvinces(data) {
+  return (0, _request.request)({
+    url: '/api/upms/area/getChildrenByPId',
+    data: data });
+
+};exports.getProvinces = getProvinces;
 
 /***/ }),
 
@@ -8820,7 +8829,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAu4AAAAECAIAAABe
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.getHomeList = void 0;var _request = __webpack_require__(/*! ./request.js */ 24);
+Object.defineProperty(exports, "__esModule", { value: true });exports.addHit = exports.getHomeList = void 0;var _request = __webpack_require__(/*! ./request.js */ 24);
 
 // 获取首页数据
 var getHomeList = function getHomeList(data) {
@@ -8829,6 +8838,15 @@ var getHomeList = function getHomeList(data) {
     data: data });
 
 };exports.getHomeList = getHomeList;
+
+var addHit = function addHit(data) {
+  return (0, _request.request)({
+    url: '/api/act/ad/addHit',
+    method: 'post',
+    data: data,
+    type: 'form' });
+
+};exports.addHit = addHit;
 
 /***/ }),
 
@@ -8840,18 +8858,16 @@ var getHomeList = function getHomeList(data) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-// const apiUrl = 'http://192.168.0.202:7000'; // 开发
+/* WEBPACK VAR INJECTION */(function(uni) { // const apiUrl = 'https://m.qinlvny.com'; // 正式
 var apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
-// const apiUrl = 'http://m.qinlvny.com'; // 正式
-var versionNumber = 'v1.0.0'; //版本号
+var versionNumber = 'v1.0.3'; //版本号
 
 if (apiUrl == 'http://192.168.0.202:7000') {
-  uni.setStorageSync('v', versionNumber + ' 开发');
-  uni.setStorageSync('s', '开发');
+  uni.setStorageSync('V', versionNumber + ' 开发');
+  uni.setStorageSync('S', '开发');
 } else {
-  uni.setStorageSync('v', versionNumber + '正式');
-  uni.setStorageSync('s', '正式');
+  uni.setStorageSync('V', versionNumber + '正式');
+  uni.setStorageSync('S', '正式');
 }
 Promise.prototype.finally = function (callback) {
   var P = this.constructor;
@@ -8862,6 +8878,7 @@ Promise.prototype.finally = function (callback) {
     });});
 
 };
+
 /*
     * @param {*} params 
     * @param {*} url String
@@ -8870,6 +8887,7 @@ Promise.prototype.finally = function (callback) {
     * @param {*} fail Function
     * @param {*} complete Function
     */
+var islogin = uni.getStorageSync('isLogin');
 var request = function request() {var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   return new Promise(function (resolve, reject) {
     var data = params.data || {};
@@ -8897,6 +8915,14 @@ var request = function request() {var params = arguments.length > 0 && arguments
     if (params.url.indexOf('/api') != -1) {
       newUrl = newUrl.split('/api')[1];
     }
+    try {
+      if (params.data.grant_type == 'mini_program' || params.data.grant_type == 'wx_app') {
+        apiUrl = 'http://2b7306b237.wicp.vip';
+      }
+    } catch (e) {
+      //TODO handle the exception
+    }
+
 
     uni.onNetworkStatusChange(function (res) {
       if (!res.isConnected) {
@@ -8905,7 +8931,6 @@ var request = function request() {var params = arguments.length > 0 && arguments
 
       }
     });
-
 
     uni.request({
       url: apiUrl + newUrl,
@@ -8917,55 +8942,93 @@ var request = function request() {var params = arguments.length > 0 && arguments
         // 请求成功
         var res = res.data;
         if (res.code == '1000') {
+          uni.setStorageSync('err', 0);
           resolve(res);
         } else {
           // 请求成功非1000	
-          if (res.code === '1011') {
-            var content = '登录过期，请重新登录！';
-            if (uni.getStorageSync('access_token') == '') {
-              content = '请先登录！';
+          if (res.code === '1011' || res.code === '1007') {
+
+            tonken过期, 重新换取token;
+            if (res.message == 'Full authentication is required to access this resource') {
+              var tokenData = {
+                grant_type: 'refresh_token',
+                scope: 1,
+                client_id: 'cwap',
+                client_secret: 'xx',
+                refresh_token: uni.getStorageSync('refresh_token') };
+
+
+              uni.request({
+                url: apiUrl + '/oauth/oauth/token',
+                method: 'POST',
+                data: tokenData,
+                header: {
+                  'content-type': 'application/multipart/form-data' },
+
+                success: function success(res) {
+                  if (res.code == '1000') {
+                    uni.request({
+                      url: apiUrl + newUrl,
+                      method: params.method || 'GET',
+                      data: params.data,
+                      header: header,
+                      success: function success(res) {
+                        if (res.code == '1000') {
+                          resolve(res);
+                        }
+
+                      } });
+
+                  }
+                } });
+
+
+            } else {
+              var content = '登录过期，请重新登录！';
+              if (uni.getStorageSync('access_token') == '') {
+                content = '请先登录！';
+              }
+              if (res.message == '无权访问！') {
+                content = '无权访问！';
+              }
+              var _islogin = uni.getStorageSync('isLogin');
+              if (_islogin != 1) {
+                uni.setStorageSync('isLogin', 1);
+                uni.showModal({
+                  title: '提示',
+                  content: content,
+                  success: function success(res) {
+                    if (res.confirm) {
+                      // uni.setStorageSync('isLogin',0)	
+                      uni.navigateTo({
+                        url: '/pages/login/login' });
+
+                    } else if (res.cancel) {
+                      console.log('用户点击取消');
+                      uni.setStorageSync('isLogin', 0);
+                    }
+                  } });
+
+              }
             }
-            uni.showModal({
-              title: '提示',
-              content: content,
-              success: function success(res) {
-                if (res.confirm) {
-                  uni.navigateTo({
-                    url: '/pages/login/login' });
 
-                } else if (res.cancel) {
-                  console.log('用户点击取消');
-                }
-              } });
 
+
+          } else {
+            // if(!uni.getStorageSync('access_token')){
+            // 	if(uni.getStorageSync('err') != 1){
+            // 		uni.navigateTo({
+            // 			url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
+            // 		})
+            // 	}
+            // }
 
           }
-          // else{
-          // 	params.url = newUrl;
-          //
-          // 	let pages = getCurrentPages(); // 当前页面
-          // 	let beforePage = pages[pages.length - 2]; // 前一个页面
-          // 	let url = beforePage.route
-          // 	if(url =! '/pages/common/err/err'){
-          // 		uni.navigateTo({
-          // 			url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
-          // 		})
-          // 	}
-          //
-          //
-          // 	console.log('params===>>')
-          // 	console.log(params)
-          // 	uni.navigateTo({
-          // 		url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
-          // 	})
-          //
-
-
-          // }
           resolve(res);
         }
       },
       fail: function fail(err) {
+
         uni.hideToast();
         // 请求失败处理
         if (err.errMsg || err.errMsg === "request:fail timeout") {
@@ -8973,11 +9036,6 @@ var request = function request() {var params = arguments.length > 0 && arguments
             icon: 'none',
             title: '网络请求超时' });
 
-        } else {
-          // uni.showToast({
-          // 	icon:'none',
-          // 	title:res.message || '网络请求超时'
-          // })
         }
         reject(err);
       },
@@ -9014,6 +9072,28 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBNkNDREM2MUNFNDQxMUU5QTQ5M0RCRDhFNzI3Q0E4OSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBNkNDREM2MkNFNDQxMUU5QTQ5M0RCRDhFNzI3Q0E4OSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkE2Q0NEQzVGQ0U0NDExRTlBNDkzREJEOEU3MjdDQTg5IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkE2Q0NEQzYwQ0U0NDExRTlBNDkzREJEOEU3MjdDQTg5Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+T7CtywAAAUZJREFUeNpi/P//P8NgBkwMgxyMOpBSwIJLws/Pj64O2bRp08iOYh8g3gfEn6EYxPYdLA5sBuLNQGwBxKegGMQGxVnrQDsQFHI1QHwCiJWB2BmKQezjQFxFaUhS6sBCIP4BxEFA/BxJHMQOhsoVDqQDTaEh9RyLHEjsKFQNzRx4GIj/48G8QOyIRx4U3TwEzDg82AtqRrIKaiiwhdL/iTGMBEC0eaN18agDicjlR0jgU681QySwIZE/GsWjDhx14KgDh0yvjkhwBK3CJ8SnuwNtSeSP3DT4GUoLUcFOmBlfqOnA01A6jgoOTEEzkyoO7IfSnUCcB8SCZDhMEKq3Gc1MqjhwCxC3ADEbEE8E4ncEOkLY8DuoXpAZ7dDOPlUzSS20E74fiL+SEYJfoXr9oR16mhQzW6CYfl2+0SHgUQeOOhA/AAgwACaHXq4JfDMHAAAAAElFTkSuQmCC"
+
+/***/ }),
+
+/***/ 25:
+/*!****************************************!*\
+  !*** D:/zl/uniapp-qinlv/utils/tips.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var tips = function tips(message) {
+  wx.showToast({
+    title: message,
+    icon: 'none',
+    duration: 1500 });
+
+};var _default =
+
+
+{
+  tips: tips };exports.default = _default;
 
 /***/ }),
 
@@ -9094,7 +9174,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAUCAYAAACE
 
 /***/ }),
 
-/***/ 282:
+/***/ 288:
 /*!***********************************************************************************!*\
   !*** D:/zl/uniapp-qinlv/components/common/mpvue-citypicker/city-data/province.js ***!
   \***********************************************************************************/
@@ -9244,7 +9324,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 283:
+/***/ 289:
 /*!*******************************************************************************!*\
   !*** D:/zl/uniapp-qinlv/components/common/mpvue-citypicker/city-data/city.js ***!
   \*******************************************************************************/
@@ -10758,7 +10838,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 284:
+/***/ 290:
 /*!*******************************************************************************!*\
   !*** D:/zl/uniapp-qinlv/components/common/mpvue-citypicker/city-data/area.js ***!
   \*******************************************************************************/
@@ -23311,28 +23391,6 @@ areaData;exports.default = _default;
 
 /***/ }),
 
-/***/ 297:
-/*!***************************************************!*\
-  !*** D:/zl/uniapp-qinlv/static/img/tag-close.png ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAB60lEQVRYR+2XTW4CMQyFn+EkiBskI3XRc7DuL9BeqIICrbrmGt1UIjkCnKR1ZcSgAQLJxFRC6niHRk6+vOc4hnDhQRfOhwZQ61CjYKOgVgFtflINGmNuiejaOTcE8KPZtNfrtZfL5QjAp3PuI7ZWFNBaewNgBqBNRO+LxeIxF1LgVqvVhJnvAHwDeIhBpgC+AHguT6qAbBVFMd3AlcuNnHPbtUNqRgEBkLV2DKCvgAzBTTYlw6dsTgGU/ANIZn7z3gt0rCaz4dYbx4q08j0HMgQ3dc4NAJxUbutWDcC6SraMMRMiuq/sUQuuroLbQ1lrXwHIbV7Hxm75XapyFrhcwFLJY5Awxkz3lJs556Rek2ytulqnBverQWpyIr2squSaftfWbDiNglW7dyD3TqGCOwdgaXcIUg33LwAP6vCSLE69JLV73zlucRBu8/RxoM1kQ+a0GYEL9cDqu0zngqwLmAJXOhR6TZImmFyLD+ASZkM1ZKqCmplQBZkCqIHb2h2YppPsjgIWRTFmZpnf1pFg67EJ7mA2ZOax9/7pWELSS2KM6RORjPwkcJ1Opz+fz+UPT05UIZmZh957eSaPRlRByTTGiIJX3W53oIDbud0Avrz30q5ORhJgbJG//N4AatVtFGwU1Cqgzb/4GvwFHpg8OGXpxKIAAAAASUVORK5CYII="
-
-/***/ }),
-
-/***/ 298:
-/*!*****************************************************!*\
-  !*** D:/zl/uniapp-qinlv/static/img/icon-wechat.png ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,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"
-
-/***/ }),
-
 /***/ 3:
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -23364,7 +23422,29 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 301:
+/***/ 303:
+/*!***************************************************!*\
+  !*** D:/zl/uniapp-qinlv/static/img/tag-close.png ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAB60lEQVRYR+2XTW4CMQyFn+EkiBskI3XRc7DuL9BeqIICrbrmGt1UIjkCnKR1ZcSgAQLJxFRC6niHRk6+vOc4hnDhQRfOhwZQ61CjYKOgVgFtflINGmNuiejaOTcE8KPZtNfrtZfL5QjAp3PuI7ZWFNBaewNgBqBNRO+LxeIxF1LgVqvVhJnvAHwDeIhBpgC+AHguT6qAbBVFMd3AlcuNnHPbtUNqRgEBkLV2DKCvgAzBTTYlw6dsTgGU/ANIZn7z3gt0rCaz4dYbx4q08j0HMgQ3dc4NAJxUbutWDcC6SraMMRMiuq/sUQuuroLbQ1lrXwHIbV7Hxm75XapyFrhcwFLJY5Awxkz3lJs556Rek2ytulqnBverQWpyIr2squSaftfWbDiNglW7dyD3TqGCOwdgaXcIUg33LwAP6vCSLE69JLV73zlucRBu8/RxoM1kQ+a0GYEL9cDqu0zngqwLmAJXOhR6TZImmFyLD+ASZkM1ZKqCmplQBZkCqIHb2h2YppPsjgIWRTFmZpnf1pFg67EJ7mA2ZOax9/7pWELSS2KM6RORjPwkcJ1Opz+fz+UPT05UIZmZh957eSaPRlRByTTGiIJX3W53oIDbud0Avrz30q5ORhJgbJG//N4AatVtFGwU1Cqgzb/4GvwFHpg8OGXpxKIAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 304:
+/*!*****************************************************!*\
+  !*** D:/zl/uniapp-qinlv/static/img/icon-wechat.png ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+
+/***/ 307:
 /*!****************************************!*\
   !*** D:/zl/uniapp-qinlv/api/payApi.js ***!
   \****************************************/
@@ -23396,7 +23476,7 @@ exports.payAlipayByWap = payAlipayByWap;var payWXpayByWap = function payWXpayByW
 
 /***/ }),
 
-/***/ 321:
+/***/ 327:
 /*!*****************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-moment.png ***!
   \*****************************************************/
@@ -23407,7 +23487,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw
 
 /***/ }),
 
-/***/ 33:
+/***/ 34:
 /*!*********************************************!*\
   !*** D:/zl/uniapp-qinlv/utils/validator.js ***!
   \*********************************************/
@@ -23429,7 +23509,7 @@ var isPhone = function isPhone(phone) {
 var isNickName = function isNickName(nickName) {
   // 去掉前后空格
   var name = nickName.replace(/^\s+|\s+$/g, "");
-  return name.length > 2 && name.length < 21;
+  return name.length >= 2 && name.length < 21;
 };
 
 /**
@@ -23470,28 +23550,6 @@ var isNumber = function isInteger(obj) {
 
 /***/ }),
 
-/***/ 34:
-/*!****************************************!*\
-  !*** D:/zl/uniapp-qinlv/utils/tips.js ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var tips = function tips(message) {
-  wx.showToast({
-    title: message,
-    icon: 'none',
-    duration: 1500 });
-
-};var _default =
-
-
-{
-  tips: tips };exports.default = _default;
-
-/***/ }),
-
 /***/ 35:
 /*!*****************************************!*\
   !*** D:/zl/uniapp-qinlv/api/userApi.js ***!
@@ -23500,7 +23558,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.getUserInfo = exports.postUserSms = exports.postUserLogin = exports.postUserHeadImg = exports.getUserAddressList = exports.getChildrenByPId = exports.postUserAddressInsert = exports.getAddressById = exports.postAddressUpdate = exports.postUpdateNickname = exports.postAddressDelete = exports.getCollectGoodsList = exports.getOrderPageMyOrder = exports.postUserImgUpload = exports.getOrderDetailById = exports.postOrderCancel = exports.postOrderConfirm = exports.postOrderLogisticsQuery = exports.getCollectGoodsRemove = exports.getAdPositioneById = exports.getPageLayout = void 0;var _request = __webpack_require__(/*! ./request.js */ 24);
+Object.defineProperty(exports, "__esModule", { value: true });exports.getUserInfoData = exports.postUserSms = exports.postUserLogin = exports.postUserHeadImg = exports.getUserAddressList = exports.getChildrenByPId = exports.postUserAddressInsert = exports.getAddressById = exports.postAddressUpdate = exports.postUpdateNickname = exports.postAddressDelete = exports.getCollectGoodsList = exports.getOrderPageMyOrder = exports.postUserImgUpload = exports.getOrderDetailById = exports.postOrderCancel = exports.postOrderConfirm = exports.postOrderLogisticsQuery = exports.getCollectGoodsRemove = exports.getAdPositioneById = exports.getPageLayout = exports.getSetFormId = exports.weixinLogin = void 0;var _request = __webpack_require__(/*! ./request.js */ 24);
 
 
 // 用户登录
@@ -23524,7 +23582,7 @@ exports.postUserLogin = postUserLogin;var postUserSms = function postUserSms(dat
 };
 
 // 获取用户信息
-exports.postUserSms = postUserSms;var getUserInfo = function getUserInfo(data) {
+exports.postUserSms = postUserSms;var getUserInfoData = function getUserInfoData(data) {
   return (0, _request.request)({
     url: '/api/upms/user/getUserInfo',
     data: data });
@@ -23532,7 +23590,7 @@ exports.postUserSms = postUserSms;var getUserInfo = function getUserInfo(data) {
 };
 
 // 跟新用户头像
-exports.getUserInfo = getUserInfo;var postUserHeadImg = function postUserHeadImg(data) {
+exports.getUserInfoData = getUserInfoData;var postUserHeadImg = function postUserHeadImg(data) {
   return (0, _request.request)({
     url: '/api/upms/userImg/upload',
     data: data,
@@ -23699,11 +23757,32 @@ exports.getAdPositioneById = getAdPositioneById;var getPageLayout = function get
     data: data,
     type: 'form' });
 
-};exports.getPageLayout = getPageLayout;
+};
+
+
+// formId 提交
+exports.getPageLayout = getPageLayout;var getSetFormId = function getSetFormId(data) {
+  return (0, _request.request)({
+    url: '/api/wechat/accessInterface/setFormId',
+    data: data,
+    type: 'form',
+    method: 'post' });
+
+};
+
+// 微信登录
+exports.getSetFormId = getSetFormId;var weixinLogin = function weixinLogin(data) {
+  return (0, _request.request)({
+    url: '/api/oauth/socialLogin/weixin',
+    data: data,
+    type: 'form',
+    method: 'post' });
+
+};exports.weixinLogin = weixinLogin;
 
 /***/ }),
 
-/***/ 352:
+/***/ 358:
 /*!****************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-aimup.png ***!
   \****************************************************/
@@ -23714,7 +23793,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 
 /***/ }),
 
-/***/ 353:
+/***/ 359:
 /*!******************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-aimdown.png ***!
   \******************************************************/
@@ -23725,7 +23804,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 
 /***/ }),
 
-/***/ 359:
+/***/ 365:
 /*!**************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-min.png ***!
   \**************************************************/
@@ -23736,7 +23815,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 
 /***/ }),
 
-/***/ 360:
+/***/ 366:
 /*!***************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-plus.png ***!
   \***************************************************/
@@ -25096,7 +25175,7 @@ exports.getOrderCart = getOrderCart;var postCreateOrder = function postCreateOrd
 /*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.0.0-23620191019001","_inBundle":false,"_integrity":"sha512-gBpkjEOQ/LhTnXBVi266PoTNT5VJtbYoEVy+gZ8/LN9/jKEWeWndd2Lu7vn7hmUySVM5K5UV/Bd5LEVkgXB8mA==","_location":"/@dcloudio/uni-stat","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"@dcloudio/uni-stat@next","name":"@dcloudio/uni-stat","escapedName":"@dcloudio%2funi-stat","scope":"@dcloudio","rawSpec":"next","saveSpec":null,"fetchSpec":"next"},"_requiredBy":["#USER","/","/@dcloudio/vue-cli-plugin-uni"],"_resolved":"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-23620191019001.tgz","_shasum":"5c006b903ae7bc407c8b1786de249ffbf72da996","_spec":"@dcloudio/uni-stat@next","_where":"/Users/fxy/Documents/DCloud/HbuilderX-plugins/release/uniapp-cli","author":"","bugs":{"url":"https://github.com/dcloudio/uni-app/issues"},"bundleDependencies":false,"deprecated":false,"description":"","devDependencies":{"@babel/core":"^7.5.5","@babel/preset-env":"^7.5.5","eslint":"^6.1.0","rollup":"^1.19.3","rollup-plugin-babel":"^4.3.3","rollup-plugin-clear":"^2.0.7","rollup-plugin-commonjs":"^10.0.2","rollup-plugin-copy":"^3.1.0","rollup-plugin-eslint":"^7.0.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.2.0","rollup-plugin-replace":"^2.2.0","rollup-plugin-uglify":"^6.0.2"},"files":["dist","package.json","LICENSE"],"gitHead":"bc995d4b43b68e7fe7914ae6b2112117d36e63a8","homepage":"https://github.com/dcloudio/uni-app#readme","license":"Apache-2.0","main":"dist/index.js","name":"@dcloudio/uni-stat","repository":{"type":"git","url":"git+https://github.com/dcloudio/uni-app.git","directory":"packages/uni-stat"},"scripts":{"build":"NODE_ENV=production rollup -c rollup.config.js","dev":"NODE_ENV=development rollup -w -c rollup.config.js"},"version":"2.0.0-23620191019001"};
+module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.0.0-23720191024001","_inBundle":false,"_integrity":"sha512-vJEk493Vdb8KueNzR2otzDi23rfyRcQBo/t1R41MwNGPk+AUB94gh10+HVLo98DRcvMzkuVofz3KXTAfEx24iw==","_location":"/@dcloudio/uni-stat","_phantomChildren":{},"_requested":{"type":"tag","registry":true,"raw":"@dcloudio/uni-stat@next","name":"@dcloudio/uni-stat","escapedName":"@dcloudio%2funi-stat","scope":"@dcloudio","rawSpec":"next","saveSpec":null,"fetchSpec":"next"},"_requiredBy":["#USER","/","/@dcloudio/vue-cli-plugin-uni"],"_resolved":"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-23720191024001.tgz","_shasum":"18272814446a9bc6053bc92666ec7064a1767588","_spec":"@dcloudio/uni-stat@next","_where":"/Users/fxy/Documents/DCloud/HbuilderX-plugins/release/uniapp-cli","author":"","bugs":{"url":"https://github.com/dcloudio/uni-app/issues"},"bundleDependencies":false,"deprecated":false,"description":"","devDependencies":{"@babel/core":"^7.5.5","@babel/preset-env":"^7.5.5","eslint":"^6.1.0","rollup":"^1.19.3","rollup-plugin-babel":"^4.3.3","rollup-plugin-clear":"^2.0.7","rollup-plugin-commonjs":"^10.0.2","rollup-plugin-copy":"^3.1.0","rollup-plugin-eslint":"^7.0.0","rollup-plugin-json":"^4.0.0","rollup-plugin-node-resolve":"^5.2.0","rollup-plugin-replace":"^2.2.0","rollup-plugin-uglify":"^6.0.2"},"files":["dist","package.json","LICENSE"],"gitHead":"a725c04ef762e5df78a9a69d140c2666e0de05fc","homepage":"https://github.com/dcloudio/uni-app#readme","license":"Apache-2.0","main":"dist/index.js","name":"@dcloudio/uni-stat","repository":{"type":"git","url":"git+https://github.com/dcloudio/uni-app.git","directory":"packages/uni-stat"},"scripts":{"build":"NODE_ENV=production rollup -c rollup.config.js","dev":"NODE_ENV=development rollup -w -c rollup.config.js"},"version":"2.0.0-23720191024001"};
 
 /***/ }),
 
@@ -25119,7 +25198,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACN
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/main/main": { "navigationBarTitleText": "沁绿农业", "navigationStyle": "custom", "usingComponents": {} }, "pages/login/login": { "navigationBarTitleText": "登录", "usingComponents": {} }, "pages/user/user": { "navigationBarTitleText": "我的", "navigationStyle": "custom", "usingComponents": {} }, "pages/order/order": { "navigationBarTitleText": "进货单", "navigationStyle": "custom", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/setting/setting": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/user/protocal/protocal": { "navigationBarTitleText": "服务条款与协议", "usingComponents": {} }, "pages/user/about/about": { "navigationBarTitleText": "关于我们", "usingComponents": {} }, "pages/user/info/info": { "navigationBarTitleText": "个人信息", "usingComponents": {} }, "pages/user/nickname/nickname": { "navigationBarTitleText": "修改昵称", "usingComponents": {} }, "pages/user/addlist/addlist": { "navigationBarTitleText": "管理收货地址", "usingComponents": {} }, "pages/user/addedit/addedit": { "navigationBarTitleText": "添加地址", "usingComponents": { "ra-btn": "/components/common/RaBtn", "dialog": "/components/common/Dialog", "mpvue-city-picker": "/components/common/mpvue-citypicker/mpvueCityPicker" } }, "pages/user/collection/collection": { "navigationBarTitleText": "收藏", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/order/list": { "navigationBarTitleText": "我的订单", "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay", "dialog": "/components/common/Dialog" } }, "pages/user/order/finish": { "navigationBarTitleText": "订单完成", "usingComponents": {} }, "pages/user/order/freight": { "navigationBarTitleText": "物流详情", "usingComponents": {} }, "pages/user/order/detail": { "navigationBarTitleText": "订单详情", "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay" } }, "pages/user/order/success": { "navigationBarTitleText": "订单完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/user/pay/success": { "navigationBarTitleText": "支付完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition" } }, "pages/order/goodsDetail/goodsDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "share": "/components/good/Share", "standard": "/components/good/Standard", "player": "/components/common/Player" } }, "pages/order/prompt/prompt": { "navigationBarTitleText": "运费说明", "usingComponents": { "provinces": "/components/common/Provinces" } }, "pages/order/submit/submit": { "navigationBarTitleText": "提交订单", "usingComponents": { "pay": "/components/common/Pay" } }, "pages/order/paySuccess/paySuccess": { "navigationBarTitleText": "支付成功", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition" } }, "pages/order/orderSuccess/orderSuccess": { "navigationBarTitleText": "订单完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/main/search/search": { "navigationBarTitleText": "搜索商品", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/order/goodsList/goodsList": { "navigationBarTitleText": "商品列表", "usingComponents": { "panel": "/components/search/Panel", "good": "/components/common/Good" } }, "pages/common/err/err": { "navigationBarTitleText": "异常", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "沁绿农业APP", "navigationBarBackgroundColor": "#FFFFFF", "backgroundColor": "#FFFFFF", "onReachBottomDistance": 151 } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/main/main": { "navigationBarTitleText": "沁绿农业", "enablePullDownRefresh": true, "navigationStyle": "custom", "usingComponents": {} }, "pages/login/login": { "navigationBarTitleText": "登录", "usingComponents": {} }, "pages/user/user": { "navigationBarTitleText": "我的", "navigationStyle": "custom", "usingComponents": {} }, "pages/order/order": { "navigationBarTitleText": "进货单", "navigationStyle": "custom", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/setting/setting": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/user/protocal/protocal": { "navigationBarTitleText": "服务条款与协议", "usingComponents": {} }, "pages/user/about/about": { "navigationBarTitleText": "关于我们", "usingComponents": {} }, "pages/user/info/info": { "navigationBarTitleText": "个人信息", "usingComponents": {} }, "pages/user/nickname/nickname": { "navigationBarTitleText": "修改昵称", "usingComponents": {} }, "pages/user/addlist/addlist": { "navigationBarTitleText": "管理收货地址", "usingComponents": {} }, "pages/user/addedit/addedit": { "navigationBarTitleText": "添加地址", "usingComponents": { "ra-btn": "/components/common/RaBtn", "dialog": "/components/common/Dialog", "mpvue-city-picker": "/components/common/mpvue-citypicker/mpvueCityPicker" } }, "pages/user/collection/collection": { "navigationBarTitleText": "收藏", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/order/list": { "navigationBarTitleText": "我的订单", "enablePullDownRefresh": true, "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay", "dialog": "/components/common/Dialog" } }, "pages/user/order/finish": { "navigationBarTitleText": "订单完成", "usingComponents": {} }, "pages/user/order/freight": { "navigationBarTitleText": "物流详情", "usingComponents": {} }, "pages/user/order/detail": { "navigationBarTitleText": "订单详情", "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay" } }, "pages/user/order/success": { "navigationBarTitleText": "交易已完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/user/pay/success": { "navigationBarTitleText": "支付完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition" } }, "pages/order/goodsDetail/goodsDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "share": "/components/good/Share", "standard": "/components/good/Standard", "player": "/components/common/Player" } }, "pages/order/prompt/prompt": { "navigationBarTitleText": "运费说明", "usingComponents": { "provinces": "/components/common/Provinces" } }, "pages/order/submit/submit": { "navigationBarTitleText": "提交订单", "usingComponents": { "pay": "/components/common/Pay" } }, "pages/order/paySuccess/paySuccess": { "navigationBarTitleText": "支付成功", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition", "dialog": "/components/common/Dialog" } }, "pages/order/orderSuccess/orderSuccess": { "navigationBarTitleText": "订单完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/main/search/search": { "navigationBarTitleText": "搜索商品", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/order/goodsList/goodsList": { "navigationBarTitleText": "商品列表", "usingComponents": { "panel": "/components/search/Panel", "good": "/components/common/Good" } }, "pages/common/err/err": { "navigationBarTitleText": "异常", "usingComponents": {} }, "pages/common/webview/webview": { "navigationBarTitleText": "网络地址", "usingComponents": {} }, "pages/login/binding/binding": { "navigationBarTitleText": "绑定手机号", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "沁绿农业APP", "navigationBarBackgroundColor": "#FFFFFF", "backgroundColor": "#FFFFFF", "onReachBottomDistance": 151 } };exports.default = _default;
 
 /***/ }),
 

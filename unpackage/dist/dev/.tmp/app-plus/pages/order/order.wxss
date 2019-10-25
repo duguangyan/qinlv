@@ -240,6 +240,10 @@
       width: 100%;
       padding-top: 30rpx;
 }
+.cart .footer .checkall.data-v-109e8254 {
+      position: relative;
+      top: 4rpx;
+}
 .cart .footer .icon-img.data-v-109e8254 {
       width: 34rpx;
       height: 34rpx;

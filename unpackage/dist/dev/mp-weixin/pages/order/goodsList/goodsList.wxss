@@ -36,8 +36,8 @@
       text-align: left;
 }
 .list .top .search .icon-30.data-v-65b013e1 {
-      width: 36rpx;
-      height: 36rpx;
+      width: 30rpx;
+      height: 30rpx;
       position: absolute;
       left: 30rpx;
       top: 8rpx;
@@ -66,7 +66,7 @@
   list-style: none;
 }
 .list .sort-bar.data-v-65b013e1 {
-  height: 80rpx;
+  height: 120rpx;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -81,7 +81,7 @@
       -ms-flex-pack: justify;
           justify-content: space-between;
   color: #999;
-  font-size: 24rpx;
+  font-size: 28rpx;
 }
 .list .sort-bar .icon-sx.data-v-65b013e1 {
     width: 16rpx;
@@ -91,15 +91,12 @@
   .list .sort-bar .fil-price.data-v-65b013e1,
   .list .sort-bar .filter.data-v-65b013e1 {
     position: relative;
-    -webkit-transition: font-size 0.2s;
-    -o-transition: font-size 0.2s;
-    transition: font-size 0.2s;
 }
 .list .sort-bar .general.actived.data-v-65b013e1,
     .list .sort-bar .fil-price.actived.data-v-65b013e1,
     .list .sort-bar .filter.actived.data-v-65b013e1 {
       color: #000;
-      font-size: 26rpx;
+      font-size: 28rpx;
 }
 .list .sort-bar .fil-price.data-v-65b013e1,
   .list .sort-bar .general.data-v-65b013e1 {

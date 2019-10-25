@@ -5,7 +5,7 @@
 				<img src="@/static/img/icon-logo.png" >
 			</div>
 		    <div class="text">沁绿农业科技有限公司</div>
-		    <div class="text">V1.0.0</div>
+		    <div class="text">{{v}}</div>
 		  </div>
 	</view>
 </template>
@@ -14,8 +14,11 @@
 	export default {
 		data() {
 			return {
-				
+				v:''
 			}
+		},
+		onLoad() {
+			this.v = uni.getStorageSync('v')
 		},
 		methods: {
 			

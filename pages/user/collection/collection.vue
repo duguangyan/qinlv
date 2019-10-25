@@ -7,7 +7,7 @@
 
 			<div class="collection-no-data" v-if="list.length<=0">
 				<img src="@/static/img/icon-collection-no.png" alt="图片">
-				<div class="text-999 fs-12">收藏夹还没有你的收藏 已是空空如也</div>
+				<div class="text-999 fs24">收藏夹还没有你的收藏 已是空空如也</div>
 			</div>
 			<div class="list" v-if="list.length>0">
 				<ul>
@@ -19,16 +19,16 @@
 							<img :src="item.imgUrl" alt="图片">
 						</div>
 						<div class="fll ml-10 info" v-bind:class="{ 'info-edit' : !isEdit }">
-							<p class="fs-14 p1 ellipsis ellipsis-line4">{{item.name}}</p>
-							<p class="p4 text-666 fs-12">{{item.skuDesc || ''}}</p>
-							<p v-if="item.status !== 4" class="text-red fs-14 p2">￥ <span class="fs-18">{{item.price}}</span></p>
+							<p class="fs28 p1 ellipsis-line2">{{item.name}}</p>
+							<p class="p4 text-666 fs24">{{item.skuDesc || ''}}</p>
+							<p v-if="item.status !== 4" class="text-red fs28 p2">￥ <span class="fs36">{{item.price}}</span></p>
 							<p v-if="item.status === 4" class="p3">下架商品</p>
 						</div>
 					</li>
 				</ul>
 				<div class="ts-center text-999 fs24 load-text">{{loadText}}</div>
 			</div>
-			<div class="footer" v-if="isEdit">
+			<div class="footer" v-if="isEdit && list.length>0">
 				<div class='icon'>
 					<img :src="hasAllCheck ? Checked : Uncheck" width="20" height="20" @click="doCheckAll" />
 				</div>
@@ -75,11 +75,11 @@
 			Dialog
 		},
 		onLoad() {
-
-		},
-		onShow() {
 			// status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")
 			this.getCollectionData()
+		},
+		onShow() {
+			
 		},
 		onReachBottom() {
 			this.loadBottom()
@@ -94,7 +94,7 @@
 			// 去详情
 			goDetail(shopId, orderId) {
 				uni.navigateTo({
-					url: '/gooddetail/' + shopId + '/' + orderId
+					url:'/pages/order/goodsDetail/goodsDetail?shopId='+shopId + '&goodsId='+orderId
 				})
 			},
 			// 全选

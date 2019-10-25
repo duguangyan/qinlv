@@ -209,7 +209,7 @@ var _default =
     var imageUrl = uni.getStorageSync('headImgUrl');
     this.headimageUrl = imageUrl && imageUrl !== 'null' ? imageUrl : '/static/img/icon-user.png';
     // 判断是否登录
-    if (this.phone && this.uid) this.isLogin = true;
+    this.isLogin = this.uid != '';
   },
   computed: {
     dPhone: function dPhone() {
@@ -241,10 +241,6 @@ var _default =
       if (this.isLogin) {
         uni.navigateTo({
           url: '/pages/user/info/info' });
-
-      } else {
-        uni.navigateTo({
-          url: '/pages/login/login' });
 
       }
     },

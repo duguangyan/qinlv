@@ -24,7 +24,7 @@
 		  </div>
         
         <div class="address-content" v-if="order.expressDetails">
-          <div class="title">{{order.expressDetails.name}}</div>
+          <div class="title">{{order.expressDetails.traceList[0].context}}</div>
           <div class="time">{{order.shopOrder.sendTime}}</div>
         </div>
         <div v-else>暂无物流信息</div>
@@ -41,7 +41,7 @@
             {{order.orderShipping.receiver}}
             <span class="phone">{{order.orderShipping.phone}}</span>
           </div>
-          <div class="address">{{order.shopOrder.createTime}}</div>
+          <div class="address">{{order.orderShipping.province + order.orderShipping.city + order.orderShipping.region + order.orderShipping.address}}</div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@
         </div>
         <div class="msg">
           <span>买家留言</span>
-          <span>{{order.postscript || ''}}</span>
+          <span class="mgl-20 text-666">{{order.postscript || ''}}</span>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
       <div class="btn-red btn" v-if="status == 3" @click="postOrderConfirm">确认收货</div>
       <div class="btn-black btn" v-if="status == 0" @click="postOrderCancel">取消订单</div>
     </div>
-    <Pay :orderId="orderId" :show="isPayShow"  v-on:close="payClose" v-on:doPay="doPay" :price="nowIndexPrice"></Pay>
+    <Pay :orderId="orderId" :platform='platform' :show="isPayShow"  v-on:close="payClose" v-on:doPay="doPay" :price="nowIndexPrice"></Pay>
 	<Dialog :title='title' :isShow='isShow' @doConfirm="doConfirm" @doCancel="doCancel"> </Dialog>
   </div>
 </template>
@@ -118,7 +118,9 @@ export default {
       statusText: '',
       status: '',
       nowIndexPrice: 0,
-	  isOrderDialog:0
+	  isOrderDialog:0,
+	  isPay:0,
+	  platform:0
     }
   },
   components: {
@@ -126,19 +128,21 @@ export default {
     Pay
   },
   onLoad(options) {
-	this.orderId = options.orderId
-	this.shopId = options.shopId
+	  this.orderId = options.orderId
+	  this.shopId = options.shopId || 1
+	  this.platform = uni.getStorageSync('platform')
   },
   onShow() {
     // 获取参数
-    
     if (this.orderId) {
       this.getOrderDetailById(this.orderId, this.shopId)
     } else {
       T.tips('订单ID或店铺ID不能为空')
-      uni.navigateBack({
-      	delta:1
-      })
+      setTimeout(()=>{
+		  uni.switchTab({
+		  	url:'/pages/main/main'
+		  })
+	  },1500)
     }
   },
   methods: {
@@ -229,36 +233,38 @@ export default {
     // 取消订单
     postOrderCancel() {
 		this.isShow = true
-		debugger
         this.isOrderDialog = 0
     },
     // 获取订单详情
     getOrderDetailById(orderId,shopId){
       let data = {
-        orderId,
-        shopId
+        orderId
       }
+	  if(shopId){
+		  data.shopId = shopId
+	  }
       getOrderDetailById(data).then(res => {
         if (res.code === '1000') {
           this.order = res.data[0]
           this.statusText = ''
           if(this.order.shopOrder) {
-            this.status = this.order.shopOrder.status
-            switch (this.order.shopOrder.status) {
+            this.status = this.order.shopOrder.status;
+			
+            switch (this.status) {
               case -1:
                 this.statusText = '已取消'
               break
               case 0:
-                this.statusText = '待支付'
+                this.statusText = '待付款'
               break
               case 1:
                 this.statusText = '已支付'
               break
               case 2:
-                this.statusText = '未发货'
+                this.statusText = '待发货'
               break
               case 3:
-                this.statusText = '已发货'
+                this.statusText = '待收货'
               break
               case 4:
                 this.statusText = '已完成'
@@ -312,12 +318,12 @@ export default {
     top: 0;
     z-index: 99;
     width: 100%;
-    height: 145px;
-    background: linear-gradient(180deg, #fc2d2d 0%, #fc2d2d 145px, transparent 0);
-
+    height: 290upx;
+    background: red;
+	left: 0;
     .img{
-      width: 145px;
-      height: 96px;
+      width: 190upx;
+      height: 192upx;
       position: absolute;
       right: 0;
       bottom: 0;
@@ -329,47 +335,47 @@ export default {
   }
   background-color: #f5f5f5;
   min-height: 100vh;
-  padding-bottom: 70px;
+  padding-bottom: 140upx;
   .annoc {
     color: #fefefe;
-    margin-top: 20px;
+    margin-top: 40upx;
     position: absolute;
-    left: 15px;
-    top: 50px;
+    left: 30upx;
+    top: 100upx;
     .title {
-      font-size: 20px;
+      font-size: 40upx;
     }
     .sub {
-      font-size: 10px;
-      margin-top: 4px;
+      font-size: 20upx;
+      margin-top: 8upx;
     }
   }
   .body {
-    margin-top: 90px;
+    margin-top: 180upx;
     .address-content{
-      width: 360px;
+      width: 720upx;
     }
   }
   .com {
-    padding: 12px 15px;
+    padding: 24upx 30upx;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     background-color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 20upx;
     color: #000;
-    font-size: 12px;
+    font-size: 24upx;
   }
   .bus {
-    margin-top: 145px;
+    margin-top: 290upx;
     @extend .com;
     img:first-child {
-      margin-right: 15px;
+      margin-right: 30upx;
     }
     .time {
       color: #999;
-      font-size: 10px;
-      margin-top: 4px;
+      font-size: 20upx;
+      margin-top: 8upx;
     }
     img:last-child {
      
@@ -378,20 +384,20 @@ export default {
   .location {
     @extend .com;
     img:first-child {
-      margin-right: 15px;
+      margin-right: 30upx;
     }
     .name {
-      font-size: 14px;
+      font-size: 28upx;
       font-weight: bold;
     }
     .phone {
       color: #999;
-      font-size: 12px;
-      margin-left: 6px;
+      font-size: 24upx;
+      margin-left: 12upx;
     }
     .address {
       color: #999;
-      margin-top: 4px;
+      margin-top: 8upx;
     }
   }
   .flex {
@@ -401,18 +407,18 @@ export default {
   }
 
   .list {
-    padding: 15px 15px 0 15px;
+    padding: 30upx 30upx 0 30upx;
     background-color: #fff;
-    margin-bottom: 15px;
+    margin-bottom: 30upx;
 
     .title {
-      padding: 0 0 5px 0;
+      padding: 0 0 10upx 0;
       display: flex;
       justify-content: flex-start;
-      font-size: 12px;
+      font-size: 24upx;
       .platform {
         color: #000;
-        margin-left: 5px;
+        margin-left: 10upx;
         font-weight: bold;
         flex-grow: 1;
       }
@@ -424,60 +430,60 @@ export default {
     .goods-price {
       @extend .flex;
       color: #000;
-      font-size: 12px;
+      font-size: 24upx;
       .money {
         font-weight: bold;
       }
     }
     .goods-price {
-      padding-top: 5px;
-      padding-bottom: 10px;
+      padding-top: 10upx;
+      padding-bottom: 20upx;
     }
     .freight {
-      padding-top: 10px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid #f0f0f0;
+      padding-top: 20upx;
+      padding-bottom: 36upx;
+      border-bottom: 1upx solid #f0f0f0;
     }
     .total-price {
       @extend .flex;
-      height: 45px;
+      height: 90upx;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 24upx;
       & > *:first-child {
-        font-size: 14px;
+        font-size: 28upx;
       }
     }
     .msg {
-      line-height: 50px;
-      font-size: 14px;
+      line-height: 100upx;
+      font-size: 28upx;
       display: flex;
       justify-content: flex-start;
       align-items: center;
       & > *:last-child {
-        margin-left: 10px;
+        margin-left: 20upx;
         color: #999;
       }
     }
   }
 
   .info {
-    padding: 15px;
+    padding: 30upx;
     background-color: #fff;
     .title {
-      font-size: 14px;
-      padding-bottom: 3px;
+      font-size: 28upx;
+      padding-bottom: 6upx;
     }
     .item {
       color: #999;
-      font-size: 12px;
-      margin-top: 10px;
+      font-size: 24upx;
+      margin-top: 20upx;
     }
   }
 
   .footer {
-    padding-right: 15px;
+    padding-right: 30upx;
     background-color: #fff;
-    height: 50px;
+    height: 100upx;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -485,22 +491,22 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    box-shadow: 0 -1px 0 0 #f0f0f0;
+    box-shadow: 0 -1upx 0 0 #f0f0f0;
     .btn {
-      width: 95px;
-      line-height: 30px;
-      border-radius: 18px;
+      width: 190upx;
+      line-height: 60upx;
+      border-radius: 36upx;
       text-align: center;
-      margin-left: 10px;
-      font-size: 16px;
+      margin-left: 20upx;
+      font-size: 32upx;
     }
     .btn-red {
-      border: 1px solid #fc2d2d;
+      border: 1upx solid #fc2d2d;
       color: #fc2d2d;
 
     }
     .btn-black{
-      border: 1px solid #d9d9d9;
+      border: 1upx solid #d9d9d9;
       color: #000;
 	  margin-right: 20upx;
     }

@@ -18,7 +18,7 @@
 			      <view class="uid fs28" v-if="!nickName">ID:{{uid}}</view>
 			      <view class="phone fs24">{{dPhone}}</view>
 			    </view>
-			    <view class="fs30 mgl-20" v-else @click="goLogin">点击登录</view>
+			    <view class="fs30 mgl-20" v-if="!isLogin" @click="goLogin">点击登录</view>
 			  </view>
 			</view>
 		</view>
@@ -27,7 +27,7 @@
         <!-- 我的订单 -->
         <view class="order">
           <view class="title cf">
-            <view class="p1 fll">我的订单</view>
+            <view class="p1 fll fs28">我的订单</view>
 			<view class="img flr">
 				<image src="../../static/img/tag-go.png"/>
 			</view>
@@ -47,7 +47,7 @@
         <!-- 我的收藏 -->
         <view class="collection">
           <view class="body cf" @click="goCollection">
-            <view class="fs36 fll">我的收藏</view>
+            <view class="fs36 fll fs28">我的收藏</view>
             <view class="img flr">
               <image src="../../static/img/tag-go.png"/>
             </view>
@@ -85,7 +85,7 @@
 			let imageUrl = uni.getStorageSync('headImgUrl')
 			this.headimageUrl = imageUrl && imageUrl !== 'null' ? imageUrl : '/static/img/icon-user.png'
 			// 判断是否登录
-			if(this.phone && this.uid ) this.isLogin = true
+			this.isLogin = this.uid!='' 
 		},
 		computed: {
 		    dPhone() {
@@ -117,10 +117,6 @@
 				if(this.isLogin) {
 					uni.navigateTo({
 						url:'/pages/user/info/info'
-					})
-				} else {
-					uni.navigateTo({
-						url:'/pages/login/login'
 					})
 				}
 			},
@@ -253,6 +249,7 @@
     .title {
 		border-bottom: 1upx solid #F5F5F5;
 		padding-bottom: 20upx;
+		height: 60upx;
 	  .img{
 		  width: 20upx;
 		  height: 20upx;
@@ -270,6 +267,9 @@
       & > .p1{
         color: #333;
         font-weight: blod;
+		position: relative;
+		top: 10upx;
+		
       }
       &>image{
         margin-left: 4upx;
@@ -281,7 +281,7 @@
       justify-content: space-between;
       align-items: center;
       text-align: center;
-	  padding-top: 20upx;
+	  padding-top: 45upx;
       .li {
         list-style: none;
         font-size: 12upx;

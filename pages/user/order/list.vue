@@ -11,7 +11,7 @@
     </div>
     <div class="order-no-data" v-if="orders.length<=0">
       <img src="@/static/img/icon-order-no.png" alt="图片">
-      <div class="text-999 fs-12">您还没有相关订单</div>
+      <div class="text-999 fs24">您还没有相关订单</div>
     </div>
     <div class="list" v-if="orders.length>0">
 
@@ -22,8 +22,8 @@
 				  <img src="@/static/img/icon-plat.png" width="15" height="15" alt />
 			  </div>
             
-            <span class="platform">{{item.shopName}}</span>
-            <span class="status">
+            <span class="platform fs28">{{item.shopName}}</span>
+            <span class="status fs28">
             <span v-if="item.status === -1">已取消</span>
             <span v-if="item.status === 0">待付款</span>
             <span v-if="item.status === 2">待发货</span>
@@ -32,7 +32,7 @@
           </span>
           </div>
           <Good v-for="good in item.orderDetailList" :key="good.id" :item="good"></Good>
-          <div class="accu">共{{item.orderDetailList.length}}件商品&nbsp;合计:￥<span>{{item.payMoney}}</span></div>
+          <div class="accu fs24">共{{item.orderDetailList.length}}件商品&nbsp;合计:￥<span class='fs32'>{{item.payMoney}}</span></div>
           <div class="operator">
             <div tag="div" class="check-phy" v-if="item.status === 3" @click="goFreight(index)">查看物流</div>
             <div tag="div" class="check-ord" @click="goDetail(index)">查看订单</div>
@@ -54,7 +54,7 @@
     <!--    // price： 支付价格-->
     <!--    // function payClose：关闭支付弹窗-->
     <!--    // function doPay: 点击支付按钮事件-->
-    <Pay :orderId="payOrderId" :show="isPayShow"  v-on:close="payClose" v-on:doPay="doPay" :price="nowIndexPrice"></Pay>
+    <Pay :orderId="payOrderId" :platform='platform' :show="isPayShow"  v-on:close="payClose" v-on:doPay="doPay" :price="nowIndexPrice"></Pay>
 	<Dialog :title='title' :isShow='isShow' @doConfirm="doConfirm" @doCancel="doCancel"> </Dialog>
   </div>
 </template>
@@ -105,7 +105,8 @@ export default {
       nowIndexPrice: 0,
       isWx: true,
       payOrderId: '',
-	  navIndex:0
+	  navIndex:0,
+	  platform:0
     }
   },
   components: {
@@ -116,8 +117,18 @@ export default {
   onReachBottom() {
   	this.loadBottom()
   },
+  onPullDownRefresh() {
+  	//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+  	console.log('refresh');
+  	// 获取订单列表
+  	this.orders = []
+  	this.getOrders()
+  	setTimeout(function () {
+  		uni.stopPullDownRefresh();  //停止下拉刷新动画
+  	}, 1000);
+  },
   onLoad() {
-  	
+  	this.platform = uni.getStorageSync('platform')
   },
   onShow() {
     let orderNavIndex = uni.getStorageSync('orderNavIndex')
@@ -126,6 +137,7 @@ export default {
 	  this.navIndex = orderNavIndex
 	}
 	// 获取订单列表
+	this.orders = []
 	this.getOrders()
   },
   methods: {

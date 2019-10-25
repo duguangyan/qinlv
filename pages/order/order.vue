@@ -45,7 +45,7 @@
 							<div class="count" v-if="!isEdit && it.status !== 4">
 								<span :class="{ 'text-999' : it.isColor999 }" @click="doCalculation(0,index,idx)">-</span>
 								
-								<input type="text" v-model="it.num" @click="clickInput(index,idx)" @change="changInput($event,index,idx)" />
+								<input type="number" v-model="it.num" @click="clickInput(index,idx)" @change="changInput($event,index,idx)" />
 								
 								<span @click="doCalculation(1,index,idx)">+</span>
 							</div>
@@ -64,7 +64,7 @@
 				<div class="icon-img fll">
 					<img :src="isCheckAll?Checked:Uncheck" alt width="17" height="17" @click="checkAll" />
 				</div>
-				<span class="fll" @click="checkAll">全选</span>
+				<span class="fll checkall" @click="checkAll">全选</span>
 				<div class="total-money fll">
 					合计:&nbsp;
 					<span class="money">{{totalMoney}}</span>
@@ -123,6 +123,7 @@
 		onShow() {
 			// 获取进货单列表
 			this.getCartOrderList()
+			
 		},
 		methods: {
 			doConfirm(){
@@ -133,8 +134,8 @@
 			},
 			// 去详情
 			goDetail(shopId, orderId) {
-				this.$router.push({
-					path: '/gooddetail/' + shopId + '/' + orderId
+				uni.navigateTo({
+					url:'/pages/order/goodsDetail/goodsDetail?shopId='+shopId+'&goodsId='+orderId
 				})
 			},
 			// 结算
@@ -144,7 +145,7 @@
 				let cartIdList = []
 				this.list.forEach(item => {
 					item.items.forEach(it => {
-						if (it.checked === 1) {
+						if (it.checked == 1 && item.status != 4) {
 							cartIdList.push(it.cartId)
 						}
 					})
@@ -171,7 +172,6 @@
 			},
 			// 去结算
 			goPay() {
-				// this.$router.push('/submit')
 				if (this.totalMoney > 0) {
 					this.submit()
 				} else {
@@ -199,18 +199,18 @@
 			      let val = e.target.value
 			      if (validator.isNumber(val)) {
 			        if (val < this.list[index].items[idx].startNum) {
-			          Toast('数量不能小于起批量:'+this.list[index].items[idx].startNum)
+			          T.tips('数量不能小于起批量:'+this.list[index].items[idx].startNum)
 			          this.list[index].items[idx].num = this.list[index].items[idx].startNum
 			          this.changeNum(index,idx,this.list[index].items[idx].skuId, this.list[index].items[idx].startNum)
 			        } else if(val > this.list[index].items[idx].stock){
-			          Toast('数量不能超过库存量:'+this.list[index].items[idx].stock)
+			          T.tips('数量不能超过库存量:'+this.list[index].items[idx].stock)
 			          this.list[index].items[idx].num = this.list[index].items[idx].stock
 			          this.changeNum(index,idx,this.list[index].items[idx].skuId, this.list[index].items[idx].stock)
 			        }else {
 			          this.changeNum(index,idx,this.list[index].items[idx].skuId, val)
 			        }
 			      } else {
-			        Toast('请输入正确的数量')
+			        T.tips('请输入正确的数量')
 			        this.changeNum(index,idx,this.list[index].items[idx].skuId, this.list[index].items[idx].startNum)
 			      }
 			    },
@@ -228,6 +228,7 @@
 				getCartChangeNum(data).then(res => {
 					if (res.code === '1000') {
 						this.list[index].items[idx].num = res.data.num
+						this.list[index].items[idx].price = res.data.price
 						this.list[index].items[idx].totalPrice = res.data.totalPrice
 						this.list[index].items[idx].isColor999 = false
 						this.calculationTotalMoney()
@@ -253,7 +254,7 @@
 			          console.log(this.clickNum)
 			          this.changeNum(index,idx,this.list[index].items[idx].skuId,num)
 			        } else {
-			          Toast('数量不能小于起批量:'+this.list[index].items[idx].startNum)
+			          T.tips('数量不能小于起批量:'+this.list[index].items[idx].startNum)
 			        }
 			      } else {
 			        if(this.list[index].items[idx].num < this.list[index].items[idx].stock){
@@ -261,7 +262,7 @@
 			          num++
 			          this.changeNum(index,idx,this.list[index].items[idx].skuId,num)
 			        } else {
-			          Toast('购买数量不能超过库存量:'+this.list[index].items[idx].stock)
+			          T.tips('购买数量不能超过库存量:'+this.list[index].items[idx].stock)
 			        }
 			
 			      }
@@ -363,6 +364,7 @@
 				})
 			},
 			getCartOrderList() {
+				this.list = []
 				getCartOrderList().then((res) => {
 					if (res.code === '1000') {
 						if (res.data.cartLines && res.data.cartLines.length > 0) {
@@ -676,6 +678,7 @@
 		}
 
 		.footer {
+			
 			>div {
 				width: 100%;
 				padding-top: 30upx;
@@ -694,7 +697,10 @@
 			left: 0;
 			width: 100%;
 			padding: 0 30upx;
-
+			.checkall{
+				position: relative;
+				top: 4upx;
+			}
 			.icon-img {
 
 				width: 34upx;

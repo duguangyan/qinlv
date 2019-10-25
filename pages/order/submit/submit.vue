@@ -2,8 +2,8 @@
 	<view>
 		<div class="submit">
 		    <div class="address" @click="goAddress">
-		      <div v-if="address == null" class="addAd" to="/adedit">请添加收货地址</div>
-		      <div v-if="address != null" class="div">
+		      <div v-if="address == ''" class="addAd" to="/adedit">请添加收货地址</div>
+		      <div v-if="address != ''" class="div">
 		        <div class="ad-title">收货人: {{address.name}}</div>
 		        <div
 		          class="ad-det"
@@ -29,7 +29,7 @@
 		        <ul>
 		          <li class="cf" v-for="(it,idx) in item.goodsParamList" :key="idx">
 		            <div class="fll img">
-		              <img :src="it.imgUrl || defaultUrl" alt="图片" />
+		              <img :src="it.imgUri || defaultUrl" alt="图片" />
 		            </div>
 		            <div class="fll mgl-20 info fs28">
 		              <p class="fs-16 p1 cf">
@@ -62,7 +62,7 @@
 		        合计:&ensp;
 		        <span>{{totalMoney}}</span>
 		      </div>
-		      <div class="btn" v-bind:class="{ active: address !== '' }" @click="showPay">提交订单</div>
+		      <div class="btn" v-bind:class="{ 'active': address !== '','platform1':platform==2 }" @click="showPay">提交订单</div>
 		    </div>
 		    <!--    // orderId：支付订单-->
 		    <!--    // show：支付上拉框是否弹起-->
@@ -72,12 +72,16 @@
 		    <!--    // function doPay: 点击支付按钮事件-->
 		    <Pay
 		      :orderId="payOrderId"
+			  :platform='platform'
 		      ref="pay"
 		      :show="isPay"
 		      @close="doClose"
 		      :price="totalMoney"
 		      v-on:doPay="doPay"
 		    />
+			
+			
+			
 		  </div>
 	</view>
 </template>
@@ -101,20 +105,22 @@
 				isBuyNow:'',
 				submitData:'',
 				list: [], //数据列表
-				      defaultUrl:
-				        "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2180358788,168891397&fm=26&gp=0.jpg",
-				      isPay: false,
-				      Checked,
-				      Uncheck,
-				      Plat,
-				      totalNum: 0, // 总数量
-				      totalMoney: 0, // 总金额
-				      address: "", // 地址
-				      message: "", //留言
-				      deliverMoney: 0, // 运费
-				      payOrderId: "", //订单ID
-				      cartIdList: "", // cartlist
-				      totalCount: "" // 总数量
+				  defaultUrl:
+					"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2180358788,168891397&fm=26&gp=0.jpg",
+				  isPay: false,
+				  Checked,
+				  Uncheck,
+				  Plat,
+				  totalNum: 0, // 总数量
+				  totalMoney: 0, // 总金额
+				  address: "", // 地址
+				  message: "", //留言
+				  deliverMoney: 0, // 运费
+				  payOrderId: "", //订单ID
+				  cartIdList: "", // cartlist
+				  totalCount: "" ,// 总数量
+				  hasSuccessShow: false,
+				  platform:0
 			};
 		},
 		components:{
@@ -125,15 +131,17 @@
 			this.isBuyNow = options.isBuyNow;
 		},
 		onShow() {
-			
+			// 设备样式兼容
+			this.platform = uni.getStorageSync('platform');
 			// 上一级传递参数：结算返回的数据
 				if (this.isBuyNow) {
 				  let submitData = JSON.parse(this.submitData);
-				  if (uni.getStorageSync("address")) {
-					this.address = JSON.parse(uni.getStorageSync("address"));
-					submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
-				  }
+				 //  if (uni.getStorageSync("address")) {
+					// this.address = JSON.parse(uni.getStorageSync("address"));
+					// submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
+				 //  }
 				  buyGood(submitData).then(data => {
+					this.address = data.data.address || '';
 					this.list = data.data.shopList;
 					this.totalMoney = data.data.totalMoney;
 					this.deliverMoney = data.data.deliverMoney;
@@ -150,24 +158,29 @@
 					this.totalCount = submitData.totalCount;
 				  }
 				  // 判断是否有地址
-				  if (uni.getStorageSync("address")) {
-					// 获取缓存地址
-					this.address = JSON.parse(uni.getStorageSync("address"));
-					// 根据地址获取运费
-					this.getOrderCartByAddress(this.address.id);
-				  } else {
-					// 获取默认地址
-					this.getAddressDefAddress();
-				  }
+				 //  if (uni.getStorageSync("address")) {
+					// // 获取缓存地址
+					// this.address = JSON.parse(uni.getStorageSync("address"));
+					// // 根据地址获取运费
+					// this.getOrderCartByAddress(this.address.id);
+				 //  } else {
+					// // 获取默认地址
+					// this.getAddressDefAddress();
+				 //  }
+				 
+				 this.getAddressDefAddress();
 				}
 		},
 		methods: {
+			
 		    // 确认支付
-		    doPay() {},
+		    doPay(e) {
+				this.isPay = false
+				this.hasSuccessShow = true
+			},
 		    // 关闭支付显示
 		    doClose() {
 		      this.isPay = false;
-		      // this.$router.go(-1)
 		    },
 			// 去选择地址
 			goAddress(){
@@ -177,6 +190,10 @@
 			},
 		    // 显示支付
 		    showPay() {
+				if(this.address == ''){
+					T.tips('请选择收货地址')
+					return false
+				}
 		      let list = {
 		        shopParamList: this.list,
 		        postscript: this.message,
@@ -231,14 +248,19 @@
 		    },
 		    // 去详情
 		    goDetail(shopId, orderId) {
-		      this.$router.push({ path: "/gooddetail/" + shopId + "/" + orderId });
+				uni.navigateTo({
+					url:'/pages/user/order/detail?shopId='+shopId+'&goodsId='+orderId
+				})
 		    },
 		    // 获取默认地址
 		    getAddressDefAddress() {
 		      getAddressDefAddress().then(res => {
 		        if (res.code === "1000") {
-		          this.address = res.data;
-		          this.getOrderCartByAddress(this.address.id);
+					if(res.data){
+						 this.address = res.data;
+						 this.getOrderCartByAddress(this.address.id);
+					}
+		          
 		        }
 		      });
 		    },
@@ -358,6 +380,9 @@
         }
         .info {
           width: 460upx;
+		  .s1{
+			  width: 350upx;
+		  }
 		  .p1{
 			  height: 80upx;
 		  }
@@ -552,6 +577,9 @@
     .active {
       background-color: #fc2d2d;
     }
+	.platform1{
+		top: 15upx !important;
+	}
   }
 }
 </style>

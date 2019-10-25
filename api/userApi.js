@@ -22,7 +22,7 @@ const postUserSms = data => {
 }
 
 // 获取用户信息
-const getUserInfo = data => {
+const getUserInfoData = data => {
   return request({
     url: '/api/upms/user/getUserInfo',
     data
@@ -200,7 +200,29 @@ const getPageLayout = data => {
 }
 
 
+// formId 提交
+const getSetFormId = data => {
+  return request({
+    url: '/api/wechat/accessInterface/setFormId',
+    data,
+    type: 'form',
+	method: 'post',
+  })
+}
+
+// 微信登录
+const weixinLogin = data => {
+  return request({
+    url: '/api/oauth/socialLogin/weixin',
+    data,
+    type: 'form',
+	method: 'post',
+  })
+}
+
 export {
+  weixinLogin,
+  getSetFormId,
   getPageLayout,
   getAdPositioneById,
   getCollectGoodsRemove,
@@ -221,5 +243,5 @@ export {
   postUserHeadImg,
   postUserLogin,
   postUserSms,
-  getUserInfo
+  getUserInfoData
 }

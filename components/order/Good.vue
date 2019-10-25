@@ -4,7 +4,7 @@
       <img :src="item.imgUrl" height="100%" alt />
     </div>
     <div class="content">
-      <div class="name">{{item.goodsName}}</div>
+      <div class="name ellipsis-line2">{{item.goodsName}}</div>
       <div class="standard">{{item.skuDesc}}</div>
     </div>
     <div class="content2">
@@ -53,9 +53,8 @@ export default {
 	}
   }
   .name {
-    line-clamp: 2;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    height: 80upx;
+	width: 90%;
   }
   .standard {
     padding: 4upx 10upx;
@@ -63,9 +62,7 @@ export default {
     font-size: 20upx;
     color: #666;
     display: inline-block;
-    position: absolute;
-    top: 56upx;
-    left: 0;
+	margin-top: 20upx;
   }
   .num {
     position: absolute;

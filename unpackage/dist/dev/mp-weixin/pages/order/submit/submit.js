@@ -221,6 +221,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
 var _iconChecked = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-checked.png */ 53));
 var _iconUncheck = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-uncheck.png */ 54));
 var _iconPlat = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-plat.png */ 55));
@@ -231,7 +235,7 @@ var _cartApi = __webpack_require__(/*! @/api/cartApi.js */ 57);
 
 
 var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 294));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 300));};var _default =
 {
   data: function data() {
     return {
@@ -251,8 +255,10 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
       deliverMoney: 0, // 运费
       payOrderId: "", //订单ID
       cartIdList: "", // cartlist
-      totalCount: "" // 总数量
-    };
+      totalCount: "", // 总数量
+      hasSuccessShow: false,
+      platform: 0 };
+
   },
   components: {
     Pay: Pay },
@@ -262,15 +268,17 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
     this.isBuyNow = options.isBuyNow;
   },
   onShow: function onShow() {var _this = this;
-
+    // 设备样式兼容
+    this.platform = uni.getStorageSync('platform');
     // 上一级传递参数：结算返回的数据
     if (this.isBuyNow) {
       var submitData = JSON.parse(this.submitData);
-      if (uni.getStorageSync("address")) {
-        this.address = JSON.parse(uni.getStorageSync("address"));
-        submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
-      }
+      //  if (uni.getStorageSync("address")) {
+      // this.address = JSON.parse(uni.getStorageSync("address"));
+      // submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
+      //  }
       (0, _goodsApi.buyGood)(submitData).then(function (data) {
+        _this.address = data.data.address || '';
         _this.list = data.data.shopList;
         _this.totalMoney = data.data.totalMoney;
         _this.deliverMoney = data.data.deliverMoney;
@@ -287,24 +295,29 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
         this.totalCount = _submitData.totalCount;
       }
       // 判断是否有地址
-      if (uni.getStorageSync("address")) {
-        // 获取缓存地址
-        this.address = JSON.parse(uni.getStorageSync("address"));
-        // 根据地址获取运费
-        this.getOrderCartByAddress(this.address.id);
-      } else {
-        // 获取默认地址
-        this.getAddressDefAddress();
-      }
+      //  if (uni.getStorageSync("address")) {
+      // // 获取缓存地址
+      // this.address = JSON.parse(uni.getStorageSync("address"));
+      // // 根据地址获取运费
+      // this.getOrderCartByAddress(this.address.id);
+      //  } else {
+      // // 获取默认地址
+      // this.getAddressDefAddress();
+      //  }
+
+      this.getAddressDefAddress();
     }
   },
   methods: {
+
     // 确认支付
-    doPay: function doPay() {},
+    doPay: function doPay(e) {
+      this.isPay = false;
+      this.hasSuccessShow = true;
+    },
     // 关闭支付显示
     doClose: function doClose() {
       this.isPay = false;
-      // this.$router.go(-1)
     },
     // 去选择地址
     goAddress: function goAddress() {
@@ -314,6 +327,10 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
     },
     // 显示支付
     showPay: function showPay() {var _this2 = this;
+      if (this.address == '') {
+        _tips.default.tips('请选择收货地址');
+        return false;
+      }
       var list = {
         shopParamList: this.list,
         postscript: this.message,
@@ -368,14 +385,19 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 34
     },
     // 去详情
     goDetail: function goDetail(shopId, orderId) {
-      this.$router.push({ path: "/gooddetail/" + shopId + "/" + orderId });
+      uni.navigateTo({
+        url: '/pages/user/order/detail?shopId=' + shopId + '&goodsId=' + orderId });
+
     },
     // 获取默认地址
     getAddressDefAddress: function getAddressDefAddress() {var _this4 = this;
       (0, _cartApi.getAddressDefAddress)().then(function (res) {
         if (res.code === "1000") {
-          _this4.address = res.data;
-          _this4.getOrderCartByAddress(_this4.address.id);
+          if (res.data) {
+            _this4.address = res.data;
+            _this4.getOrderCartByAddress(_this4.address.id);
+          }
+
         }
       });
     },
