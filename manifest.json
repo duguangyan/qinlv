@@ -2,8 +2,8 @@
     "name" : "上上农夫",
     "appid" : "__UNI__E3A114F",
     "description" : "上上农夫专业的红薯销售平台，提供全国最优质的红薯",
-    "versionName" : "1.0.3",
-    "versionCode" : 103,
+    "versionName" : "1.0.4",
+    "versionCode" : 104,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -13,7 +13,9 @@
             "Bluetooth" : {},
             "VideoPlayer" : {},
             "Push" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "Payment" : {},
+            "Share" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -72,8 +74,19 @@
             /* SDK配置 */
             "sdkConfigs" : {
                 "push" : {},
-                "payment" : {},
-                "share" : {},
+                "payment" : {
+                    "alipay" : {},
+                    "weixin" : {
+                        "appid" : "wx26baf2267dd24e83",
+                        "UniversalLinks" : "https://m.qinlvny.com/static/apple-app-site-association"
+                    }
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx26baf2267dd24e83",
+                        "UniversalLinks" : "https://m.qinlvny.com/static/apple-app-site-association"
+                    }
+                },
                 "oauth" : {
                     "weixin" : {
                         "appid" : "wx26baf2267dd24e83",

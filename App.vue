@@ -2,7 +2,14 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch');
-
+			
+			// 获取code
+			// uni.login({
+			// 	provider:'weixin',
+			// 	success(e) {
+			// 		console.log('code',JSON.stringify(e))
+			// 	}
+			// })
 			// 版本更新
 			if (uni.getUpdateManager) {
 				const updateManager = uni.getUpdateManager();
@@ -25,19 +32,7 @@
 
 				})
 			}
-			// 获取openid
-			// wx.login({
-			// 	success: res => {
-			// 		// 登录注册接口
-			// 		if (res.code) {
-			// 			// 调用服务端登录接口，发送 res.code 到服务器端换取 openId, sessionKey, unionId并存入数据库中
-			// 			console.log(res)
-			// 		} else {
-			// 			console.log('登录失败！' + res.errMsg)
-			// 		}
-			// 	}
-			// });
-
+	
 			// 获取 appid
 			uni.setStorageSync('appid', 'wxf89e01a251ab43f7')
 

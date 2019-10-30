@@ -59,6 +59,9 @@
       z-index: 2;
       width: 100%;
 }
+.list ._li .back.data-v-faa6081c {
+      width: 80%;
+}
 .list ._li .low.data-v-faa6081c {
       max-width: 750rpx;
       -o-text-overflow: ellipsis;

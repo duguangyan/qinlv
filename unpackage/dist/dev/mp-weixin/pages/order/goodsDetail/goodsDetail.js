@@ -135,10 +135,6 @@ var render = function() {
     _vm.e5 = function($event) {
       _vm.isStandard = false
     }
-
-    _vm.e6 = function($event) {
-      _vm.isPlayer = false
-    }
   }
 
   _vm.$mp.data = Object.assign(
@@ -418,6 +414,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var _iconCollect = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-collect.png */ 198));
 var _iconCollect2 = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-collect2.png */ 199));
 var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
@@ -432,7 +429,7 @@ var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
 
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));
-var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var Share = function Share() {return Promise.all(/*! import() | components/good/Share */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/good/Share")]).then(__webpack_require__.bind(null, /*! @/components/good/Share */ 324));};var Player = function Player() {return __webpack_require__.e(/*! import() | components/common/Player */ "components/common/Player").then(__webpack_require__.bind(null, /*! @/components/common/Player.vue */ 332));};var Standard = function Standard() {return __webpack_require__.e(/*! import() | components/good/Standard */ "components/good/Standard").then(__webpack_require__.bind(null, /*! @/components/good/Standard */ 339));};var _default =
+var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var Share = function Share() {return Promise.all(/*! import() | components/good/Share */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/good/Share")]).then(__webpack_require__.bind(null, /*! @/components/good/Share */ 332));};var Player = function Player() {return __webpack_require__.e(/*! import() | components/common/Player */ "components/common/Player").then(__webpack_require__.bind(null, /*! @/components/common/Player.vue */ 340));};var Standard = function Standard() {return __webpack_require__.e(/*! import() | components/good/Standard */ "components/good/Standard").then(__webpack_require__.bind(null, /*! @/components/good/Standard */ 347));};var _default =
 {
   data: function data() {
     return {
@@ -496,7 +493,10 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
       (0, _goodsApi.getGoodNums)({
         status: "" }).
       then(function (data) {
-        _this.counter = data.data.itemNum;
+        if (data.code == '1000') {
+          _this.counter = data.data.itemNum;
+        }
+
       });
     }
     (0, _goodsApi.getDetail)({
@@ -645,6 +645,10 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     });
   },
   methods: {
+    closePlayer: function closePlayer() {
+      this.isPlayer = false;
+      this.videoUrl = '';
+    },
     submitInfo: function submitInfo(e) {
       console.log(e.detail.formId);
 
@@ -817,7 +821,10 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     play: function play(item) {
       if (item.type == 3) {
         this.videoUrl = this.videoObj[item.sort];
-        this.isPlayer = true;
+        uni.navigateTo({
+          url: '/pages/order/goodsDetail/video/video?url=' + this.videoUrl });
+
+        //this.isPlayer = true;
       }
 
     },

@@ -136,10 +136,7 @@
 			// 上一级传递参数：结算返回的数据
 				if (this.isBuyNow) {
 				  let submitData = JSON.parse(this.submitData);
-				 //  if (uni.getStorageSync("address")) {
-					// this.address = JSON.parse(uni.getStorageSync("address"));
-					// submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
-				 //  }
+				  
 				  buyGood(submitData).then(data => {
 					this.address = data.data.address || '';
 					this.list = data.data.shopList;
@@ -147,6 +144,15 @@
 					this.deliverMoney = data.data.deliverMoney;
 					this.cartIdList = data.data.cartIdList;
 					this.totalCount = data.data.totalCount;
+					
+					if (uni.getStorageSync("address")) {
+						this.address = JSON.parse(uni.getStorageSync("address"));
+						submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
+						setTimeout(()=>{
+							uni.setStorageSync('address','')
+						},300)
+					}
+					
 				  });
 				} else {
 				  if (this.submitData) {
@@ -158,17 +164,19 @@
 					this.totalCount = submitData.totalCount;
 				  }
 				  // 判断是否有地址
-				 //  if (uni.getStorageSync("address")) {
-					// // 获取缓存地址
-					// this.address = JSON.parse(uni.getStorageSync("address"));
-					// // 根据地址获取运费
-					// this.getOrderCartByAddress(this.address.id);
-				 //  } else {
-					// // 获取默认地址
-					// this.getAddressDefAddress();
-				 //  }
-				 
-				 this.getAddressDefAddress();
+				  if (uni.getStorageSync("address")) {
+					// 获取缓存地址
+					this.address = JSON.parse(uni.getStorageSync("address"));
+					// 根据地址获取运费
+					this.getOrderCartByAddress(this.address.id);
+					setTimeout(()=>{
+						uni.setStorageSync('address','')
+					},300)
+					
+				  } else {
+					// 获取默认地址
+					this.getAddressDefAddress();
+				  }
 				}
 		},
 		methods: {

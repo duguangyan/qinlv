@@ -8858,16 +8858,15 @@ var addHit = function addHit(data) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) { // const apiUrl = 'https://m.qinlvny.com'; // 正式
-var apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
-var versionNumber = 'v1.0.3'; //版本号
+/* WEBPACK VAR INJECTION */(function(uni) {var apiUrl = 'https://m.qinlvny.com'; // 正式
+// let apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
+// let apiUrl = 'http://192.168.0.202:7000'; // 开发
+var versionNumber = 'V1.0.4'; //版本号
 
 if (apiUrl == 'http://192.168.0.202:7000') {
-  uni.setStorageSync('V', versionNumber + ' 开发');
-  uni.setStorageSync('S', '开发');
+  uni.setStorageSync('v', versionNumber + ' 开发');
 } else {
-  uni.setStorageSync('V', versionNumber + '正式');
-  uni.setStorageSync('S', '正式');
+  uni.setStorageSync('v', versionNumber + '正式');
 }
 Promise.prototype.finally = function (callback) {
   var P = this.constructor;
@@ -8915,22 +8914,15 @@ var request = function request() {var params = arguments.length > 0 && arguments
     if (params.url.indexOf('/api') != -1) {
       newUrl = newUrl.split('/api')[1];
     }
-    try {
-      if (params.data.grant_type == 'mini_program' || params.data.grant_type == 'wx_app') {
-        apiUrl = 'http://2b7306b237.wicp.vip';
-      }
-    } catch (e) {
-      //TODO handle the exception
-    }
+    // try{
+    // 	if(params.data.grant_type == 'mini_program' || params.data.grant_type == 'wx_app'){
+    // 		apiUrl = 'http://2b7306b237.wicp.vip'
+    // 	}
+    // }catch(e){
+    // 	//TODO handle the exception
+    // }
 
 
-    uni.onNetworkStatusChange(function (res) {
-      if (!res.isConnected) {
-        uni.navigateTo({
-          url: '/pages/common/err/err?from=unonline' });
-
-      }
-    });
 
     uni.request({
       url: apiUrl + newUrl,
@@ -8941,100 +8933,118 @@ var request = function request() {var params = arguments.length > 0 && arguments
         uni.hideToast();
         // 请求成功
         var res = res.data;
-        if (res.code == '1000') {
+
+        if (res.code == '1000' || res.access_token) {
           uni.setStorageSync('err', 0);
           resolve(res);
+
         } else {
           // 请求成功非1000	
-          if (res.code === '1011' || res.code === '1007') {
-
-            tonken过期, 重新换取token;
-            if (res.message == 'Full authentication is required to access this resource') {
-              var tokenData = {
-                grant_type: 'refresh_token',
-                scope: 1,
-                client_id: 'cwap',
-                client_secret: 'xx',
-                refresh_token: uni.getStorageSync('refresh_token') };
-
-
-              uni.request({
-                url: apiUrl + '/oauth/oauth/token',
-                method: 'POST',
-                data: tokenData,
-                header: {
-                  'content-type': 'application/multipart/form-data' },
-
+          if (res.code === '1011') {
+            var content = '登录过期，请重新登录！';
+            if (uni.getStorageSync('access_token') == '') {
+              content = '请先登录！';
+            }
+            if (res.message == '无权访问！') {
+              content = '无权访问！';
+            }
+            var _islogin = uni.getStorageSync('isLogin');
+            if (_islogin != 1) {
+              uni.setStorageSync('isLogin', 1);
+              uni.showModal({
+                title: '提示',
+                content: content,
                 success: function success(res) {
-                  if (res.code == '1000') {
-                    uni.request({
-                      url: apiUrl + newUrl,
-                      method: params.method || 'GET',
-                      data: params.data,
-                      header: header,
-                      success: function success(res) {
-                        if (res.code == '1000') {
-                          resolve(res);
-                        }
+                  if (res.confirm) {
+                    // uni.setStorageSync('isLogin',0)	
+                    uni.navigateTo({
+                      url: '/pages/login/login' });
 
-                      } });
-
+                  } else if (res.cancel) {
+                    console.log('用户点击取消');
+                    uni.setStorageSync('isLogin', 0);
                   }
                 } });
 
+            }
 
-            } else {
-              var content = '登录过期，请重新登录！';
-              if (uni.getStorageSync('access_token') == '') {
-                content = '请先登录！';
-              }
-              if (res.message == '无权访问！') {
-                content = '无权访问！';
-              }
-              var _islogin = uni.getStorageSync('isLogin');
-              if (_islogin != 1) {
-                uni.setStorageSync('isLogin', 1);
-                uni.showModal({
-                  title: '提示',
-                  content: content,
-                  success: function success(res) {
-                    if (res.confirm) {
-                      // uni.setStorageSync('isLogin',0)	
-                      uni.navigateTo({
-                        url: '/pages/login/login' });
+          } else if (res.code === '1017') {
+            var tokenData = {
+              grant_type: 'refresh_token',
+              scope: 2,
+              client_id: 'cwap',
+              client_secret: 'xx',
+              refresh_token: uni.getStorageSync('refresh_token') };
 
-                    } else if (res.cancel) {
-                      console.log('用户点击取消');
-                      uni.setStorageSync('isLogin', 0);
-                    }
-                  } });
+
+            uni.request({
+              url: apiUrl + '/oauth/oauth/token',
+              method: 'POST',
+              data: tokenData,
+              header: {
+                'content-type': 'application/multipart/form-data' },
+
+              success: function success(res) {
+                if (res.code == '1000') {
+                  uni.request({
+                    url: apiUrl + newUrl,
+                    method: params.method || 'GET',
+                    data: params.data,
+                    header: header,
+                    success: function success(res) {
+                      if (res.code == '1000') {
+                        resolve(res);
+                      } else {
+                        uni.showToast({
+                          title: '标题',
+                          duration: '请求数据错误' });
+
+                      }
+                    },
+                    fail: function fail() {
+                      uni.showToast({
+                        title: '标题',
+                        duration: '请求数据错误' });
+
+                    } });
+
+                } else {
+                  uni.showToast({
+                    title: '标题',
+                    duration: '请求数据错误' });
+
+                }
+              },
+              fail: function fail(err) {
+                uni.showToast({
+                  title: '标题',
+                  duration: '请求数据错误' });
+
+              } });
+
+          } else {
+            if (!uni.getStorageSync('access_token')) {
+              // 防止重复进入错误页面
+              if (uni.getStorageSync('err') != 1) {
+                uni.navigateTo({
+                  url: '/pages/common/err/err?redirect=' + JSON.stringify(params) });
 
               }
             }
-
-
-
-          } else {
-            // if(!uni.getStorageSync('access_token')){
-            // 	if(uni.getStorageSync('err') != 1){
-            // 		uni.navigateTo({
-            // 			url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
-            // 		})
-            // 	}
-            // }
-
           }
-          resolve(res);
+          // resolve(res);
         }
       },
       fail: function fail(err) {
-
         uni.hideToast();
         // 请求失败处理
         if (err.errMsg || err.errMsg === "request:fail timeout") {
           uni.showToast({
             icon: 'none',
             title: '网络请求超时' });
+
+          uni.navigateTo({
+            url: '/pages/common/err/err?from=unonline' });
 
         }
         reject(err);
@@ -9174,7 +9184,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAUCAYAAACE
 
 /***/ }),
 
-/***/ 288:
+/***/ 296:
 /*!***********************************************************************************!*\
   !*** D:/zl/uniapp-qinlv/components/common/mpvue-citypicker/city-data/province.js ***!
   \***********************************************************************************/
@@ -9324,7 +9334,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 289:
+/***/ 297:
 /*!*******************************************************************************!*\
   !*** D:/zl/uniapp-qinlv/components/common/mpvue-citypicker/city-data/city.js ***!
   \*******************************************************************************/
@@ -10838,7 +10848,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 290:
+/***/ 298:
 /*!*******************************************************************************!*\
   !*** D:/zl/uniapp-qinlv/components/common/mpvue-citypicker/city-data/area.js ***!
   \*******************************************************************************/
@@ -23422,7 +23432,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 303:
+/***/ 311:
 /*!***************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/tag-close.png ***!
   \***************************************************/
@@ -23433,7 +23443,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM
 
 /***/ }),
 
-/***/ 304:
+/***/ 312:
 /*!*****************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-wechat.png ***!
   \*****************************************************/
@@ -23444,7 +23454,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABx
 
 /***/ }),
 
-/***/ 307:
+/***/ 315:
 /*!****************************************!*\
   !*** D:/zl/uniapp-qinlv/api/payApi.js ***!
   \****************************************/
@@ -23476,7 +23486,7 @@ exports.payAlipayByWap = payAlipayByWap;var payWXpayByWap = function payWXpayByW
 
 /***/ }),
 
-/***/ 327:
+/***/ 335:
 /*!*****************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-moment.png ***!
   \*****************************************************/
@@ -23782,7 +23792,7 @@ exports.getSetFormId = getSetFormId;var weixinLogin = function weixinLogin(data)
 
 /***/ }),
 
-/***/ 358:
+/***/ 366:
 /*!****************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-aimup.png ***!
   \****************************************************/
@@ -23793,7 +23803,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 
 /***/ }),
 
-/***/ 359:
+/***/ 367:
 /*!******************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-aimdown.png ***!
   \******************************************************/
@@ -23804,7 +23814,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 
 /***/ }),
 
-/***/ 365:
+/***/ 373:
 /*!**************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-min.png ***!
   \**************************************************/
@@ -23815,7 +23825,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7
 
 /***/ }),
 
-/***/ 366:
+/***/ 374:
 /*!***************************************************!*\
   !*** D:/zl/uniapp-qinlv/static/img/icon-plus.png ***!
   \***************************************************/
@@ -25198,7 +25208,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACN
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/main/main": { "navigationBarTitleText": "沁绿农业", "enablePullDownRefresh": true, "navigationStyle": "custom", "usingComponents": {} }, "pages/login/login": { "navigationBarTitleText": "登录", "usingComponents": {} }, "pages/user/user": { "navigationBarTitleText": "我的", "navigationStyle": "custom", "usingComponents": {} }, "pages/order/order": { "navigationBarTitleText": "进货单", "navigationStyle": "custom", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/setting/setting": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/user/protocal/protocal": { "navigationBarTitleText": "服务条款与协议", "usingComponents": {} }, "pages/user/about/about": { "navigationBarTitleText": "关于我们", "usingComponents": {} }, "pages/user/info/info": { "navigationBarTitleText": "个人信息", "usingComponents": {} }, "pages/user/nickname/nickname": { "navigationBarTitleText": "修改昵称", "usingComponents": {} }, "pages/user/addlist/addlist": { "navigationBarTitleText": "管理收货地址", "usingComponents": {} }, "pages/user/addedit/addedit": { "navigationBarTitleText": "添加地址", "usingComponents": { "ra-btn": "/components/common/RaBtn", "dialog": "/components/common/Dialog", "mpvue-city-picker": "/components/common/mpvue-citypicker/mpvueCityPicker" } }, "pages/user/collection/collection": { "navigationBarTitleText": "收藏", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/order/list": { "navigationBarTitleText": "我的订单", "enablePullDownRefresh": true, "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay", "dialog": "/components/common/Dialog" } }, "pages/user/order/finish": { "navigationBarTitleText": "订单完成", "usingComponents": {} }, "pages/user/order/freight": { "navigationBarTitleText": "物流详情", "usingComponents": {} }, "pages/user/order/detail": { "navigationBarTitleText": "订单详情", "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay" } }, "pages/user/order/success": { "navigationBarTitleText": "交易已完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/user/pay/success": { "navigationBarTitleText": "支付完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition" } }, "pages/order/goodsDetail/goodsDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "share": "/components/good/Share", "standard": "/components/good/Standard", "player": "/components/common/Player" } }, "pages/order/prompt/prompt": { "navigationBarTitleText": "运费说明", "usingComponents": { "provinces": "/components/common/Provinces" } }, "pages/order/submit/submit": { "navigationBarTitleText": "提交订单", "usingComponents": { "pay": "/components/common/Pay" } }, "pages/order/paySuccess/paySuccess": { "navigationBarTitleText": "支付成功", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition", "dialog": "/components/common/Dialog" } }, "pages/order/orderSuccess/orderSuccess": { "navigationBarTitleText": "订单完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/main/search/search": { "navigationBarTitleText": "搜索商品", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/order/goodsList/goodsList": { "navigationBarTitleText": "商品列表", "usingComponents": { "panel": "/components/search/Panel", "good": "/components/common/Good" } }, "pages/common/err/err": { "navigationBarTitleText": "异常", "usingComponents": {} }, "pages/common/webview/webview": { "navigationBarTitleText": "网络地址", "usingComponents": {} }, "pages/login/binding/binding": { "navigationBarTitleText": "绑定手机号", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "沁绿农业APP", "navigationBarBackgroundColor": "#FFFFFF", "backgroundColor": "#FFFFFF", "onReachBottomDistance": 151 } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/main/main": { "navigationBarTitleText": "沁绿农业", "enablePullDownRefresh": true, "navigationStyle": "custom", "usingComponents": {} }, "pages/login/login": { "navigationBarTitleText": "登录", "usingComponents": {} }, "pages/user/user": { "navigationBarTitleText": "我的", "navigationStyle": "custom", "usingComponents": {} }, "pages/order/order": { "navigationBarTitleText": "进货单", "navigationStyle": "custom", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/setting/setting": { "navigationBarTitleText": "设置", "usingComponents": {} }, "pages/user/protocal/protocal": { "navigationBarTitleText": "服务条款与协议", "usingComponents": {} }, "pages/user/about/about": { "navigationBarTitleText": "关于我们", "usingComponents": {} }, "pages/user/info/info": { "navigationBarTitleText": "个人信息", "usingComponents": {} }, "pages/user/nickname/nickname": { "navigationBarTitleText": "修改昵称", "usingComponents": {} }, "pages/user/addlist/addlist": { "navigationBarTitleText": "管理收货地址", "usingComponents": {} }, "pages/user/addedit/addedit": { "navigationBarTitleText": "添加地址", "usingComponents": { "ra-btn": "/components/common/RaBtn", "dialog": "/components/common/Dialog", "mpvue-city-picker": "/components/common/mpvue-citypicker/mpvueCityPicker" } }, "pages/user/collection/collection": { "navigationBarTitleText": "收藏", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/user/order/list": { "navigationBarTitleText": "我的订单", "enablePullDownRefresh": true, "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay", "dialog": "/components/common/Dialog" } }, "pages/user/order/finish": { "navigationBarTitleText": "订单完成", "usingComponents": {} }, "pages/user/order/freight": { "navigationBarTitleText": "物流详情", "usingComponents": {} }, "pages/user/order/detail": { "navigationBarTitleText": "订单详情", "usingComponents": { "good": "/components/order/Good", "pay": "/components/common/Pay" } }, "pages/user/order/success": { "navigationBarTitleText": "交易已完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/user/pay/success": { "navigationBarTitleText": "支付完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition" } }, "pages/order/goodsDetail/goodsDetail": { "navigationBarTitleText": "商品详情", "usingComponents": { "share": "/components/good/Share", "standard": "/components/good/Standard", "player": "/components/common/Player" } }, "pages/order/prompt/prompt": { "navigationBarTitleText": "运费说明", "usingComponents": { "provinces": "/components/common/Provinces" } }, "pages/order/submit/submit": { "navigationBarTitleText": "提交订单", "usingComponents": { "pay": "/components/common/Pay" } }, "pages/order/paySuccess/paySuccess": { "navigationBarTitleText": "支付成功", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods", "advertising-position": "/components/common/AdvertisingPosition", "dialog": "/components/common/Dialog" } }, "pages/order/orderSuccess/orderSuccess": { "navigationBarTitleText": "订单完成", "usingComponents": { "strictly-goods": "/components/common/StrictlyGoods" } }, "pages/main/search/search": { "navigationBarTitleText": "搜索商品", "usingComponents": { "dialog": "/components/common/Dialog" } }, "pages/order/goodsList/goodsList": { "navigationBarTitleText": "商品列表", "usingComponents": { "panel": "/components/search/Panel", "good": "/components/common/Good" } }, "pages/common/err/err": { "navigationBarTitleText": "异常", "usingComponents": {} }, "pages/common/webview/webview": { "navigationBarTitleText": "网络地址", "usingComponents": {} }, "pages/login/binding/binding": { "navigationBarTitleText": "绑定手机号", "usingComponents": {} }, "pages/order/goodsDetail/video/video": { "navigationBarTitleText": "视频播放", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "沁绿农业APP", "navigationBarBackgroundColor": "#FFFFFF", "backgroundColor": "#FFFFFF", "onReachBottomDistance": 151 } };exports.default = _default;
 
 /***/ }),
 

@@ -198,7 +198,7 @@ var _iconFilter2 = _interopRequireDefault(__webpack_require__(/*! @/static/img/i
 var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
 
 
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Panel = function Panel() {return Promise.all(/*! import() | components/search/Panel */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/search/Panel")]).then(__webpack_require__.bind(null, /*! @/components/search/Panel.vue */ 353));};var Good = function Good() {return Promise.all(/*! import() | components/common/Good */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Good")]).then(__webpack_require__.bind(null, /*! @/components/common/Good.vue */ 362));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Panel = function Panel() {return Promise.all(/*! import() | components/search/Panel */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/search/Panel")]).then(__webpack_require__.bind(null, /*! @/components/search/Panel.vue */ 361));};var Good = function Good() {return Promise.all(/*! import() | components/common/Good */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Good")]).then(__webpack_require__.bind(null, /*! @/components/common/Good.vue */ 370));};var _default =
 {
   data: function data() {
     return {

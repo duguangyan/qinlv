@@ -250,9 +250,8 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
 
                   } else {
                     uni.setStorageSync('access_token', res.access_token);
-                    //uni.setStorageSync('access_token', res.refresh_token)
+                    uni.setStorageSync('refresh_token', res.refresh_token);
                     uni.setStorageSync('uid', res.id);
-
                     // 获取用户信息
                     _this.getUserInfoDates();
                   }
@@ -297,7 +296,7 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
 
             } else {
               uni.setStorageSync('access_token', res.access_token);
-              //uni.setStorageSync('access_token', res.refresh_token)
+              uni.setStorageSync('access_token', res.refresh_token);
               uni.setStorageSync('uid', res.id);
 
               // 获取用户信息
@@ -375,8 +374,9 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
           // let dates = this.$qs.stringify(data)
         };(0, _userApi.postUserLogin)(data).then(function (res) {
           uni.setStorageSync('access_token', res.access_token);
-          //uni.setStorageSync('access_token', res.refresh_token)
+          uni.setStorageSync('refresh_token', res.refresh_token);
           uni.setStorageSync('uid', res.id);
+
           uni.setStorageSync('phone', _this3.phone);
           if (_this3.setCodeInterval != '') {
             clearInterval(_this3.setCodeInterval);

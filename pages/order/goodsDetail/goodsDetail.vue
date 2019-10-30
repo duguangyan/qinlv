@@ -16,7 +16,8 @@
 				</mt-swipe-item>
 			</mt-swipe>
 		</div> -->
-
+		
+		<!-- <Player class="Player" :src="videoUrl" :show="isPlayer" @close="closePlayer" /> -->
 		<view class="top">
 			<view class="tips cf">
 				<view class="fll" @click="goBack" v-if="false">
@@ -85,7 +86,7 @@
 		      <div class="tag1">
 		        <span>规格</span>
 		      </div>
-		      <li v-for="(item,index) in good.standardList" :key="index" v-show="index<3">
+		      <li v-for="(item,index) in good.standardList" :key="index" v-if="index<3">
 		        <span v-for="(sta,staIdx) in item" :key="staIdx" :class="{'fix-block':staIdx == item.length-1}">{{sta}}</span>
 		      </li>
 		      <div v-if="good.standardList.length > 3" class="check-more" @click="isStandard = true">查看更多&gt;</div>
@@ -111,9 +112,9 @@
 			</div>
 			<div class="txt">{{good.goods.detail}}</div>
 			<div class="tag2" v-for="(item,index) in imageList" :key="index" >
-				<div v-if="item.type==3" :class="{'img-con':item.type==3}" @click="play(item)">
+				<!-- <div v-if="item.type==3" :class="{'img-con':item.type==3}" @click="play(item)">
 					<image class='img2' src="../../../static/img/play.png" mode=""></image>
-				</div>
+				</div> -->
 				<img class="img" mode="widthFix" :src="item.imgUrl" width="100%" alt />
 			</div>
 			
@@ -225,7 +226,7 @@
 
 		<Share :img='imageList[0].imgUrl' :name="good.goods.name" :shopId='shopId' :goodsId='goodsId' :show="isShare" @close="isShare = false" />
 		<Standard v-if="good.standardList.length>3" :show="isStandard" :list="good.standardList" @close="isStandard = false" />
-		<Player :src="videoUrl" :show="isPlayer" @close="isPlayer = false" />
+		
 	</div>
 </template>
 
@@ -311,7 +312,10 @@
 				getGoodNums({
 					status: ""
 				}).then(data => {
-					this.counter = data.data.itemNum;
+					if(data.code == '1000'){
+						this.counter = data.data.itemNum;
+					}
+					
 				});
 			}
 			getDetail({
@@ -460,6 +464,10 @@
 			});
 		},
 		methods: {
+			closePlayer(){
+				this.isPlayer = false;
+				this.videoUrl = '';
+			},
 			submitInfo(e){
 				console.log(e.detail.formId)
 				
@@ -632,7 +640,10 @@
 			play(item) {
 				if(item.type == 3){
 					this.videoUrl = this.videoObj[item.sort];
-					this.isPlayer = true;
+					uni.navigateTo({
+						url:'/pages/order/goodsDetail/video/video?url='+this.videoUrl
+					})
+					//this.isPlayer = true;
 				}
 				
 			},
@@ -678,6 +689,11 @@
 </script>
 
 <style lang="scss" scoped>
+	// .Player{
+	// 	position: fixed;
+	// 	height: 750upx;
+	// 	top: 0;
+	// }
 	.opt{
 		opacity: 0;
 	}
@@ -733,7 +749,7 @@
 
 		.fix-block {
 			display: block;
-			width: 120upx;
+			// width: 120upx;
 			text-align: right;
 		}
 

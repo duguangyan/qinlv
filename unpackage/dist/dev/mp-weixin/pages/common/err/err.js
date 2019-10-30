@@ -188,6 +188,7 @@ var _default = { data: function data() {return { title: '服务器出错了', im
         }
         (0, _request.request)(data).then(function (res) {
           if (res.code === '1000') {
+            uni.setStorageSync('err', 0);
             uni.navigateBack({
               delta: 1 });
 

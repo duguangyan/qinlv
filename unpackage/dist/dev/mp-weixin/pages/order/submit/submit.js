@@ -235,7 +235,7 @@ var _cartApi = __webpack_require__(/*! @/api/cartApi.js */ 57);
 
 
 var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 200);
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 300));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 308));};var _default =
 {
   data: function data() {
     return {
@@ -273,10 +273,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
     // 上一级传递参数：结算返回的数据
     if (this.isBuyNow) {
       var submitData = JSON.parse(this.submitData);
-      //  if (uni.getStorageSync("address")) {
-      // this.address = JSON.parse(uni.getStorageSync("address"));
-      // submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
-      //  }
+
       (0, _goodsApi.buyGood)(submitData).then(function (data) {
         _this.address = data.data.address || '';
         _this.list = data.data.shopList;
@@ -284,6 +281,15 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
         _this.deliverMoney = data.data.deliverMoney;
         _this.cartIdList = data.data.cartIdList;
         _this.totalCount = data.data.totalCount;
+
+        if (uni.getStorageSync("address")) {
+          _this.address = JSON.parse(uni.getStorageSync("address"));
+          submitData.addressId = JSON.parse(uni.getStorageSync("address")).id;
+          setTimeout(function () {
+            uni.setStorageSync('address', '');
+          }, 300);
+        }
+
       });
     } else {
       if (this.submitData) {
@@ -295,17 +301,19 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
         this.totalCount = _submitData.totalCount;
       }
       // 判断是否有地址
-      //  if (uni.getStorageSync("address")) {
-      // // 获取缓存地址
-      // this.address = JSON.parse(uni.getStorageSync("address"));
-      // // 根据地址获取运费
-      // this.getOrderCartByAddress(this.address.id);
-      //  } else {
-      // // 获取默认地址
-      // this.getAddressDefAddress();
-      //  }
+      if (uni.getStorageSync("address")) {
+        // 获取缓存地址
+        this.address = JSON.parse(uni.getStorageSync("address"));
+        // 根据地址获取运费
+        this.getOrderCartByAddress(this.address.id);
+        setTimeout(function () {
+          uni.setStorageSync('address', '');
+        }, 300);
 
-      this.getAddressDefAddress();
+      } else {
+        // 获取默认地址
+        this.getAddressDefAddress();
+      }
     }
   },
   methods: {

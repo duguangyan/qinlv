@@ -252,7 +252,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));
-var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common/Dialog.vue */ 164));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good */ 293));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay */ 300));};var _default =
+var _Dialog = _interopRequireDefault(__webpack_require__(/*! @/components/common/Dialog.vue */ 164));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good */ 301));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay */ 308));};var _default =
 {
   name: 'orddetail',
   data: function data() {

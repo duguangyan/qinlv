@@ -10,13 +10,13 @@
 			</div>
 			<div class="list" v-if="hasOrders">
 				<li v-for="item in list" :key="item.id">
-					<div @click="goBlack(item)">
+					<div class="back" @click="goBlack(item)">
 						<div class="upon">
 							<span class="name">{{item.name}}</span>
 							<span class="phone">{{item.phone}}</span>
 						</div>
 						<div class="low">
-							<span v-show="item.isDefault" class="tag">默认</span>
+							<span v-show="item.def" class="tag">默认</span>
 							<span class="address">{{item.address}}</span>
 						</div>
 					</div>
@@ -89,7 +89,7 @@
 	}
 	.list {
 		border-top: 1upx solid #f0f0f0;
-
+		
 		.no-data {
 			height: 100%;
 			text-align: center;
@@ -137,7 +137,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-
+			.back{
+				width: 80%;
+			}
 			.low {
 				max-width: 750upx;
 				text-overflow: ellipsis;

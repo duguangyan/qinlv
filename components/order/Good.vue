@@ -1,13 +1,13 @@
 <template>
-  <div class="item">
-    <div class="photo">
-      <img :src="item.imgUrl" height="100%" alt />
+  <div class="item cf">
+    <div class="photo fll">
+      <image :src="item.imgUrl"/>
     </div>
-    <div class="content">
+    <div class="content fll">
       <div class="name ellipsis-line2">{{item.goodsName}}</div>
       <div class="standard">{{item.skuDesc}}</div>
     </div>
-    <div class="content2">
+    <div class="content2 flr">
       <div class="price">￥{{item.price}}</div>
       <div class="num">x{{item.num}}</div>
     </div>
@@ -28,15 +28,12 @@ export default {
 
 <style lang="scss" scoped>
 .item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
   font-size: 24upx;
   color: #000;
   padding: 20upx 0;
   .content {
-    flex-grow: 1;
-    position: relative;
+	width: 60%;
+	margin-left: 20upx;
   }
   .content2 {
     position: relative;
@@ -46,10 +43,11 @@ export default {
     height: 160upx;
     border-radius: 10upx;
     overflow: hidden;
-    margin-right: 20upx;
-	>img{
-		width: 100%;
-		height: 100%;
+	background: red;
+	>image{
+		width: 160upx;
+		height: 160upx;
+		text-align: center;
 	}
   }
   .name {

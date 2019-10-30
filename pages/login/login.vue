@@ -126,9 +126,8 @@
 												});
 											}else{
 												uni.setStorageSync('access_token', res.access_token)
-												//uni.setStorageSync('access_token', res.refresh_token)
+												uni.setStorageSync('refresh_token', res.refresh_token)
 												uni.setStorageSync('uid', res.id)
-											
 												// 获取用户信息
 												_this.getUserInfoDates()
 											}
@@ -173,7 +172,7 @@
 							});
 						}else{
 							uni.setStorageSync('access_token', res.access_token)
-							//uni.setStorageSync('access_token', res.refresh_token)
+							uni.setStorageSync('access_token', res.refresh_token)
 							uni.setStorageSync('uid', res.id)
 						
 							// 获取用户信息
@@ -251,8 +250,9 @@
 		        // let dates = this.$qs.stringify(data)
 		        postUserLogin(data).then((res) => {
 					uni.setStorageSync('access_token', res.access_token)
-					//uni.setStorageSync('access_token', res.refresh_token)
+					uni.setStorageSync('refresh_token', res.refresh_token)
 					uni.setStorageSync('uid', res.id)
+					
 					uni.setStorageSync('phone', this.phone)
 					if(this.setCodeInterval!=''){
 						clearInterval(this.setCodeInterval)

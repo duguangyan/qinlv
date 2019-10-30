@@ -9,11 +9,11 @@
       </div>
 
     </div>
-    <div class="order-no-data" v-if="orders.length<=0">
+    <div class="order-no-data" v-if="hasOrders">
       <img src="@/static/img/icon-order-no.png" alt="图片">
       <div class="text-999 fs24">您还没有相关订单</div>
     </div>
-    <div class="list" v-if="orders.length>0">
+    <div class="list" v-if="!hasOrders">
 
       <ul>
         <li v-for="(item, index) in orders" :key="item.id">
@@ -27,7 +27,7 @@
             <span v-if="item.status === -1">已取消</span>
             <span v-if="item.status === 0">待付款</span>
             <span v-if="item.status === 2">待发货</span>
-            <span v-if="item.status === 3">代收款</span>
+            <span v-if="item.status === 3">待收货</span>
             <span v-if="item.status === 4">已完成</span>
           </span>
           </div>
@@ -70,6 +70,7 @@ export default {
   data() {
     return {
 		title: '确认收货吗?',
+		hasOrders: false,
 		isShow: false,
 		orderId: '',
 		shopId: '',
@@ -174,7 +175,7 @@ export default {
 	goFreight(index){
 		let item = this.orders[index]
 		uni.navigateTo({
-			url:'/pages/user/order/freight?orderId='+item.orderId+'&shopId='+item.item.shopId
+			url:'/pages/user/order/freight?orderId='+item.orderId+'&shopId='+item.shopId
 		})
 	},
     // 去收货完成页面
@@ -241,6 +242,7 @@ export default {
       getOrderPageMyOrder(data).then((res) => {
         if (res.code === '1000') {
           this.orders = this.orders.concat(res.data.records)
+		  this.hasOrders = this.orders.length <= 0
           if (this.orders.length >= res.data.total) {
             this.allLoaded = true
             this.loadText  = '数据已经加载完毕'

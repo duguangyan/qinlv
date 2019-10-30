@@ -176,8 +176,10 @@ var _default =
         success: function success(res) {
           if (res.confirm) {
             var records = uni.getStorageSync('records');
+            var platform = uni.getStorageSync('platform');
             uni.clearStorageSync(); // 清除缓存
             uni.setStorageSync('records', records);
+            uni.setStorageSync('platform', platform);
             uni.switchTab({
               url: '/pages/user/user' });
 

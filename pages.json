@@ -165,6 +165,12 @@
 				"navigationBarTitleText": "绑定手机号" 
 			}
         }
+        ,{
+            "path" : "pages/order/goodsDetail/video/video",
+            "style" : {
+				"navigationBarTitleText": "视频播放" 
+			}
+        }
     ],
 	"tabBar": {
 		"color": "#D9D9D9",

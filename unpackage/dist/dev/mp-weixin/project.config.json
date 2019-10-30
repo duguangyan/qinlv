@@ -9,7 +9,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.7.0",
 	"appid": "wxf89e01a251ab43f7",
-	"projectname": "%E4%B8%8A%E4%B8%8A%E5%86%9C%E5%A4%AB",
+	"projectname": "上上农夫",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
@@ -21,24 +21,13 @@
 			"current": -1,
 			"list": []
 		},
-		"plugin": {
-			"current": -1,
-			"list": []
-		},
 		"game": {
 			"current": -1,
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
-			"list": [
-				{
-					"id": -1,
-					"name": "pages/login/binding/binding",
-					"pathName": "pages/login/binding/binding",
-					"scene": null
-				}
-			]
+			"current": -1,
+			"list": []
 		}
 	}
 }

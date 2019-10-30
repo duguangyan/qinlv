@@ -7,8 +7,8 @@
   "id": "__UNI__E3A114F",
   "name": "上上农夫",
   "version": {
-    "name": "1.0.3",
-    "code": 103
+    "name": "1.0.4",
+    "code": 104
   },
   "description": "上上农夫专业的红薯销售平台，提供全国最优质的红薯",
   "launch_path": "__uniappview.html",
@@ -22,6 +22,8 @@
     "VideoPlayer": {},
     "Push": {},
     "OAuth": {},
+    "Payment": {},
+    "Share": {},
     "UniNView": {
       "description": "UniNView原生渲染"
     }
@@ -146,8 +148,19 @@
       },
       "plugins": {
         "push": {},
-        "payment": {},
-        "share": {},
+        "payment": {
+          "alipay": {},
+          "weixin": {
+            "appid": "wx26baf2267dd24e83",
+            "UniversalLinks": "https://m.qinlvny.com/static/apple-app-site-association"
+          }
+        },
+        "share": {
+          "weixin": {
+            "appid": "wx26baf2267dd24e83",
+            "UniversalLinks": "https://m.qinlvny.com/static/apple-app-site-association"
+          }
+        },
         "oauth": {
           "weixin": {
             "appid": "wx26baf2267dd24e83",

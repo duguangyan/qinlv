@@ -39,8 +39,10 @@
 			      success: function (res) {
 			          if (res.confirm) {
 			              let records = uni.getStorageSync('records')
+						  let platform = uni.getStorageSync('platform')
 			              uni.clearStorageSync() // 清除缓存
 						  uni.setStorageSync('records',records)
+						  uni.setStorageSync('platform',platform)
 			              uni.switchTab({
 			              	url:'/pages/user/user'
 			              })

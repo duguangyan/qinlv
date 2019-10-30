@@ -36,7 +36,6 @@
 }
 .good-detail .fix-block.data-v-438a4b87 {
     display: block;
-    width: 120rpx;
     text-align: right;
 }
 .good-detail .mc15.data-v-438a4b87, .good-detail .overall.data-v-438a4b87, .good-detail .good-name.data-v-438a4b87, .good-detail .info.data-v-438a4b87 {

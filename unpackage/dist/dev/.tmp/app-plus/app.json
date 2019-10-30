@@ -27,7 +27,8 @@
     "pages/order/goodsList/goodsList",
     "pages/common/err/err",
     "pages/common/webview/webview",
-    "pages/login/binding/binding"
+    "pages/login/binding/binding",
+    "pages/order/goodsDetail/video/video"
   ],
   "window": {
     "navigationBarTextStyle": "black",

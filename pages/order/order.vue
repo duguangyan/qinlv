@@ -1,10 +1,10 @@
 <template>
 	<div class="cart">
-		<div class="edit cf" v-if="list.length > 0">
+		<div class="edit cf" v-if="!hasData">
 			<div class="title fll">进货单({{validTotal}})</div>
 			<div class="icon flr" @click="isEdit = !isEdit">{{isEdit?'完成':'编辑'}}</div>
 		</div>
-		<div class="cart-nodata" v-if="list.length<=0">
+		<div class="cart-nodata" v-if="hasData">
 			<div class="img">
 				<img src="@/static/img/icon-cart-nodata.png" alt="图片">
 			</div>
@@ -13,7 +13,7 @@
 			</div>
 			<div class="bg-red text-fff shop-btn" @click="goHome">去购物</div>
 		</div>
-		<div class="list" v-if="list.length>0">
+		<div class="list" v-if="!hasData">
 			<div v-for="(item,index) in list" :key="index" style="margin-top: 10upx">
 				<div class="cf parent-title">
 					<div class="fll parent-icon" @click="checkParentIcon(index)">
@@ -36,10 +36,10 @@
 							<img :src="it.imgUrl || defaultUrl" alt="图片">
 						</div>
 						<div class="fll ml-10 info">
-							<p class="fs28 p1 ellipsis ellipsis-line2">{{it.goodsName || ''}}</p>
-							<p class="p4 text-666 fs20 ellipsis ellipsis-line3">{{it.skuDesc || '--'}}</p>
+							<p class="fs28 p1 ellipsis ellipsis-line2" @click="goDetail(item.shopId, it.goodsId)">{{it.goodsName || ''}}</p>
+							<p class="p4 text-666 fs20 ellipsis ellipsis-line3" @click="goDetail(item.shopId, it.goodsId)">{{it.skuDesc || '--'}}</p>
 							<!--              status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")-->
-							<p v-if="it.status !== 4" class="text-red fs-14 p2">￥ <span class="fs-18">{{it.price}}</span></p>
+							<p v-if="it.status !== 4" class="text-red fs-14 p2" @click="goDetail(item.shopId, it.goodsId)">￥ <span class="fs-18">{{it.price}}</span></p>
 							<p v-if="it.status === 4" class="text-red fs-14 p3"> <span>下架商品</span></p>
 							<!-- 数量操作 -->
 							<div class="count" v-if="!isEdit && it.status !== 4">
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 
-		<div class="footer" v-if="list.length > 0">
+		<div class="footer" v-if="list.length>0">
 			<div v-if="isEdit">
 				<div class="del" @click="preDel">删除</div>
 			</div>
@@ -83,6 +83,7 @@
 	import Dialog from '@/components/common/Dialog.vue'
 	import util from '@/utils/util.js'
 	import T from '@/utils/tips.js'
+	import validator from '@/utils/validator.js'
 	import {
 		getCartOrderList,
 		getCartCheck,
@@ -94,6 +95,7 @@
 	export default {
 		data() {
 			return {
+				hasData: false,
 				title:'您确定删除商品吗?',
 				confirmText:'删除',
 				cancelText:'再想想',
@@ -367,6 +369,7 @@
 				this.list = []
 				getCartOrderList().then((res) => {
 					if (res.code === '1000') {
+						this.hasData = res.data.cartLines.length <= 0
 						if (res.data.cartLines && res.data.cartLines.length > 0) {
 							this.list = res.data.cartLines
 							if (this.list.length > 0) {
@@ -652,9 +655,8 @@
 		}
 
 		.list {
-			margin-top: 20upx;
+			margin-top: 50upx;
 			background-color: #fff;
-			padding-top: 30upx;
 
 			.title {
 				img:first-child {

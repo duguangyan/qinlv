@@ -177,9 +177,8 @@
       font-size: 28rpx;
 }
 .cart .list.data-v-109e8254 {
-    margin-top: 20rpx;
+    margin-top: 50rpx;
     background-color: #fff;
-    padding-top: 30rpx;
 }
 .cart .list .title.data-v-109e8254 {
       padding: 0 0 10rpx 30rpx;

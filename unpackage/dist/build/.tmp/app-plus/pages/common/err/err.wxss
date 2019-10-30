@@ -1,18 +1,18 @@
-.err.data-v-67f73c1a {
+.err.data-v-1785c674 {
   text-align: center;
 }
-.err > ._img.data-v-67f73c1a {
+.err > ._img.data-v-1785c674 {
     margin-top: 200rpx;
     width: 240rpx;
     height: 240rpx;
 }
-.err .p.data-v-67f73c1a {
+.err .p.data-v-1785c674 {
     color: #999;
     width: 220rpx;
     margin: 0 auto;
     font-size: 24rpx;
 }
-.err .btn.data-v-67f73c1a {
+.err .btn.data-v-1785c674 {
     width: 140rpx;
     height: 60rpx;
     line-height: 60rpx;

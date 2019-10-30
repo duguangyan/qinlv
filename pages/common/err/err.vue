@@ -64,6 +64,7 @@
 		          }
 		          request(data).then(res => {
 		            if (res.code === '1000') {
+					  uni.setStorageSync('err',0)
 		              uni.navigateBack({
 		              	delta:1
 		              })

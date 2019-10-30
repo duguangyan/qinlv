@@ -201,12 +201,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good.vue */ 293));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 300));};var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good.vue */ 301));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay.vue */ 308));};var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default =
 {
   name: 'ordlist',
   data: function data() {
     return {
       title: '确认收货吗?',
+      hasOrders: false,
       isShow: false,
       orderId: '',
       shopId: '',
@@ -311,7 +312,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
     goFreight: function goFreight(index) {
       var item = this.orders[index];
       uni.navigateTo({
-        url: '/pages/user/order/freight?orderId=' + item.orderId + '&shopId=' + item.item.shopId });
+        url: '/pages/user/order/freight?orderId=' + item.orderId + '&shopId=' + item.shopId });
 
     },
     // 去收货完成页面
@@ -378,6 +379,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
       (0, _userApi.getOrderPageMyOrder)(data).then(function (res) {
         if (res.code === '1000') {
           _this3.orders = _this3.orders.concat(res.data.records);
+          _this3.hasOrders = _this3.orders.length <= 0;
           if (_this3.orders.length >= res.data.total) {
             _this3.allLoaded = true;
             _this3.loadText = '数据已经加载完毕';

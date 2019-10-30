@@ -1,13 +1,12 @@
-// const apiUrl = 'https://m.qinlvny.com'; // 正式
- let apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
-const versionNumber = 'v1.0.3'; //版本号
+ const apiUrl = 'https://m.qinlvny.com'; // 正式
+// let apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
+// let apiUrl = 'http://192.168.0.202:7000'; // 开发
+const versionNumber = 'V1.0.4'; //版本号
 
 if (apiUrl == 'http://192.168.0.202:7000') {
-	uni.setStorageSync('V', versionNumber + ' 开发');
-	uni.setStorageSync('S', '开发');
+	uni.setStorageSync('v', versionNumber + ' 开发');
 } else {
-	uni.setStorageSync('V', versionNumber + '正式');
-	uni.setStorageSync('S', '正式');
+	uni.setStorageSync('v', versionNumber + '正式');
 }
 Promise.prototype.finally = function(callback) {
 	let P = this.constructor;
@@ -55,22 +54,15 @@ const request = function(params = {}) {
 		if (params.url.indexOf('/api') != -1) {
 			newUrl = newUrl.split('/api')[1]
 		}  
-		try{
-			if(params.data.grant_type == 'mini_program' || params.data.grant_type == 'wx_app'){
-				apiUrl = 'http://2b7306b237.wicp.vip'
-			}
-		}catch(e){
-			//TODO handle the exception
-		}
+		// try{
+		// 	if(params.data.grant_type == 'mini_program' || params.data.grant_type == 'wx_app'){
+		// 		apiUrl = 'http://2b7306b237.wicp.vip'
+		// 	}
+		// }catch(e){
+		// 	//TODO handle the exception
+		// }
 		
 		// #endif
-		uni.onNetworkStatusChange(function (res) {
-			if(!res.isConnected) {
-				uni.navigateTo({
-					url:'/pages/common/err/err?from=unonline'
-				})
-			}
-		});
 		
 		uni.request({
 			url: apiUrl + newUrl,
@@ -81,100 +73,118 @@ const request = function(params = {}) {
 				uni.hideToast();
 				// 请求成功
 				var res = res.data;
-				if (res.code == '1000') {
+				
+				if (res.code == '1000' || res.access_token) {
 					uni.setStorageSync('err',0);
 					resolve(res);
+					
 				} else {
 					// 请求成功非1000	
-					if(res.code === '1011' || res.code === '1007'){
-						
-						tonken过期,重新换取token
-						if(res.message == 'Full authentication is required to access this resource'){
-							let tokenData = {
-								grant_type:'refresh_token',
-								scope:1,
-								client_id: 'cwap',
-								client_secret:'xx',
-								refresh_token: uni.getStorageSync('refresh_token')
-							}
-
-							uni.request({
-								url: apiUrl + '/oauth/oauth/token',
-								method: 'POST',
-								data:tokenData,
-								header:{
-									'content-type':'application/multipart/form-data'
-								},
-								success(res) {
-									if(res.code == '1000'){
-										uni.request({
-											url: apiUrl + newUrl,
-											method: params.method || 'GET',
-											data: params.data,
-											header,
-											success(res) {
-												if(res.code == '1000'){
-													resolve(res);
-												}
-												
-											}
-										})
-									}
-								}
-							})
-							
-						} else {
-							let content = '登录过期，请重新登录！'
-							if(uni.getStorageSync('access_token') == '') {
-								content = '请先登录！'
-							}
-							if(res.message == '无权访问！'){
-								content = '无权访问！'
-							}
-							let islogin = uni.getStorageSync('isLogin')
-							if(islogin != 1){
-								uni.setStorageSync('isLogin',1)
-								uni.showModal({
-								    title: '提示',
-								    content,
-								    success: function (res) {
-								        if (res.confirm) {
-										   // uni.setStorageSync('isLogin',0)	
-								           uni.navigateTo({
-								           	url:'/pages/login/login'
-								           })
-								        } else if (res.cancel) {
-								            console.log('用户点击取消');
-											uni.setStorageSync('isLogin',0)
-								        }
-								    }
-								});
-							}
+					if(res.code === '1011'){
+						let content = '登录过期，请重新登录！'
+						if(uni.getStorageSync('access_token') == '') {
+							content = '请先登录！'
+						}
+						if(res.message == '无权访问！'){
+							content = '无权访问！'
+						}
+						let islogin = uni.getStorageSync('isLogin')
+						if(islogin != 1){
+							uni.setStorageSync('isLogin',1)
+							uni.showModal({
+							    title: '提示',
+							    content,
+							    success: function (res) {
+							        if (res.confirm) {
+									   // uni.setStorageSync('isLogin',0)	
+							           uni.navigateTo({
+							           	url:'/pages/login/login'
+							           })
+							        } else if (res.cancel) {
+							            console.log('用户点击取消');
+										uni.setStorageSync('isLogin',0)
+							        }
+							    }
+							});
 						}
 						
+					}else if(res.code === '1017'){
+						let tokenData = {
+							grant_type:'refresh_token',
+							scope:2,
+							client_id: 'cwap',
+							client_secret:'xx',
+							refresh_token: uni.getStorageSync('refresh_token')
+						}
 						
-						
-					}else{
-						// if(!uni.getStorageSync('access_token')){
-						// 	if(uni.getStorageSync('err') != 1){
-						// 		uni.navigateTo({
-						// 			url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
-						// 		})
-						// 	}
-						// }
-						
+						uni.request({
+							url: apiUrl + '/oauth/oauth/token',
+							method: 'POST',
+							data: tokenData,
+							header:{
+								'content-type':'application/multipart/form-data'
+							},
+							success(res) { 
+								if(res.code == '1000'){
+									uni.request({
+										url: apiUrl + newUrl,
+										method: params.method || 'GET',
+										data: params.data,
+										header,
+										success(res) {
+											if(res.code == '1000'){
+												resolve(res);
+											}else{
+												uni.showToast({
+												    title: '标题',
+												    duration: '请求数据错误'
+												});
+											}
+										},
+										fail() {
+											uni.showToast({
+											    title: '标题',
+											    duration: '请求数据错误'
+											});
+										}
+									})
+								} else{
+									uni.showToast({
+									    title: '标题',
+									    duration: '请求数据错误'
+									});
+								}
+							},
+							fail(err) {
+								uni.showToast({
+								    title: '标题',
+								    duration: '请求数据错误'
+								});
+							}
+						})
+					} else {
+						if(!uni.getStorageSync('access_token')){
+							// 防止重复进入错误页面
+							if(uni.getStorageSync('err') != 1){
+								uni.navigateTo({
+									url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
+								})
+							}
+						}
 					}
-					resolve(res);
+					// resolve(res);
 				}
 			},
 			fail(err) {
-				
 				uni.hideToast();
 				// 请求失败处理
 				if (err.errMsg || err.errMsg === "request:fail timeout") {
 					uni.showToast({
 						icon:'none',
 						title:'网络请求超时'
+					})
+					uni.navigateTo({
+						url:'/pages/common/err/err?from=unonline'
 					})
 				}
 				 reject(err)

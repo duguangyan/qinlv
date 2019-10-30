@@ -220,6 +220,8 @@ const weixinLogin = data => {
   })
 }
 
+
+
 export {
   weixinLogin,
   getSetFormId,

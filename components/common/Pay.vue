@@ -106,6 +106,7 @@
 			},
 			checkPayNav(index) {
 				this.checkIndex = index
+				this.clock = true
 			},
 			close() {
 				vm.$emit('close', false)

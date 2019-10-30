@@ -189,7 +189,7 @@ var _default =
       { t: '待付款', u: '/static/img/icon-waitpay.png' },
       { t: '待发货', u: '/static/img/icon-waitsend.png' },
       { t: '待收货', u: '/static/img/icon-waitrecive.png' },
-      { t: '完成', u: '/static/img/icon-done.png' }],
+      { t: '已完成', u: '/static/img/icon-done.png' }],
 
       isLogin: false,
       uid: '',
