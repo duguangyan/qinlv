@@ -231,9 +231,35 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
       isRight: false, // 是否完成输入
       setCodeInterval: '', // 定时器
       deviceId: '', // 数据传值deviceId
-      appID: 'wxb8afa388fa540c2a', weixinCode: '' };}, components: {}, onHide: function onHide() {if (this.setCodeInterval != '') {clearInterval(this.setCodeInterval);}}, onLoad: function onLoad() {}, onShow: function onShow() {uni.setStorageSync('isLogin', 0);}, methods: { // APP微信登录
-    wxLogin: function wxLogin() {var _this = this;uni.getProvider({ service: 'oauth', success: function success(res) {console.log(res.provider); //支持微信、qq和微博等
-          if (~res.provider.indexOf('weixin')) {uni.login({ provider: 'weixin', success: function success(res) {console.log('-------获取openid(unionid)-----');console.log(JSON.stringify(res));var accessToken = res.authResult.access_token;var openId = res.authResult.openid;var data = { grant_type: 'wx_app', scope: 2, client_id: 'cwap', client_secret: 'xx', systemId: 2, deviceId: _this.getUUID(), accessToken: accessToken, openId: openId };console.log('data->>', data);
+      appID: 'wxb8afa388fa540c2a', weixinCode: '' };}, components: {}, onHide: function onHide() {if (this.setCodeInterval != '') {clearInterval(this.setCodeInterval);}}, onLoad: function onLoad() {}, onShow: function onShow() {uni.setStorageSync('isLogin', 0);}, methods: { // 去用户协议
+    goProtocal: function goProtocal() {uni.navigateTo({ url: '/pages/user/protocal/protocal' });}, // 获取openid
+    getOpenIdByCode: function getOpenIdByCode() {uni.login({ provider: 'weixin', success: function success(e) {console.log('code', JSON.stringify(e.code));var data = { code: e.code, providerId: 'miniProgram' };console.log(data);(0, _userApi.openIdByCode)(data).then(function (res) {console.log(res);if (res.code == '1000') {uni.setStorageSync('openid', res.data);}});} });}, // APP微信登录
+    wxLogin: function wxLogin() {
+      var _this = this;
+      uni.getProvider({
+        service: 'oauth',
+        success: function success(res) {
+          console.log(res.provider);
+          //支持微信、qq和微博等
+          if (~res.provider.indexOf('weixin')) {
+            uni.login({
+              provider: 'weixin',
+              success: function success(res) {
+                console.log('-------获取openid(unionid)-----');
+                console.log(JSON.stringify(res));
+                var accessToken = res.authResult.access_token;
+                var openId = res.authResult.openid;
+                var data = {
+                  grant_type: 'wx_app',
+                  scope: 2,
+                  client_id: 'cwap',
+                  client_secret: 'xx',
+                  systemId: 2,
+                  deviceId: _this.getUUID(),
+                  accessToken: accessToken,
+                  openId: openId };
+
+                console.log('data->>', data);
                 (0, _userApi.postUserLogin)(data).then(function (res) {
                   console.log(JSON.stringify(res));
                   if (res.code == '9999') {
@@ -389,6 +415,11 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
       }
     },
     getUserInfoDates: function getUserInfoDates() {
+
+      this.getOpenIdByCode();
+
+
+
       (0, _userApi.getUserInfoData)().then(function (res) {
         if (res.code === '1000') {
           if (res.data.phone) {

@@ -1,6 +1,6 @@
 <template>
   <!--  广告位  -->
-  <div class="advertising">
+  <div class="advertising" v-if="adSets && adSets.length>0">
     <div class="div cf">
         <div class="img fll" v-for="(item,index) in adSets" :key="index">
           <img @click="goPath(item)" :src="item.path" alt="广告">

@@ -15,10 +15,10 @@
 			</view>
 			<view class="protocal">
 				登录表示同意
-				<text>用户服务协议</text>
+				<text @click="goProtocal">用户服务协议</text>
 			</view>
 		</view>
-		<view :class="{'bg-theme':isRight}" @click="dologin" class="btn">立即登录</view>
+		<view :class="{'bg-theme':isRight}" @click="dologin" class="btn fs32">立即登录</view>
 
 		<!--  #ifdef  MP-WEIXIN -->
 		<view class="footer">
@@ -52,7 +52,7 @@
 <script>
 	import validator from '../../utils/validator.js'
 	import T from '@/utils/tips.js'
-	import { postUserLogin, getUserInfoData, postUserSms, weixinLogin } from '@/api/userApi.js'
+	import { postUserLogin, getUserInfoData, postUserSms, weixinLogin, openIdByCode } from '@/api/userApi.js'
 	export default {
 		data() {
 			return {
@@ -82,6 +82,33 @@
 			uni.setStorageSync('isLogin',0)	
 		},
 		methods: {
+			// 去用户协议
+			goProtocal(){
+				uni.navigateTo({
+					url:'/pages/user/protocal/protocal'
+				})
+			},
+			// 获取openid
+			getOpenIdByCode(){
+				uni.login({
+					provider:'weixin',
+					success(e) {
+						console.log('code',JSON.stringify(e.code))
+						let data = {
+							code: e.code,
+							providerId: 'miniProgram' 
+						}
+						console.log(data)
+						openIdByCode(data).then(res => {
+							console.log(res)
+							if(res.code == '1000'){
+								uni.setStorageSync('openid',res.data)
+							}
+						})
+					}
+				})
+				
+			},
 			// APP微信登录
 			wxLogin(){
 				let _this = this
@@ -98,7 +125,6 @@
 										console.log(JSON.stringify(res));
 										let accessToken = res.authResult.access_token;
 										let openId       = res.authResult.openid;
-										
 										let data = {
 											grant_type: 'wx_app',
 											scope: 2,
@@ -265,6 +291,11 @@
 		      }
 		    },
 		    getUserInfoDates() {
+				// #ifdef  MP-WEIXIN
+				this.getOpenIdByCode();
+				// #endif
+				
+			  
 		      getUserInfoData().then((res) => {
 		        if (res.code === '1000') {
 				  if(res.data.phone){
@@ -300,6 +331,8 @@
 
 <style lang="scss" scoped>
 	.login {
+		height: 100vh;
+		background: #fff;
 		.close{
 			width: 60upx;
 			height: 60upx;
@@ -314,7 +347,7 @@
 			margin-right: 56upx;
 		}
 		.welcome {
-			margin-top: 74upx;
+			padding-top: 74upx;
 			font-size: 40upx;
 			color: #000;
 		}

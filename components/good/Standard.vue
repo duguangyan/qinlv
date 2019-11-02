@@ -49,8 +49,8 @@ export default vm;
   bottom: 0;
   z-index: 99;
   .icon-30{
-	  width: 30upx;
-	  height: 30upx;
+	  width: 44upx;
+	  height: 44upx;
 	  
   }
   .mask {

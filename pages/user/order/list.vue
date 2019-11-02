@@ -4,22 +4,25 @@
 
       <div class="tags-con">
         <div class="tabs cf">
-          <div class="fll li" :class="{navActive : navIndex==index}" v-for="(item,index) in tabs" :key="index" @click="changePosi(index)">{{item.name}}</div>
+          <div class="fll li"  v-for="(item,index) in tabs" :key="index" @click="changePosi(index)">
+			  <span :class="{navActive:navIndex==index}">{{item.name}}</span>
+			  <i v-if="navIndex==index"></i>
+		  </div>
         </div>
       </div>
 
     </div>
     <div class="order-no-data" v-if="hasOrders">
       <img src="@/static/img/icon-order-no.png" alt="图片">
-      <div class="text-999 fs24">您还没有相关订单</div>
+      <div class="text-999 fs28">您还没有相关订单</div>
     </div>
     <div class="list" v-if="!hasOrders">
 
       <ul>
         <li v-for="(item, index) in orders" :key="item.id">
           <div class="title">
-			  <div class="icon">
-				  <img src="@/static/img/icon-plat.png" width="15" height="15" alt />
+			  <div class="icon" :class="{'Android': platform == 1}">
+				  <img src="@/static/img/icon-plat.png" alt />
 			  </div>
             
             <span class="platform fs28">{{item.shopName}}</span>
@@ -129,12 +132,15 @@ export default {
   	}, 1000);
   },
   onLoad() {
-  	this.platform = uni.getStorageSync('platform')
+  	
   },
   onShow() {
+  // 设备样式兼容
+  this.platform = uni.getStorageSync('platform');
+  console.log('platform:',this.platform)
     let orderNavIndex = uni.getStorageSync('orderNavIndex')
 	if (orderNavIndex) {
-	  this.status = orderNavIndex === '1' ? 0 : orderNavIndex
+	  this.status = orderNavIndex == '1' ? 0 : orderNavIndex
 	  this.navIndex = orderNavIndex
 	}
 	// 获取订单列表
@@ -179,10 +185,10 @@ export default {
 		})
 	},
     // 去收货完成页面
-    goFinshPage(index) {
+    goFinshPage() {
       // orderId, shopId
 	  uni.navigateTo({
-	  	url:'/pages/user/order/success?orderId='+this.orders[index].orderId+'&shopId='+this.orders[index].shopId
+	  	url:'/pages/user/order/success?orderId='+this.orderId+'&shopId='+this.shopId
 	  })
     },
     // 去支付
@@ -249,9 +255,11 @@ export default {
           }
         } else {
           T.tips(res.message || '获取订单列表失败')
+		  this.hasOrders = this.orders.length <= 0
         }
        
       }).catch(err => {
+		  
         T.tips(err.message || '获取订单列表失败')
       })
     }
@@ -276,7 +284,7 @@ export default {
   }
   .order-no-data{
     text-align: center;
-    padding-top: 240upx;
+    padding-top: 340upx;
     >img{
       width: 240upx;
       height: 240upx;
@@ -292,18 +300,53 @@ export default {
     background-color: #fff;
     position: relative;
     .tabs {
-		height: 70upx;
-		line-height: 70upx;
-		.navActive{
-			border-bottom: 4upx solid #fc2d2d;
-			color: #fc2d2d;
-		}
+		height: 80upx;
+		line-height: 80upx;
+		position: relative;
+		
+		// .li::after{
+		// 	content: '';
+		// 	display: block;
+		// 	width: 60%;
+		// 	height: 4upx;
+		// 	background: none;
+		// 	color: #fc2d2d;
+		// 	position: absolute;
+		// 	bottom: 0;
+		// }
 		.li{
-			text-align: center;
-			margin: 0 35upx;
 			font-size: 30upx;
+			width: 20%;
+			text-align: center;
+			position: relative;
+			span{
+			
+			}
+			.navActive{
+				color: #fc2d2d;
+			}
+			i{
+				position: absolute;
+				bottom: 0;
+				height: 6upx;
+				width: 20%;
+				display: block;
+				background: #fc2d2d;
+				margin-left: 40%;
+			}
+			// .navActive::after{
+			// 	content: '';
+			// 	display: block;
+			// 	width: 10%;
+			// 	height: 4upx;
+			// 	background: #fc2d2d;
+			// 	color: #fc2d2d;
+			// 	position: absolute;
+			// 	bottom: 0;
+			// 	left: 5%;
+			// }
 		}
-      
+		 
     }
     .flag {
       width: 34upx;
@@ -320,9 +363,9 @@ export default {
   .list {
     margin-top: 100upx;
     li {
-      padding: 15upx;
+      padding: 30upx;
       background-color: #fff;
-      margin-top: 10upx;
+      margin-bottom: 20upx;
     }
     .title {
       padding: 0 0 5upx 0;
@@ -330,18 +373,24 @@ export default {
       justify-content: flex-start;
       font-size: 24upx;
 	  .icon{
-		  width: 30upx;
-		  height: 30upx;
+		  width: 36upx;
+		  height: 36upx;
+		  
+		  margin-right: 10upx;
 		  >img{
 			  width: 100%;
 			  height: 100%;
 		  }
 	  }
+	  .Android{
+		  position: relative;
+		  top: -8upx;
+	  }
       .platform {
         color: #000;
         margin-left: 5upx;
-        font-weight: bold;
         flex-grow: 1;
+		color: #333;
       }
       .status {
         color: #fc2d2d;
@@ -362,7 +411,7 @@ export default {
         width: 140upx;
         line-height: 60upx;
         border: 1upx solid #d9d9d9;
-        border-radius: 30upx;
+        border-radius: 60upx;
         text-align: center;
         margin-left: 20upx;
         font-size: 24upx;

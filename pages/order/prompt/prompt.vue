@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<div class="freight-prompt">
-		    <div class="address cf">
+		    <div class="address cf" @click="isShow = true">
 		      <span class="fll">运送地址:</span>
-		      <input class="fll" type="text" disabled readonly v-model="curAddress" placeholder="请选择地址" @click="isShow = true">
+		      <input class="fll" type="text" disabled readonly v-model="curAddress" placeholder="请选择地址">
 		    </div>
 		
 		    <div class="prompt">{{prompt}}</div>

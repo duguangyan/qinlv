@@ -183,8 +183,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -229,30 +251,18 @@ var _default = { data: function data() {return { headImgUrl: '../../../static/im
     var nickName = uni.getStorageSync('nickName');this.person.nickName = nickName === 'null' ? '' : uni.getStorageSync('nickName');}, methods: { // 去添加地址
     goAddlist: function goAddlist() {uni.navigateTo({ url: '/pages/user/addlist/addlist' });}, // 去修改昵称
     goNickName: function goNickName() {uni.navigateTo({ url: '/pages/user/nickname/nickname' });}, // 上传头像
-    onUpload: function onUpload(e) {
-
-
-
-
-
-
-
-
-
-      var _this = this;
-      uni.chooseImage({
-        count: 1, //默认9
+    onUpload: function onUpload(e) {var _this = this;uni.chooseImage({ count: 1, //默认9
         sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album', 'camera'], //从相册选择
         success: function success(res) {
           var tempFilePaths = res.tempFilePaths;
-          var url = uni.getStorageSync('s') == '开发' ? 'http://192.168.0.202:8000/upms/userImg/upload' : '/upms/userImg/upload';
+          var url = uni.getStorageSync('s') == '开发' ? 'http://192.168.0.202:8000/upms/userImg/upload' : 'https://m.qinlvny.com/upms/userImg/upload';
           uni.uploadFile({
             url: url, //仅为示例，非真实的接口地址
             filePath: tempFilePaths[0],
             name: 'file',
             success: function success(uploadFileRes) {
-              console.log(uploadFileRes.data);
+              console.log(uploadFileRes);
               var res = JSON.parse(uploadFileRes.data);
               if (res.code === '1000') {
                 _this.uploadUserHeadImg(res.data);
@@ -272,12 +282,13 @@ var _default = { data: function data() {return { headImgUrl: '../../../static/im
     },
     uploadUserHeadImg: function uploadUserHeadImg(url) {var _this2 = this;
       var data = {
-        headImage: url };
+        headImgUrl: url };
+
 
       (0, _userApi.postUpdateNickname)(data).then(function (res) {
         if (res.code === '1000') {
           _this2.headImgUrl = url;
-          localStorage.setItem('headImgUrl', url);
+          uni.setStorageSync('headImgUrl', url);
           _tips.default.tips(res.message || '头像上传成功');
         } else {
           _tips.default.tips(res.message || '上传图片失败');

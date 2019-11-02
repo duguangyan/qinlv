@@ -162,7 +162,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
-var _validator = _interopRequireDefault(__webpack_require__(/*! @/utils/validator.js */ 34));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+var _validator = _interopRequireDefault(__webpack_require__(/*! @/utils/validator.js */ 34));
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
@@ -174,6 +175,11 @@ var _validator = _interopRequireDefault(__webpack_require__(/*! @/utils/validato
 //
 //
 var _default = { data: function data() {return { nickName: '' };}, onShow: function onShow() {var nickName = uni.getStorageSync('nickName');this.nickName = nickName === 'null' ? '' : uni.getStorageSync('nickName');}, methods: {
+    doInput: function doInput() {
+      if (0 < this.nickName.length && this.nickName.length > 12) {
+        _tips.default.tips('昵称在1~20个字符之间');
+      }
+    },
     nickNameChange: function nickNameChange(e) {
       uni.setStorageSync('nickName', e);
     },

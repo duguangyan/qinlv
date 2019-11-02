@@ -162,6 +162,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35); //
 //
 //
@@ -191,14 +194,20 @@ var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35); //
 //
 //
 //
-var _default = { data: function data() {return { list: [], from: '', hasOrders: true };}, onLoad: function onLoad(options) {this.from = options.from || '';}, onShow: function onShow() {// 获取用户地址列表
+//
+//
+//
+var _default = { data: function data() {return { list: [], from: '', hasOrders: true, platform: 0 };}, onLoad: function onLoad(options) {this.from = options.from || '';}, onShow: function onShow() {// 设备样式兼容
+    this.platform = uni.getStorageSync('platform'); // 获取用户地址列表
     this.getUserAddresList();}, methods: { // 返回订单页面
     goBlack: function goBlack(item) {if (this.from === 'submit') {uni.setStorageSync('address', JSON.stringify(item));uni.navigateBack({ delta: 1 });}}, // 获取用户地址列表
-    getUserAddresList: function getUserAddresList() {var _this = this;
-      (0, _userApi.getUserAddressList)().then(function (res) {
+    getUserAddresList: function getUserAddresList() {var _this = this;(0, _userApi.getUserAddressList)().then(function (res) {
         if (res.code === '1000') {
+          _this.list = [];
           _this.list = res.data;
           _this.hasOrders = _this.list.length > 0;
+        } else {
+          _this.hasOrders = _this.orders.length > 0;
         }
       });
     },

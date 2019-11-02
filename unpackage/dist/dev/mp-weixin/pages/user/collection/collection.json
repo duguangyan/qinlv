@@ -1,6 +1,8 @@
 {
   "navigationBarTitleText": "收藏",
+  "navigationStyle": "custom",
   "usingComponents": {
-    "dialog": "/components/common/Dialog"
+    "dialog": "/components/common/Dialog",
+    "navigation-bar": "/components/common/NavigationBar"
   }
 }

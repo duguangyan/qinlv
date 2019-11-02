@@ -64,7 +64,60 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*每个页面公共css */
+page{
+	background: #F7F7F7;
+}
 ._a{
 	text-decoration:none;
 	color: #333;

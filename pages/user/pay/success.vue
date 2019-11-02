@@ -4,7 +4,7 @@
       <div class="img">
         <img src="@/static/img/icon-finsh-order.png" alt="图片">
       </div>
-      <div class="d1 fs-20 text-333 mt-20">
+      <div class="d1 fs38 text-333 mt-20">
         支付完成
       </div>
       <div class="text-red mt-10" v-if="payPrice">￥{{payPrice}}</div>
@@ -75,11 +75,15 @@
     }
     .content{
       text-align: center;
-      margin-top: 100px;
+      padding-top: 80upx;
+	  padding-bottom: 40upx;
+	  background: #fff;
       .img{
-        width: 40px;
-        height: 40px;
-        margin: 0 auto;
+        width: 80upx;
+        height: 80upx;
+        margin: 20upx auto;
+		position: relative;
+		top: -10upx;
         >img{
           width: 100%;
 		  height: 100%;
@@ -96,7 +100,7 @@
           border-radius: 20px;
         }
         :first-child{
-          margin-right: 10px;
+          margin-right: 20px;
         }
       }
     }

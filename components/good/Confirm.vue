@@ -63,7 +63,7 @@
 <script>
 import { addToCart } from "@/api/goodsApi.js";
 import util from '@/utils/util.js'
-
+import T from '@/utils/tips.js'
 export default {
   name: "good-confirm",
   props: {
@@ -210,7 +210,7 @@ export default {
         }
       }
       if (isInvalid) {
-        return this.$tips("请选择所有的项");
+        return T.tips("请选择所有的项");
       }
       if (this.nav.match(/cart/)) {
         addToCart({

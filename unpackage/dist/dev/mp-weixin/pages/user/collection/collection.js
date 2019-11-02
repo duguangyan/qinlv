@@ -178,6 +178,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
 var _iconChecked = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-checked.png */ 53));
 var _iconUncheck = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-uncheck.png */ 54));
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
@@ -229,36 +233,49 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
 //
 //
 //
-var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default = { data: function data() {return { currentPage: 1, list: [], isEdit: false, countChecked: 0 /* 选中的计数器 */, total: 0, Checked: _iconChecked.default, Uncheck: _iconUncheck.default, pageSize: 10, allLoaded: false, loadText: '上拉加载更多...', hasAllCheck: false, ids: [], isShow: false, title: '您确定从收藏夹删除吗?' };}, components: { Dialog: Dialog }, onLoad: function onLoad() {// status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")
-    this.getCollectionData();}, onShow: function onShow() {}, onReachBottom: function onReachBottom() {this.loadBottom();}, methods: { doConfirm: function doConfirm() {this.doDel();}, doCancel: function doCancel() {this.isShow = false;}, // 去详情
-    goDetail: function goDetail(shopId, orderId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + orderId });}, // 全选
-    doCheckAll: function doCheckAll() {var _this = this;
+//
+//
+//
+//
+var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 297));};var NavigationBar = function NavigationBar() {return __webpack_require__.e(/*! import() | components/common/NavigationBar */ "components/common/NavigationBar").then(__webpack_require__.bind(null, /*! @/components/common/NavigationBar.vue */ 321));};var _default = { data: function data() {return { currentPage: 1, list: [], isEdit: false, countChecked: 0 /* 选中的计数器 */, total: 0, Checked: _iconChecked.default, Uncheck: _iconUncheck.default, pageSize: 10, allLoaded: false, loadText: '上拉加载更多...', hasAllCheck: false, ids: [], isShow: false, title: '您确定从收藏夹删除吗?', clickTitle: '管理', isClick: true };}, components: { Dialog: Dialog, NavigationBar: NavigationBar }, onLoad: function onLoad() {// status 商品状态(-1 已删除 0待审核 1审核中  2审核驳回  3已上架   4已下架  5 锁定 6 申请解锁")
+    this.getCollectionData();}, onShow: function onShow() {}, onReachBottom: function onReachBottom() {this.loadBottom();}, methods: { doClick: function doClick(e) {var _this = this;this.isEdit = !this.isEdit;var res = this.list.map(function (item) {item.isEdit = _this.isEdit;return item;});this.list = res;this.clickTitle = this.isEdit ? '完成' : '管理';}, doConfirm: function doConfirm() {this.doDel();},
+    doCancel: function doCancel() {
+      this.isShow = false;
+    },
+    // 去详情
+    goDetail: function goDetail(shopId, orderId) {
+      uni.navigateTo({
+        url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + orderId });
+
+    },
+    // 全选
+    doCheckAll: function doCheckAll() {var _this2 = this;
       this.ids = [];
       if (this.hasAllCheck) {
         this.hasAllCheck = false;
         this.list.forEach(function (item, index) {
           item.isCheck = false;
-          _this.ids = [];
+          _this2.ids = [];
         });
       } else {
         this.hasAllCheck = true;
         this.list.forEach(function (item, index) {
           item.isCheck = true;
-          _this.ids.push(_this.list[index].goodsId);
+          _this2.ids.push(_this2.list[index].goodsId);
         });
       }
     },
     // 判断是否全选
-    hasAllChecked: function hasAllChecked() {var _this2 = this;
+    hasAllChecked: function hasAllChecked() {var _this3 = this;
       this.hasAllCheck = true;
       this.countChecked = 0;
       this.ids = [];
       this.list.forEach(function (item, index) {
         if (!item.isCheck) {
-          _this2.hasAllCheck = false;
+          _this3.hasAllCheck = false;
         } else {
-          _this2.countChecked++;
-          _this2.ids.push(_this2.list[index].goodsId);
+          _this3.countChecked++;
+          _this3.ids.push(_this3.list[index].goodsId);
         }
       });
       console.log(this.countChecked);
@@ -269,16 +286,16 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       this.hasAllChecked();
     },
     // 上拉加载更多
-    loadBottom: function loadBottom() {var _this3 = this;
+    loadBottom: function loadBottom() {var _this4 = this;
       // this.$refs.loadmore.onBottomLoaded();
       setTimeout(function () {
-        if (!_this3.allLoaded) {
-          _this3.currentPage++;
-          _this3.getCollectionData();
+        if (!_this4.allLoaded) {
+          _this4.currentPage++;
+          _this4.getCollectionData();
         }
       }, 500);
     },
-    getCollectionData: function getCollectionData() {var _this4 = this;
+    getCollectionData: function getCollectionData() {var _this5 = this;
       var data = {
         pageIndex: this.currentPage,
         pageSize: this.pageSize };
@@ -286,11 +303,12 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       (0, _userApi.getCollectGoodsList)(data).then(function (res) {
         if (res.code === '1000') {
           var total = 0;
-          _this4.list = _this4.list.concat(res.data.records);
-          _this4.total = total;
-          if (_this4.list.length >= res.data.total) {
-            _this4.allLoaded = true;
-            _this4.loadText = '数据已经加载完毕';
+          _this5.list = _this5.list.concat(res.data.records);
+          _this5.total = total;
+          _this5.isClick = _this5.list.length > 0;
+          if (_this5.list.length >= res.data.total) {
+            _this5.allLoaded = true;
+            _this5.loadText = '数据已经加载完毕';
           }
         } else {
           _tips.default.tips(res.message || '获取收藏列表失败');
@@ -299,10 +317,10 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
         _tips.default.tips(err.message || '获取收藏列表失败');
       });
     },
-    edit: function edit() {var _this5 = this;
+    edit: function edit() {var _this6 = this;
       this.isEdit = !this.isEdit;
       var res = this.list.map(function (item) {
-        item.isEdit = _this5.isEdit;
+        item.isEdit = _this6.isEdit;
         return item;
       });
       this.list = res;
@@ -313,25 +331,26 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       }
       this.isShow = true;
     },
-    doDel: function doDel() {var _this6 = this;
+    doDel: function doDel() {var _this7 = this;
       this.isShow = false;
       var goodsId = '';
       this.ids.forEach(function (item, index) {
-        goodsId += index === _this6.ids.length - 1 ? item : item + ',';
+        goodsId += index === _this7.ids.length - 1 ? item : item + ',';
       });
       var data = {
         goodsId: goodsId };
 
       (0, _userApi.getCollectGoodsRemove)(data).then(function (res) {
         if (res.code === '1000') {
-          _this6.ids.forEach(function (item, index) {
-            _this6.list.forEach(function (it, i) {
+          _this7.ids.forEach(function (item, index) {
+            _this7.list.forEach(function (it, i) {
               if (item === it.goodsId) {
-                _this6.list.splice(i, 1);
+                _this7.list.splice(i, 1);
               }
             });
           });
-          _this6.ids = [];
+          _this7.ids = [];
+          _this7.isClick = _this7.list.length > 0;
           // this.list = []
           // this.getCollectionData()
         } else {

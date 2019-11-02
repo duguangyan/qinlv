@@ -8,8 +8,8 @@
   z-index: 99;
 }
 .standard .icon-30.data-v-2236d712 {
-    width: 30rpx;
-    height: 30rpx;
+    width: 44rpx;
+    height: 44rpx;
 }
 .standard .mask.data-v-2236d712 {
     position: fixed;

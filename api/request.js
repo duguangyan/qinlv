@@ -1,12 +1,14 @@
- const apiUrl = 'https://m.qinlvny.com'; // 正式
+// const apiUrl = 'http://m.qinlvny.com'; // 正式
 // let apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
-// let apiUrl = 'http://192.168.0.202:7000'; // 开发
+ let apiUrl = 'http://192.168.0.202:7000'; // 开发
 const versionNumber = 'V1.0.4'; //版本号
 
 if (apiUrl == 'http://192.168.0.202:7000') {
-	uni.setStorageSync('v', versionNumber + ' 开发');
+	uni.setStorageSync('v', versionNumber);
+	uni.setStorageSync('s', ' 开发');
 } else {
-	uni.setStorageSync('v', versionNumber + '正式');
+	uni.setStorageSync('v', versionNumber);
+	uni.setStorageSync('s', ' 正式');
 }
 Promise.prototype.finally = function(callback) {
 	let P = this.constructor;
@@ -44,10 +46,16 @@ const request = function(params = {}) {
 			header['Content-type'] = 'application/x-www-form-urlencoded'
 		}
 		
-		uni.showToast({
-			title: '加载中...',
-			icon: 'loading'
-		})
+		// try{
+		// 	if(params.data.isLoading != 1){
+		// 		uni.showToast({
+		// 			title: '加载中...',
+		// 			icon: 'loading'
+		// 		})
+		// 	}
+		// }catch(e){
+		// 	//TODO handle the exception
+		// }
 		
 		let newUrl = params.url;
 		// #ifdef MP-WEIXIN || APP-PLUS
@@ -69,8 +77,15 @@ const request = function(params = {}) {
 			method: params.method || 'GET',
 			data: params.data,
 			header,
+			sslVerify: false,
 			success(res) {
-				uni.hideToast();
+				// try{
+				// 	if(params.data.isLoading != 1){
+				// 		uni.hideToast();
+				// 	}
+				// }catch(e){
+				// 	//TODO handle the exception
+				// }
 				// 请求成功
 				var res = res.data;
 				
@@ -80,35 +95,38 @@ const request = function(params = {}) {
 					
 				} else {
 					// 请求成功非1000	
-					if(res.code === '1011'){
-						let content = '登录过期，请重新登录！'
-						if(uni.getStorageSync('access_token') == '') {
-							content = '请先登录！'
-						}
-						if(res.message == '无权访问！'){
-							content = '无权访问！'
-						}
-						let islogin = uni.getStorageSync('isLogin')
-						if(islogin != 1){
-							uni.setStorageSync('isLogin',1)
-							uni.showModal({
-							    title: '提示',
-							    content,
-							    success: function (res) {
-							        if (res.confirm) {
-									   // uni.setStorageSync('isLogin',0)	
-							           uni.navigateTo({
-							           	url:'/pages/login/login'
-							           })
-							        } else if (res.cancel) {
-							            console.log('用户点击取消');
-										uni.setStorageSync('isLogin',0)
-							        }
-							    }
-							});
-						}
+					if(res.code == '1011'){
+						uni.navigateTo({
+							url:'/pages/login/login'
+						})
+						// let content = '登录过期，请重新登录！'
+						// if(uni.getStorageSync('access_token') == '') {
+						// 	content = '请先登录！'
+						// }
+						// if(res.message == '无权访问！'){
+						// 	content = '无权访问！'
+						// }
+						// let islogin = uni.getStorageSync('isLogin')
+						// if(islogin != 1){
+						// 	uni.setStorageSync('isLogin',1)
+						// 	uni.showModal({
+						// 	    title: '提示',
+						// 	    content,
+						// 	    success: function (res) {
+						// 	        if (res.confirm) {
+						// 			   // uni.setStorageSync('isLogin',0)	
+						// 	           uni.navigateTo({
+						// 	           	url:'/pages/login/login'
+						// 	           })
+						// 	        } else if (res.cancel) {
+						// 	            console.log('用户点击取消');
+						// 				uni.setStorageSync('isLogin',0)
+						// 	        }
+						// 	    }
+						// 	});
+						// }
 						
-					}else if(res.code === '1017'){
+					}else if(res.code == '1017'){
 						let tokenData = {
 							grant_type:'refresh_token',
 							scope:2,
@@ -172,11 +190,12 @@ const request = function(params = {}) {
 							}
 						}
 					}
-					// resolve(res);
+					 resolve(res);
 				}
 			},
 			fail(err) {
-				uni.hideToast();
+				
+				
 				// 请求失败处理
 				if (err.errMsg || err.errMsg === "request:fail timeout") {
 					uni.showToast({
@@ -191,7 +210,7 @@ const request = function(params = {}) {
 			},
 			complete(res) {
 				// 请求结束
-				uni.hideToast();
+
 			}
 		})
 	})

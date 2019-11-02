@@ -2,20 +2,24 @@
 	
     <view class="main">
 		<view class="seach" @click="goSearch">
-			<view class="bg"></view>
+			<!-- <view class="bg"></view> -->
+			<!--  #ifdef  APP-PLUS || H5 -->
 			<view class="img">
-				<image :class="{'platform':platform==2}" src="../../static/img/icon-search.png"></image>
+				<image src="../../static/img/icon-search-1.png"></image>
 			</view>
-			<view class="name fs24 text-fff">
-				搜索商品名称
+			<!--  #endif -->
+			<!--  #ifdef  MP-WEIXIN -->
+			<view class="img">
+				<image src="../../static/img/icon-search-2.png"></image>
 			</view>
+			<!--  #endif -->
 		</view>
 		<!-- 轮播图 -->
        <view class="index-top-warp">
        	<view class="uni-padding-wrap">
        		<view class="page-section swiper">
        			<view class="page-section-spacing">
-       				<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
+       				<swiper class="swiper" indicator-color="rgba(0,0,0,.3)" indicator-active-color='#FC2D2D' :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
        					<swiper-item v-for="(item,index) in homeList.list[0].list[0].list[0].adPosition.adSet" :key="index" @click="goNextPage(item)">
        						<view class="swiper-item">
        							<image :src="item.path"></image>
@@ -30,7 +34,7 @@
 	   <view class="nav cf">
 		   <view class="li fll" v-for="(item,index) in homeList.list[1].list[0].list" :key="index" @click="goSearchPage(item.name)">
 			   <view class="img">
-				   <image :src="item.imgPath"></image>
+				   <image :src="item.imgPath || '../../static/img/img-def-middle.png'"></image>
 			   </view>
 			   <view class="name fs24 text-333">{{item.name}}</view>
 		   </view>
@@ -46,23 +50,23 @@
 	   
        <!-- 广告 -->
 	   <view class="advs" @click="goadSet(homeList.list[2].list[0].list[0].adPosition.adSet[0])">
-		   <image :src="homeList.list[2].list[0].list[0].adPosition.adSet[0].path" mode=""></image>
+		   <image :src="homeList.list[2].list[0].list[0].adPosition.adSet[0].path || '../../static/img/img-def-large.png'" mode=""></image>
 	   </view>
 	   <!-- 精选 -->
 	   <view class="seles">
 		   <view class="title">
-			   <image :src="homeList.list[3].list[0].list[0].imgPath" mode=""></image>
+			   <image :src="homeList.list[3].list[0].list[0].imgPath || '../../static/img/img-def-large.png'" mode=""></image>
 		   </view>
 		   <view class="content cf">
 			   <view class="item fll" v-for="(item,index) in homeList.list[3].list[1].goodsDetailRespList" :key="index" @click="goGoodsDetail(item.shopId,item.id)">
 				  <view class="img">
 					  <image :src="item.imgUri" mode=""></image>
 				  </view>
-				  <view class="warp">
+				  <view class="warp" :class="{'Android': platform == 1}">
 					  <view class="fs28 ellipsis-line2">
 					  		{{item.name}}
 					  </view>
-					  <view class="cf mgt-10">
+					  <view class="cf mgt-20">
 						  <view class="fll fs36 text-red"><text class="fs24">￥</text>{{item.minPrice}}</view>
 						  <view class="add flr fs20 text-999">{{item.valueAddr}}</view>
 					  </view>
@@ -72,6 +76,8 @@
 		   </view>
 		  
 	   </view>
+	   <!-- <TabBar :checkIndex='checkIndex'></TabBar> -->
+	   
     </view>
 </template>
 
@@ -79,21 +85,24 @@
     import { mapState } from 'vuex'
 	import { getHomeList, addHit } from '../../api/mainApi.js'
 	import T from '@/utils/tips.js'
+	import TabBar from '@/components/common/TabBar.vue'
     export default {
 		data() {
 			return {
+				checkIndex:0,
 				homeList:{},
 				banner:[], // 轮播图
 				navs:[],   // 导航nav
 				advs:[],   // 广告
 				seles:[],  // 精选
-				indicatorDots: false,
+				indicatorDots: true,
 				autoplay: true,
 				interval: 3000,
 				duration: 500,
 				platform: 0
 			}
 		},
+		components:{TabBar},
         onLoad() {
 			
 			// 设备样式兼容
@@ -143,6 +152,10 @@
 				getHomeList({ parentId: 1 }).then((res) => {
 					if(res.code == '1000'){
 						this.homeList = res.data
+						this.homeList.list[3].list[1].goodsDetailRespList.forEach((item,index) => {
+							let arr = item.valueAddr.split('-')
+							item.valueAddr = arr[arr.length-1]
+						})
 					}
 				})
 			},
@@ -171,14 +184,25 @@
 
 <style lang="scss" scoped>
 	.main{
+		// padding-bottom: 100upx;
+		.bb1{
+			position: fixed;
+			height: 0;
+			bottom: 0upx;
+			border: 0.5upx solid #f5f5f5;
+			background: #f0f0f0;
+			width: 100%;
+		}
 		width: 100%;
+		height: 100%;
+		background: #f5f5f5;
 		.seach{
 			width:670upx;
 			height:60upx;
 			margin: 0 auto;
-			position: fixed;
-			top: 130upx;
-			left: 40upx;
+			position: relative;
+			top: 80upx;
+			
 			z-index: 99999;
 			
 			.bg{
@@ -189,38 +213,47 @@
 				border-radius:30upx;
 			}
 			
-			/* #ifdef MP-WEIXIN || H5 */
-			.name{
-				text-align: center;
-				position: absolute;
-				top: 15upx;
-				left: 300upx;
-			}
-			/* #endif */
-			/* #ifdef APP-PLUS || APP-PLUS-NVUE */  
 			.name{
 				text-align: center;
 				position: absolute;
 				top:6upx;
 				left: 300upx;
 			}
-			/* #endif */
 			
+			
+			
+			/*  #ifdef APP-PLUS || H5  */
 			.img{
-				width: 30upx;
-				height: 30upx;
+				// width: 24upx;
+				height: 60upx;
+				width: 670upx;
+				z-index: 99999;
 				position: absolute;
-				left: 260upx;
-				top: 0upx;
+				left: 50%;
+				margin-left: -335upx;
 				>image{
 					width: 100%;
 					height: 100%;
 				}
 			}
-			.platform{
-				position: relative;
-				top: 4upx !important;
+			/*  #endif  */
+			
+			/*  #ifdef MP-WEIXIN  */
+			.img{
+				// width: 24upx;
+				height: 60upx;
+				width: 450upx;
+				z-index: 99999;
+				position: absolute;
+				left: 30upx;
+				top: -30upx;
+				>image{
+					width: 100%;
+					height: 100%;
+				}
 			}
+			/*  #endif  */
+			
 		}
 		
 		
@@ -232,11 +265,29 @@
 					height: 520upx;
 					border-radius:10upx;
 					overflow: hidden;
+					background: #fff;
+					margin-bottom: 20upx;
+					padding-bottom: 20upx;
 					.warp{
-						padding: 4upx;
+						margin-top: 18upx;
+						padding: 4upx 20upx;
+						position: relative;
+						.ellipsis-line2{
+							height: 78upx;
+							line-height: 39upx;
+						}
 						.add{
-							position: relative;
-							top: 10upx;
+							position: absolute;
+							right: 20upx;
+							bottom: 12upx;
+						}
+						.mgt-20{
+							margin-top: 26upx !important;
+						}
+					}
+					.Android{
+						.add{
+						
 						}
 					}
 					.img{
@@ -276,6 +327,7 @@
 		}
 		.nav{
 			margin:20upx 0;
+			padding-top: 300upx;
 			.li{
 				width: 20%;
 				text-align: center;
@@ -294,9 +346,11 @@
 			}
 		}
 		.index-top-warp {
+			position: absolute;
+			top: 0;
 			width: 100%;
 			overflow: hidden;
-			background: #fff;
+			// background: #fff;
 			swiper {
 				height: 360upx
 			}
@@ -338,29 +392,5 @@
 			}
 		
 	}
-	
-	/* #ifdef MP-WEIXIN */
-	.seach{
-		top: 45upx;
-		width: 500upx;
-		.name{
-			left: 225upx;
-		}
-		.img{
-			left: 190upx;
-		}
-	}
-	/* #endif */
-    /* #ifdef APP-PLUS || H5 */
-    .seach{
-    	top: 80upx !important;
-		.name{
-			top: 14upx!important;
-		}
-		.img{
-			top: 12upx!important;
-		}
-    }
-    /* #endif */
     }
 </style>

@@ -211,6 +211,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 16);
 var _mainApi = __webpack_require__(/*! ../../api/mainApi.js */ 23);
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
@@ -290,11 +296,17 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25
 //
 //
 //
-var _default = { data: function data() {return { homeList: {}, banner: [], // 轮播图
+//
+//
+//
+//
+//
+//
+var TabBar = function TabBar() {return __webpack_require__.e(/*! import() | components/common/TabBar */ "components/common/TabBar").then(__webpack_require__.bind(null, /*! @/components/common/TabBar.vue */ 290));};var _default = { data: function data() {return { checkIndex: 0, homeList: {}, banner: [], // 轮播图
       navs: [], // 导航nav
       advs: [], // 广告
       seles: [], // 精选
-      indicatorDots: false, autoplay: true, interval: 3000, duration: 500, platform: 0 };}, onLoad: function onLoad() {// 设备样式兼容
+      indicatorDots: true, autoplay: true, interval: 3000, duration: 500, platform: 0 };}, components: { TabBar: TabBar }, onLoad: function onLoad() {// 设备样式兼容
     this.platform = uni.getStorageSync('platform');}, onShow: function onShow() {// 获取首页banner
     this.getHomeList();}, onPullDownRefresh: function onPullDownRefresh() {//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
     console.log('refresh'); // 获取首页banner
@@ -303,7 +315,7 @@ var _default = { data: function data() {return { homeList: {}, banner: [], // �
     goadSet: function goadSet(item) {(0, _mainApi.addHit)({ id: item.id });if (item.type == 1) {uni.navigateTo({ url: '/pages/common/webview/webview?url=' + item.url });} else if (item.type == 5) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=1&goodsId=' + item.url });}}, // nav 去搜索页面
     goSearchPage: function goSearchPage(name) {uni.navigateTo({ url: '/pages/order/goodsList/goodsList?search=' + name });}, // 去搜索页面
     goSearch: function goSearch() {uni.navigateTo({ url: '/pages/main/search/search' });}, // 获取首页banner
-    getHomeList: function getHomeList() {var _this = this;(0, _mainApi.getHomeList)({ parentId: 1 }).then(function (res) {if (res.code == '1000') {_this.homeList = res.data;}});}, goNextPage: function goNextPage(item) {(0, _mainApi.addHit)({ id: item.id });if (item.type == 5) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + item.shopId + '&goodsId=' + item.id });} else if (item.type == 1) {uni.navigateTo({ url: '/pages/common/webview/webview?url=' + item.url });}}, goGoodsDetail: function goGoodsDetail(shopId, goodsId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + goodsId });} } };exports.default = _default;
+    getHomeList: function getHomeList() {var _this = this;(0, _mainApi.getHomeList)({ parentId: 1 }).then(function (res) {if (res.code == '1000') {_this.homeList = res.data;_this.homeList.list[3].list[1].goodsDetailRespList.forEach(function (item, index) {var arr = item.valueAddr.split('-');item.valueAddr = arr[arr.length - 1];});}});}, goNextPage: function goNextPage(item) {(0, _mainApi.addHit)({ id: item.id });if (item.type == 5) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + item.shopId + '&goodsId=' + item.id });} else if (item.type == 1) {uni.navigateTo({ url: '/pages/common/webview/webview?url=' + item.url });}}, goGoodsDetail: function goGoodsDetail(shopId, goodsId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + goodsId });} } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

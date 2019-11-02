@@ -27,7 +27,7 @@
 		video{
 			width: 100%;
 			line-height: 100%;
-			min-height:1000upx ;
+			margin-top: 100upx;
 		}
 	}
 	

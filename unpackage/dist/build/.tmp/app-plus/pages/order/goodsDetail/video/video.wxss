@@ -1,10 +1,10 @@
-.video.data-v-4b245c5e {
+.video.data-v-453e9a59 {
   height: 100vh;
   background: #000;
 }
-.video video.data-v-4b245c5e {
+.video video.data-v-453e9a59 {
     width: 100%;
     line-height: 100%;
-    min-height: 1000rpx;
+    margin-top: 100rpx;
 }
 

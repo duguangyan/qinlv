@@ -69,6 +69,10 @@
 						this.list = res.data.list
 						list.forEach(item => {
 							if (item.componentType === 5) {
+								item.goodsDetailRespList.forEach(item => {
+									let arr = item.valueAddr.split('-');
+									item.valueAddr = arr[arr.length-1]
+								})
 								this.goodsObj = item
 							}
 						})
@@ -95,11 +99,11 @@
 
 		.title {
 			text-align: center;
-			padding: 30upx 0;
+			padding: 5upx 0;
 			margin: 0 auto;
-			margin-top: 40upx;
-			width: 300upx;
-			height: 40upx;
+			margin-top: 20upx;
+			width: 265upx;
+			height: 43upx;
 
 			>img {
 				width: 100%;
@@ -117,16 +121,17 @@
 
 				li {
 					background: #fff;
-					border-radius: 20upx;
+					border-radius: 10upx;
 					margin-top: 20upx;
 					width: 340upx;
 					height: 520upx;
 					overflow: hidden;
 
 					.content {
-						padding: 10upx;
+						// padding: 20upx;
 
 						.cf {
+							padding: 0 10upx;
 							.flr {
 								position: relative;
 								left: -10upx;
@@ -135,10 +140,10 @@
 						}
 
 						.name {
-							margin: 10upx 0 20upx 0;
+							margin: 10upx 20upx 20upx 20upx;
 							font-size: 28upx;
 							height: 76upx;
-
+							
 						}
 					}
 

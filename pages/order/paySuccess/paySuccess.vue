@@ -92,11 +92,13 @@
     }
     .content{
       text-align: center;
-      margin-top: 200upx;
+      padding-top: 150upx;
+	  background: #fff;
+	  padding-bottom: 40upx;
       .img{
         width: 80upx;
         height: 80upx;
-        margin: 0 auto;
+        margin: 10upx auto;
         >img{
           width: 100%;
 		  height: 100%;
@@ -113,7 +115,7 @@
           border-radius: 40upx;
         }
         :first-child{
-          margin-right: 20upx;
+          margin-right: 40upx;
         }
       }
     }

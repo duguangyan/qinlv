@@ -37,7 +37,7 @@
 						</p>
 		              <p class="text-666 fs24 cf mt-10">
 		                <span class="fll p4">{{it.skuDesc || ''}}</span>
-		                <span class="flr text-999">x {{it.goodsCount}}</span>
+		                <span class="flr text-999 p5">x {{it.goodsCount}}</span>
 		              </p>
 		              <p class=" fs24 p2">￥ <span class="fs28">{{it.goodsMoney}}</span></p>
 		            </div>
@@ -189,6 +189,10 @@
 		    // 关闭支付显示
 		    doClose() {
 		      this.isPay = false;
+			  uni.redirectTo({
+			      url: '/pages/user/order/detail?orderId='+this.payOrderId
+			  });
+			  
 		    },
 			// 去选择地址
 			goAddress(){
@@ -339,14 +343,18 @@
       }
     }
     .parent-title {
-      margin-top: 40upx;
+      margin-top: 30upx;
       .text {
         margin-left: 20upx;
-        font-size: 28upx;
+        font-size: 30upx;
+		position: relative;
+		top: -4upx;
       }
       .plat {
-        width: 34upx;
-        height: 34upx;
+        width: 40upx;
+        height: 40upx;
+		position: relative;
+		top: -7upx;
         > img {
           width: 100%;
 		  height: 100%;
@@ -388,15 +396,21 @@
         }
         .info {
           width: 460upx;
+		  
 		  .s1{
-			  width: 350upx;
+			  width: 320upx;
 		  }
 		  .p1{
 			  height: 80upx;
+			  .flr{
+				  position: relative;
+				  right: -20upx;
+			  }
 		  }
           .p2 {
             position: absolute;
-            bottom: 20upx;
+            bottom: 0upx;
+			color: #fc2d2d;
           }
           .p3 {
             display: inline-block;
@@ -412,11 +426,17 @@
             bottom: 20upx;
           }
           .p4 {
-            background: #f5f5f5;
-            border-radius: 10upx;
+            background: #F5F5F5;
+            border-radius: 20rpx;
             display: inline-block;
-            padding: 0upx 8upx 4upx 8upx;
+            padding: 4rpx 14rpx;
+			margin-top: 2upx;
           }
+		  .p5{
+			  position: relative;
+			  top: -38upx;
+			  right: -20upx;
+		  }
         }
         .info-edit {
           width: 460upx;
@@ -467,7 +487,8 @@
       line-height: 64upx;
       text-align: center;
       border-radius: 32upx;
-      box-shadow: 0 0 0 1upx #d9d9d9 inset;
+      // box-shadow: 0 0 0 1upx #d9d9d9 inset;
+	  border: 1upx solid #d9d9d9;
       font-size: 28upx;
       color: #000;
       position: relative;
@@ -538,7 +559,9 @@
         margin-left: 20upx;
         font-size: 24upx;
         border: none;
+		width: 88%;
         outline: none;
+		color: #333;
       }
     }
   }
@@ -556,7 +579,7 @@
     justify-content: flex-start;
     font-size: 30upx;
     .nums {
-      color: #666;
+      color: #000;
       margin-right: 30upx;
     }
     .total-price {
@@ -564,16 +587,17 @@
       span {
         color: #f5222d;
         font-weight: bold;
+		font-size: 32upx;
         &::before {
           content: "￥";
           font-weight: normal;
-          font-size: 24upx;
+          font-size: 28upx;
           display: inline-block;
         }
       }
     }
     .btn {
-      background-color: #999;
+      background-color: #d9d9d9;
       color: #fff;
       text-align: center;
       border-radius: 36upx;

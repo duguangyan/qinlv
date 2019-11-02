@@ -37,7 +37,7 @@
 								<swiper-item v-for="(item,index) in imageList" :key="index">
 									<view class="swiper-item">
 										<div v-if="item.type==3" :class="{'img-con':item.type==3}" @click="play(item)">
-											<image class='img1' src="../../../static/img/play.png" mode=""></image>
+											<image class='img1' src="../../../static/img/play.png" mode="aspectFit"></image>
 										</div>
 										 <image :src="item.imgUrl"></image>
 									</view>
@@ -53,7 +53,7 @@
 			<div v-if="good.goods.showStyle==3 || good.goods.showStyle==1">
 				<span class="price">{{good.goods.minPrice || 0}} <span class="fs24 text-000" v-if="good.goodsSkuList.length <= 1">{{'/'+good.goods.unitName}}</span></span>
 				<span v-if="good.goodsSkuList.length > 1">
-					<span>&nbsp;~&nbsp;</span>
+					<span class="text-red">&nbsp;~&nbsp;</span>
 					<span class="price"><span>{{good.goods.maxPrice || 0}}</span></span>
 					<span class="unit" v-if="good.goods.unitName">{{'/'+good.goods.unitName}}</span>
 				</span>
@@ -78,24 +78,28 @@
 		<div class="info">
 			<span>{{good.goods.hits || 0}}人看过</span>
 			<span>{{good.goods.spuSalesNum || 0}}订单数</span>
-			<div v-if="postType!==0" tag="span" @click="goPostSetting(good.goods.postSettingId)">运费说明&gt;</div>
+			<div v-if="postType!==0" class="span" @click="goPostSetting(good.goods.postSettingId)">运费说明 <div class="icon-right"><img src="@/static/img/icon-right.png"></div> </div>
 			<span v-else class="limit-block">全国包邮</span>
 		</div>
-
+		
 		<div v-if="good.goods.showStyle==3 || good.goods.showStyle==1 && good.goodsSkuList.length > 1" class="standard">
 		      <div class="tag1">
-		        <span>规格</span>
+		        <span>—</span>  <span>规格</span> <span>—</span>
 		      </div>
 		      <li v-for="(item,index) in good.standardList" :key="index" v-if="index<3">
 		        <span v-for="(sta,staIdx) in item" :key="staIdx" :class="{'fix-block':staIdx == item.length-1}">{{sta}}</span>
 		      </li>
-		      <div v-if="good.standardList.length > 3" class="check-more" @click="isStandard = true">查看更多&gt;</div>
+		      <div v-if="good.standardList.length > 3" class="check-more" @click="isStandard = true">查看更多
+				<div class="icon">
+					<img src="@/static/img/tag-go.png">
+				</div>
+			  </div>
 		    </div>
 
-		<div class="block"></div>
+		<div class="line" v-if="good.goods.showStyle==3 || good.goods.showStyle==1 && good.goodsSkuList.length > 1"></div>
 		<div class="props">
 			<div class="tag1">
-				<span>—</span> <span class="d"></span> <span>商品属性</span> <span class="d"></span><span>—</span>
+				<span>—</span> <span>商品属性</span> <span>—</span>
 			</div>
 			<li v-for="(item,index) in good.goodsDetailAttrList" :key="index">
 				<span>{{item.name}}:</span>
@@ -104,11 +108,11 @@
 			</li>
 		</div>
 
-		<div class="line"></div>
+		<div class="line" v-if="good.goodsDetailAttrList.length>0"></div>
 
 		<div class="det">
 			<div class="tag1">
-				<span>—</span> <span class="d"></span> <span>商品详情</span> <span class="d"></span><span>—</span>
+				<span>—</span>  <span>商品详情</span> <span>—</span>
 			</div>
 			<div class="txt">{{good.goods.detail}}</div>
 			<div class="tag2" v-for="(item,index) in imageList" :key="index" >
@@ -120,11 +124,13 @@
 			
 		</div>
 
+		<div class="goodsTitle" v-if="isGoodsTitle">{{goodsTitle}}</div>
+
 		<div class="operator flex">
 			<div class="fir flex-1">
 				<div @click="changeCollect">
 					<img class="icon-18" :src="good.hasColletion?'../../../static/img/icon-collect2.png':'../../../static/img/icon-collect.png'" />
-					<div>收藏</div>
+					<div>{{good.hasColletion?'已收藏':'收藏'}}</div>
 				</div>
 				<div tag="div" @click="goCart">
 					<div class="icon-15">
@@ -244,7 +250,8 @@
 		setCollect,
 		removeCollect,
 		getGoodNums,
-		getPostItem
+		getPostItem,
+		getHasCollect
 	} from "@/api/goodsApi.js";
 	import {getSetFormId} from '@/api/userApi.js'
 	import T from '@/utils/tips.js'
@@ -254,8 +261,8 @@
 			return {
 				opt: false,
 				indicatorDots: false,
-				autoplay: true,
-				interval: 3000,
+				autoplay: false,
+				interval: 5000,
 				duration: 500,
 				shopId: '',
 				goodsId: '',
@@ -289,8 +296,9 @@
 				counter: 0,
 				isSure: false,
 				isShare: false,
-				nav: ""
-
+				nav: "",
+				isGoodsTitle: false,
+				goodsTitle:''
 			};
 		},
 		components: {
@@ -308,6 +316,8 @@
 			this.goodsId = options.goodsId;
 		},
 		onShow() {
+			
+			
 			if (uni.getStorageSync("access_token")) {
 				getGoodNums({
 					status: ""
@@ -459,11 +469,24 @@
 					}).then(data => {
 						this.postType = data.data.type;
 					});
+					
+					
+					// 判断商品是否备收藏
+					this.getHasCollect(this.goodsId)
 				}
 				
 			});
 		},
 		methods: {
+			// 判断是否备收藏
+			getHasCollect(id){
+				let data = {
+					targetId: id
+				}
+				getHasCollect(data).then(res=>{
+					this.good.hasColletion = res.data
+				})
+			},
 			closePlayer(){
 				this.isPlayer = false;
 				this.videoUrl = '';
@@ -631,9 +654,17 @@
 					getGoodNums({
 						status: ""
 					}).then(data => {
-						this.counter = data.data.itemNum
-						this.isSure = false
-						T.tips(this.good.goods.name + '已成功加入进货单')
+						if(data.code == '1000'){
+							this.counter = data.data.itemNum
+							this.isSure = false
+							T.tips('已成功加入进货单')
+						}else{
+							this.goodsTitle = res.message
+							this.isGoodsTitle = true
+							setTimeout(()=>{
+								this.isGoodsTitle = false
+							},1500)
+						}
 					});
 				}
 			},
@@ -674,13 +705,19 @@
 			// #endif
 			changeCollect() {
 				this.good.hasColletion = !this.good.hasColletion;
-
+				if(this.good.hasColletion){
+					T.tips('已收藏')
+				}else{
+					T.tips('取消收藏')
+				}
 				this.good.hasColletion ?
 					setCollect({
-						goodsId: this.good.goods.id
+						goodsId: this.good.goods.id,
+						isLoading:1
 					}) :
 					removeCollect({
-						goodsId: this.good.goods.id
+						goodsId: this.good.goods.id,
+						isLoading:1
 					});
 			}
 		},
@@ -710,6 +747,8 @@
 		padding-bottom: 120upx;
 		width: 750upx;
 		overflow-x: hidden;
+		background: #fff;
+		height: 100vh;
 		.img-con {
 			position: absolute;
 			width: 100upx;
@@ -767,6 +806,19 @@
 			font-size: 24upx;
 			color: #999;
 			margin-top: 20upx;
+			position: relative;
+			.icon{
+				width: 22upx;
+				height: 22upx;
+				position: absolute;
+				top: 4upx;
+				left: 50%;
+				margin-left: 50upx;
+				>img{
+					width: 100%;
+					height: 100%;
+				}
+			}
 		}
 
 		.block {
@@ -777,7 +829,7 @@
 
 		.cart-text {
 			position: relative;
-
+			top: 8upx;
 			&>div {
 				display: block;
 				position: absolute;
@@ -789,7 +841,7 @@
 				border-radius: 50%;
 				text-align: center;
 				right: 4upx;
-				top: -52upx;
+				top: -60upx;
 
 				&::after {
 					content: attr(counter);
@@ -822,6 +874,7 @@
 		// }
 
 		.overall {
+			
 			.flex-l {
 				justify-content: flex-start;
 			}
@@ -835,11 +888,12 @@
 			line-height: 1;
 			padding-top: 30upx;
 			padding-bottom: 16upx;
-			color: #f5222d;
+			color: #FC2D2D;
 			display: flex;
 
 			&>div {
 				// width: 100upx;
+				color: #333 !important;
 				width: 100%;
 			}
 
@@ -852,23 +906,23 @@
 
 			.price {
 				font-size: 40upx;
-
+				color: #f5222d;
 				&::before {
-					font-size: 24upx;
+					font-size: 28upx;
 					content: "￥";
 					display: inline-block;
 				}
 			}
 
 			.unit {
-				color: #000000;
+				color: #333;
 				font-size: 24upx;
 				line-height: 40upx;
 				transform: translateY(2upx);
 			}
 
 			.multi-price {
-				font-size: 26upx;
+				font-size: 28upx;
 				font-weight: bold;
 				color: #f5222d;
 				text-align: center;
@@ -911,14 +965,31 @@
 			@extend .mc15;
 			font-size: 20upx;
 			background-color: #e6faed;
-			padding: 20upx;
+			padding:0 20upx;
 			color: #49c173;
 			display: flex;
 			justify-content: space-between;
+			border-radius: 3px;
+			overflow: hidden;
+			position: relative;
+			height: 60upx;
+			line-height: 60upx;
+			.icon-right{
+				width: 12upx;
+				height: 12upx;
+				img{
+					width: 100%;
+					height: 100%;
+				}
+				display: inline-block;
+			}
+			.span{
+				height: 100%;
+			}
 		}
 
 		.standard {
-			padding: 24upx 30upx;
+			padding: 0upx 30upx 30upx 30upx;
 			margin-top: 24upx;
 
 			li {
@@ -956,10 +1027,14 @@
 		.tag1 {
 			text-align: center;
 			position: relative;
-			
+			padding: 10upx 0;
+			color: #000;
+			font-weight: 600;
+			font-size: 32upx;
+			// margin-top: 30upx;
 			span {
 				margin: 0 10upx;
-				color: #666;
+				color: #333;
 			}
 
 			.d {
@@ -974,7 +1049,7 @@
 		}
 
 		.props {
-			padding: 24upx 30upx;
+			padding: 34upx 30upx 30upx 30upx;
 
 			// margin-top: 12upx;
 			li {
@@ -983,22 +1058,25 @@
 				color: #999;
 				display: flex;
 				position: relative;
-
+					
 				span:first-child {
 					width: 160upx;
 					display: inline-block;
 				}
-
-				&::after {
-					content: "";
-					height: 1upx;
-					display: block;
-					position: absolute;
-					bottom: 0;
-					background-color: #f0f0f0;
-					width: 100%;
-					transform: scaleY(0.5);
-				}
+				border-bottom:1upx solid #f0f0f0;
+				// &::after {
+				// 	content: "";
+				// 	height: 1upx;
+				// 	display: block;
+				// 	position: absolute;
+				// 	bottom: 0;
+				// 	background-color: #f0f0f0;
+				// 	width: 100%;
+				// 	transform: scaleY(0.5);
+				// }
+			}
+			li:last-child{
+				border-bottom:none;
 			}
 		}
 
@@ -1010,6 +1088,8 @@
 
 		.det {
 			text-align: center;
+			margin-bottom: 120upx;
+			margin-top: 30upx;
 			.img {
 				width: 100%;
 			}
@@ -1023,7 +1103,19 @@
 				padding: 0 30upx;
 			}
 		}
-
+		.goodsTitle{
+			position: fixed;
+			height: 80upx;
+			line-height: 80upx;
+			width: 100%;
+			bottom: 100upx;
+			text-align: center;
+			left: 0;
+			opacity: .3;
+			font-size: 28upx;
+			background: #000;
+			color: #fff;
+		}
 		.operator {
 			position: fixed;
 			height: 100upx;
@@ -1037,10 +1129,11 @@
 			background-color: #fff;
 
 			.icon-18 {
-				width: 36upx;
-				height: 34upx;
+				width: 44upx;
+				height: 44upx;
 				margin: 0 auto;
-
+				position: relative;
+				top: 2upx;
 				>img {
 					width: 100%;
 					height: 100%;
@@ -1048,11 +1141,11 @@
 			}
 
 			.icon-15 {
-				width: 30upx;
-				height: 34upx;
+				width: 44upx;
+				height: 44upx;
 				margin: 0 auto;
-
-
+				position: relative;
+				top: 4upx;
 				>img {
 					width: 100%;
 					height: 100%;
@@ -1216,8 +1309,8 @@
 			-webkit-overflow-scrolling: touch;
 
 			.icon-155 {
-				width: 30upx;
-				height: 30upx;
+				width: 44upx;
+				height: 44upx;
 				position: relative;
 				left: -50upx;
 			}
@@ -1229,6 +1322,7 @@
 
 			.standard {
 				border-bottom: 1upx solid #f0f0f0;
+				padding-left: 0upx !important;
 			}
 
 			.sta-name {
@@ -1238,6 +1332,7 @@
 			}
 
 			.sta-item {
+				
 				.fll{
 					// width: 150upx;
 					margin-right: 60upx;
@@ -1249,21 +1344,25 @@
 					margin-top: 30upx;
 					// width: 150upx;
 					line-height: 50upx;
-					border-radius: 24upx;
+					border-radius: 50upx;
 					text-align: center;
 					color: #666;
 					font-size: 24upx;
-					box-shadow: 0 0 0 1upx #666;
+					// box-shadow: 0 0 0 1upx #666;
+					border: 1upx solid #D9D9D9;
 					transition: all 0.5s;
 
 					&.actived {
-						box-shadow: 0 0 0 1upx #fc2d2d;
+						border: 1upx solid #fc2d2d;
+						// box-shadow: 0 0 0 1upx #fc2d2d;
 						color: #fc2d2d;
 					}
 
 					&.disabled {
-						box-shadow: 0 0 0 1upx #bebebe;
-						color: #bebebe;
+						border: 1upx solid #F5F5F5;
+						// box-shadow: 0 0 0 1upx #bebebe;
+						color: #666;
+						background: #F5F5F5;
 					}
 				}
 			}
@@ -1280,7 +1379,7 @@
 
 			.body {
 				background-color: #fff;
-				padding: 20upx;
+				padding:20upx 30upx;
 				position: fixed;
 				width: 100%;
 				max-height: 1000upx;
@@ -1328,7 +1427,7 @@
 					border-bottom: #f0f0f0 solid 1upx;
 					font-size: 30upx;
 					padding-top: 24upx;
-					margin-top: 74upx;
+					margin-top: 30upx;
 					position: relative;
 
 					.input {
@@ -1377,7 +1476,7 @@
 				}
 
 				.btn {
-					margin-top: 96upx;
+					margin-top: 50upx;
 					width: 640upx;
 					line-height: 80upx;
 					background-color: #fc2d2d;
@@ -1385,8 +1484,7 @@
 					border-radius: 40upx;
 					font-size: 32upx;
 					text-align: center;
-					margin-left: auto;
-					margin-right: auto;
+					margin-left: 30upx;
 				}
 			}
 

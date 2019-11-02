@@ -108,6 +108,7 @@ __webpack_require__.r(__webpack_exports__);
     // 		console.log('code',JSON.stringify(e))
     // 	}
     // })
+
     // 版本更新
     if (uni.getUpdateManager) {
       var updateManager = uni.getUpdateManager();
@@ -135,10 +136,23 @@ __webpack_require__.r(__webpack_exports__);
     uni.setStorageSync('appid', 'wxf89e01a251ab43f7');
 
     // 判断设备  android:1 , ios:2 , 运行在开发者工具上: 3
+    console.log(uni.getSystemInfoSync());
     switch (uni.getSystemInfoSync().platform) {
       case 'android':
         console.log('运行Android上');
-        uni.setStorageSync('platform', '1');
+        // uni.setStorageSync('platform', '4')
+
+        switch (uni.getSystemInfoSync().brand) {
+          case 'OPPO':
+            console.log('运行OPPO上');
+            uni.setStorageSync('platform', '1');
+            break;
+          case 'HUAWEI':
+            console.log('运行华为上');
+            uni.setStorageSync('platform', '4');
+            break;}
+
+
         break;
       case 'ios':
         console.log('运行iOS上');
@@ -148,6 +162,95 @@ __webpack_require__.r(__webpack_exports__);
         console.log('运行在开发者工具上');
         uni.setStorageSync('platform', '3');
         break;}
+
+
+
+
+
+    // 版本更新
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // 版本更新
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   },

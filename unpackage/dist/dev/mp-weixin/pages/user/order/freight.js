@@ -198,14 +198,7 @@ var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35); //
 //
 //
 //
-var _default = { name: 'freight', components: {}, data: function data() {return { info: '' };}, onLoad: function onLoad(options) {var _this2 = this;var data = { orderId: options.orderId, shopId: options.shopId };var _this = this;if (options.orderId && options.shopId) {(0, _userApi.postOrderLogisticsQuery)(data).then(function (res) {if (res.code === '1000') {_this2.info = res.data;} else {_this2.goBack(_this);}}).catch(function (err) {console.log(err.message);_this2.goBack(_this);});} else {this.goBack(_this);}},
-  methods: {
-    goBack: function goBack(_this) {
-      uni.showModal({
-        title: '提示',
-        content: '数据错误，返回上一页?',
-        success: function success(res) {
-          uni.navigateBack({
+var _default = { name: 'freight', components: {}, data: function data() {return { info: '' };}, onLoad: function onLoad(options) {var _this2 = this;var data = { orderId: options.orderId, shopId: options.shopId };var _this = this;if (options.orderId && options.shopId) {(0, _userApi.postOrderLogisticsQuery)(data).then(function (res) {if (res.code === '1000') {_this2.info = res.data;}});}}, methods: { goBack: function goBack(_this) {uni.showModal({ title: '提示', content: '数据错误，返回上一页?', success: function success(res) {uni.navigateBack({
             delta: 1 });
 
         } });

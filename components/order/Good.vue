@@ -5,7 +5,7 @@
     </div>
     <div class="content fll">
       <div class="name ellipsis-line2">{{item.goodsName}}</div>
-      <div class="standard">{{item.skuDesc}}</div>
+      <div class="standard" :class="{'Android': platform == 1}">{{item.skuDesc}}</div>
     </div>
     <div class="content2 flr">
       <div class="price">￥{{item.price}}</div>
@@ -22,6 +22,16 @@ export default {
       type: Object,
       default: null
     }
+  },
+  data() {
+  	return {
+  		  platform: 0
+  	};
+  },
+  mounted() {
+  	// 设备样式兼容
+  	this.platform = uni.getStorageSync('platform');
+	// console.log('platform:',this.platform)
   }
 }
 </script>
@@ -51,11 +61,16 @@ export default {
 	}
   }
   .name {
-    height: 80upx;
+    // height: 80upx;
 	width: 90%;
+	line-height: 40upx;
+  }
+  .Android{
+	  padding-top: 10upx!important;
   }
   .standard {
-    padding: 4upx 10upx;
+    padding: 6upx 14upx;
+	border-radius: 22upx;
     background-color: #f5f5f5;
     font-size: 20upx;
     color: #666;
@@ -65,7 +80,7 @@ export default {
   .num {
     position: absolute;
     color: #999;
-    top: 56upx;
+    top: 46upx;
     right: 0;
   }
 }

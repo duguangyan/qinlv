@@ -220,9 +220,18 @@ const weixinLogin = data => {
   })
 }
 
+// 获取openid
+const openIdByCode = data => {
+  return request({
+    url: '/api/oauth/userConnection/openIdByCode',
+    data,
+    type: 'form',
+  })
+}
 
 
 export {
+  openIdByCode,
   weixinLogin,
   getSetFormId,
   getPageLayout,

@@ -172,9 +172,9 @@
 				if (this.orderId !== '') {
 					let data = {
 						payChannelEnum:'WEIXIN_PAY',
-						payWay:'JSAPI',
+						payWay:'APPLET',
 						orderId: this.orderId,
-						openId:'o9iGq5ZBJpnHlBv2syO2L7jaB55Y'
+						openId: uni.getStorageSync('openid')
 					}
 					payAlipayByWap(data).then(res => {
 						if (res.code === '1000') {
@@ -207,6 +207,9 @@
 									_this.clock = true
 							        console.log('fail:' + JSON.stringify(err));
 									T.tips('支付失败')
+									uni.redirectTo({
+									    url: '/pages/user/order/detail?orderId='+_this.orderId
+									});
 							    }
 							});
 						} else {
@@ -275,6 +278,9 @@
 									_this.clock = true
 							        console.log('fail:' + JSON.stringify(err));
 									T.tips('支付失败')
+									uni.redirectTo({
+									    url: '/pages/user/order/detail?orderId='+_this.orderId
+									});
 									// uni.showModal({
 									// 	content:JSON.stringify(err),
 									// 	success() {

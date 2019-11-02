@@ -2,7 +2,7 @@
 	<view>
 		    <div class="err">
 		      <img :src="img" alt="图片">
-		      <div class="p">{{text}}</div>
+		      <div class="p fs28">{{text}}</div>
 		      <div class="btn" @click="goBack">刷新</div>
 		    </div>
 		  </div>
@@ -85,6 +85,8 @@
 <style lang="scss" scoped>
   .err{
     text-align: center;
+	height: 100vh;
+	background: #fff;
     >img{
       margin-top: 200upx;
       width: 240upx;

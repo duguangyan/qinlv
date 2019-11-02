@@ -20,7 +20,6 @@
   "permissions": {
     "Bluetooth": {},
     "VideoPlayer": {},
-    "Push": {},
     "OAuth": {},
     "Payment": {},
     "Share": {},
@@ -86,13 +85,13 @@
       },
       "splashscreen": {
         "android": {
-          "xhdpi": "C:/Users/ZZT/Desktop/应用市场/01启动-应用市场720-1280.png"
+          "xhdpi": ""
         },
         "ios": {
           "iphone": {
-            "portrait-896h@3x": "C:/Users/ZZT/Desktop/01启动-应用市场1242-2688.png",
-            "retina55": "C:/Users/ZZT/Desktop/应用市场/04启动-应用市场1242-2208.png",
-            "retina47": "C:/Users/ZZT/Desktop/应用市场/登录-加载页750-1334.png"
+            "portrait-896h@3x": "",
+            "retina55": "",
+            "retina47": ""
           }
         }
       },
@@ -190,6 +189,7 @@
     },
     "tabBar": {
       "color": "#D9D9D9",
+      "borderStyle": "rgba(255,255,255,0.4)",
       "selectedColor": "#FC2D2D",
       "backgroundColor": "#ffffff",
       "list": [
@@ -212,7 +212,6 @@
           "selectedIconPath": "static/img/3.2.png"
         }
       ],
-      "borderStyle": "rgba(0,0,0,0.4)",
       "height": "50px",
       "child": [
         "lauchwebview"

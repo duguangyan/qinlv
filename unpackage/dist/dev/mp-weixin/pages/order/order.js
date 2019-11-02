@@ -217,6 +217,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 var _iconChecked = _interopRequireDefault(__webpack_require__(/*! ../../static/img/icon-checked.png */ 53));
 var _iconUncheck = _interopRequireDefault(__webpack_require__(/*! ../../static/img/icon-uncheck.png */ 54));
 var _iconPlat = _interopRequireDefault(__webpack_require__(/*! ../../static/img/icon-plat.png */ 55));
@@ -224,6 +226,7 @@ var _iconPlat = _interopRequireDefault(__webpack_require__(/*! ../../static/img/
 var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));
 var _validator = _interopRequireDefault(__webpack_require__(/*! @/utils/validator.js */ 34));
+
 var _cartApi = __webpack_require__(/*! @/api/cartApi.js */ 57);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
@@ -302,11 +305,14 @@ var _cartApi = __webpack_require__(/*! @/api/cartApi.js */ 57);function _interop
 //
 //
 //
-var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 164));};var _default = { data: function data() {return { hasData: false, title: '您确定删除商品吗?', confirmText: '删除', cancelText: '再想想', isShow: false, list: [], defaultUrl: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2180358788,168891397&fm=26&gp=0.jpg', isEdit: false, Checked: _iconChecked.default, Uncheck: _iconUncheck.default, Plat: _iconPlat.default, isCheckAll: false, validTotal: /* 有效的商品总数 */0, validChecked: 0, totalMoney: 0, clickNum: 0, //点击商品当前数量
+//
+//
+var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 297));};var TabBar = function TabBar() {return __webpack_require__.e(/*! import() | components/common/TabBar */ "components/common/TabBar").then(__webpack_require__.bind(null, /*! @/components/common/TabBar.vue */ 290));};var _default = { data: function data() {return { checkIndex: 1, hasData: false, title: '您确定删除商品吗?', confirmText: '删除', cancelText: '再想想', isShow: false, list: [], defaultUrl: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2180358788,168891397&fm=26&gp=0.jpg', isEdit: false, Checked: _iconChecked.default, Uncheck: _iconUncheck.default, Plat: _iconPlat.default, isCheckAll: false, validTotal: /* 有效的商品总数 */0, validChecked: 0, totalMoney: 0, clickNum: 0, //点击商品当前数量
       isColor999: false, // 数量减法最低颜色
       isclock: false, // 锁
-      clock: true };}, components: { Dialog: Dialog }, onLoad: function onLoad() {}, onShow: function onShow() {// 获取进货单列表
-    this.getCartOrderList();}, methods: { doConfirm: function doConfirm() {this.doDel();}, doCancel: function doCancel() {this.isShow = false;}, // 去详情
+      clock: true, platform: 0 };}, components: { Dialog: Dialog, TabBar: TabBar }, onLoad: function onLoad() {}, onShow: function onShow() {// 获取进货单列表
+    this.getCartOrderList(); // 设备样式兼容
+    this.platform = uni.getStorageSync('platform');}, methods: { doConfirm: function doConfirm() {this.doDel();}, doCancel: function doCancel() {this.isShow = false;}, // 去详情
     goDetail: function goDetail(shopId, orderId) {uni.navigateTo({ url: '/pages/order/goodsDetail/goodsDetail?shopId=' + shopId + '&goodsId=' + orderId });}, // 结算
     submit: function submit() {var _this = this;if (!this.clock) return false;this.clock = false;var cartIdList = [];this.list.forEach(function (item) {item.items.forEach(function (it) {if (it.checked == 1 && item.status != 4) {cartIdList.push(it.cartId);}});});var userId = uni.getStorageSync('uid');var data = { userId: userId, cartIdList: cartIdList };(0, _cartApi.getOrderCart)(data).then(function (res) {if (res.code === '1000') {_this.clock = true;uni.navigateTo({ url: '/pages/order/submit/submit?submitData=' + JSON.stringify(res.data) });} else {_tips.default.tips(res.message || '结算失败');_this.clock = true;}}).catch(function (err) {_tips.default.tips(err.message || '结算失败');
         _this.clock = true;
@@ -364,7 +370,8 @@ var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | comp
       }
       var data = {
         num: num,
-        skuId: skuId };
+        skuId: skuId,
+        isLoading: 1 };
 
       this.isclock = true;
       (0, _cartApi.getCartChangeNum)(data).then(function (res) {

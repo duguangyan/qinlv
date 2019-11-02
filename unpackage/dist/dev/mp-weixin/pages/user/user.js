@@ -122,69 +122,73 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var TabBar = function TabBar() {return __webpack_require__.e(/*! import() | components/common/TabBar */ "components/common/TabBar").then(__webpack_require__.bind(null, /*! @/components/common/TabBar.vue */ 290));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {
   data: function data() {
     return {
+      checkIndex: 2,
       titles: [
       { t: '待付款', u: '/static/img/icon-waitpay.png' },
       { t: '待发货', u: '/static/img/icon-waitsend.png' },
@@ -195,13 +199,17 @@ var _default =
       uid: '',
       phone: '',
       headimageUrl: '/static/img/icon-user.png',
-      nickName: '' };
+      nickName: '',
+      platform: 0 };
 
   },
+  components: { TabBar: TabBar },
   onLoad: function onLoad() {
 
   },
   onShow: function onShow() {
+    // 设备样式兼容
+    this.platform = uni.getStorageSync('platform');
     // 获取phone 和 uid
     this.phone = uni.getStorageSync('phone');
     this.uid = uni.getStorageSync('uid');

@@ -2,5 +2,8 @@
   "navigationBarTitleText": "沁绿农业",
   "enablePullDownRefresh": true,
   "navigationStyle": "custom",
-  "usingComponents": {}
+  "backgroundColor": "#F5F5F5",
+  "usingComponents": {
+    "tab-bar": "/components/common/TabBar"
+  }
 }

@@ -1,15 +1,15 @@
-.icon-img2.data-v-02427c3a, .icon-img.data-v-02427c3a {
+.icon-img2.data-v-7925f626, .icon-img.data-v-7925f626 {
   width: 22rpx;
   height: 22rpx;
 }
-.icon-img2 > ._img.data-v-02427c3a, .icon-img > ._img.data-v-02427c3a {
+.icon-img2 > ._img.data-v-7925f626, .icon-img > ._img.data-v-7925f626 {
     width: 100%;
     height: 100%;
 }
-.setting.data-v-02427c3a {
+.setting.data-v-7925f626 {
   position: relative;
 }
-.setting.data-v-02427c3a::before {
+.setting.data-v-7925f626::before {
     content: '';
     display: block;
     z-index: -1;
@@ -20,25 +20,25 @@
     height: 100vh;
     width: 100%;
 }
-.setting .list.data-v-02427c3a {
+.setting .list.data-v-7925f626 {
     margin-top: 20rpx;
 }
-.setting .list .li.data-v-02427c3a {
+.setting .list .li.data-v-7925f626 {
       height: 100rpx;
       line-height: 100rpx;
       background: #fff;
       padding: 0 30rpx;
       border-bottom: 1rpx solid #F5F5F5;
 }
-.setting .list .li .icon.data-v-02427c3a {
-        width: 44rpx;
-        height: 44rpx;
+.setting .list .li .icon.data-v-7925f626 {
+        width: 22rpx;
+        height: 22rpx;
 }
-.setting .list .li .icon ._img.data-v-02427c3a {
+.setting .list .li .icon ._img.data-v-7925f626 {
           width: 100%;
           height: 100%;
 }
-.setting .exit.data-v-02427c3a {
+.setting .exit.data-v-7925f626 {
     width: 640rpx;
     line-height: 80rpx;
     border-radius: 40rpx;

@@ -23,11 +23,15 @@
       text-align: center;
 }
 .item .name.data-v-14d06b2a {
-    height: 80rpx;
     width: 90%;
+    line-height: 40rpx;
+}
+.item .Android.data-v-14d06b2a {
+    padding-top: 10rpx !important;
 }
 .item .standard.data-v-14d06b2a {
-    padding: 4rpx 10rpx;
+    padding: 6rpx 14rpx;
+    border-radius: 22rpx;
     background-color: #f5f5f5;
     font-size: 20rpx;
     color: #666;
@@ -37,7 +41,7 @@
 .item .num.data-v-14d06b2a {
     position: absolute;
     color: #999;
-    top: 56rpx;
+    top: 46rpx;
     right: 0;
 }
 
