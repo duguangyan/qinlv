@@ -184,11 +184,11 @@ __webpack_require__.r(__webpack_exports__);
 
 var _iconChecked = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-checked.png */ 53));
 var _iconUncheck = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-uncheck.png */ 54));
-var _userApi = __webpack_require__(/*! @/api/userApi.js */ 35);
+var _userApi = __webpack_require__(/*! @/api/userApi.js */ 25);
 
 
 
-var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 26));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //

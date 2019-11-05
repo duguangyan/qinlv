@@ -101,15 +101,37 @@ __webpack_require__.r(__webpack_exports__);
   onLaunch: function onLaunch() {
     console.log('App Launch');
 
-    // 获取code
-    // uni.login({
-    // 	provider:'weixin',
-    // 	success(e) {
-    // 		console.log('code',JSON.stringify(e))
-    // 	}
-    // })
+    // 获取 appid
+    uni.setStorageSync('appid', 'wxf89e01a251ab43f7');
 
-    // 版本更新
+    // 判断设备  android:10 , ios:2 , 运行在开发者工具上: 3
+    switch (uni.getSystemInfoSync().platform) {
+      case 'android':
+        console.log('运行Android上');
+        uni.setStorageSync('platformAndroid', '10');
+        switch (uni.getSystemInfoSync().brand) {
+          case 'OPPO':
+            console.log('运行OPPO上');
+            uni.setStorageSync('platform', '1');
+            break;
+          case 'HUAWEI':
+            console.log('运行华为上');
+            uni.setStorageSync('platform', '4');
+            break;}
+
+        break;
+      case 'ios':
+        console.log('运行iOS上');
+        uni.setStorageSync('platform', '2');
+        break;
+      default:
+        console.log('运行在开发者工具上');
+        uni.setStorageSync('platform', '3');
+        break;}
+
+
+    // 版本更新 (微信小程序)
+
     if (uni.getUpdateManager) {
       var updateManager = uni.getUpdateManager();
       console.log('updata version', updateManager);
@@ -132,131 +154,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
 
-    // 获取 appid
-    uni.setStorageSync('appid', 'wxf89e01a251ab43f7');
-
-    // 判断设备  android:1 , ios:2 , 运行在开发者工具上: 3
-    console.log(uni.getSystemInfoSync());
-    switch (uni.getSystemInfoSync().platform) {
-      case 'android':
-        console.log('运行Android上');
-        // uni.setStorageSync('platform', '4')
-
-        switch (uni.getSystemInfoSync().brand) {
-          case 'OPPO':
-            console.log('运行OPPO上');
-            uni.setStorageSync('platform', '1');
-            break;
-          case 'HUAWEI':
-            console.log('运行华为上');
-            uni.setStorageSync('platform', '4');
-            break;}
-
-
-        break;
-      case 'ios':
-        console.log('运行iOS上');
-        uni.setStorageSync('platform', '2');
-        break;
-      default:
-        console.log('运行在开发者工具上');
-        uni.setStorageSync('platform', '3');
-        break;}
-
-
-
-
-
-    // 版本更新
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // 版本更新
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
   },
   onShow: function onShow() {
     console.log('App Show');
-
   },
   onHide: function onHide() {
     console.log('App Hide');

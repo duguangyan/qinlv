@@ -7,10 +7,10 @@
 			<view class="welcome">您好！</view>
 			<view class="subwel">欢迎来到上上农夫，立即登录</view>
 			<view class="name">
-				<input class="fs30" v-model="phone" @input="doIsLogin" type="text" placeholder="请输入手机号码" />
+				<input class="fs30" v-model="phone" @input="doIsLogin" type="number" placeholder="请输入手机号码" />
 			</view>
 			<view class="code">
-				<input class="fs30" v-model="code" @input="doIsLogin" type="text" placeholder="请输入验证码" />
+				<input class="fs30" v-model="code" @input="doIsLogin" type="number" placeholder="请输入验证码" />
 				<text class="getcode" @click="getCode" :class="{'text-999':codeNum!==''}">{{codeNum}} {{codeText}}</text>
 			</view>
 			<view class="protocal">
@@ -64,19 +64,37 @@
 				setCodeInterval: '', // 定时器
 				deviceId: '', // 数据传值deviceId
 				appID: 'wxb8afa388fa540c2a',
-				weixinCode:''
+				weixinCode:'',
+				delta:1,
+				from:''
 			}
 		},
 		components: {
 		
 		},
+		onBackPress() {
+			if(!uni.getStorageSync('access_token')){
+				if(uni.getStorageSync('pagePath')=='main'){
+					uni.switchTab({
+						url:'/pages/main/main'
+					})
+				}else{
+					uni.switchTab({
+						url:'/pages/user/user'
+					})
+				}
+			}
+			console.log('onBackPress')
+		},
 		onHide() {
+			console.log('onHide')
 			if(this.setCodeInterval!=''){
 				clearInterval(this.setCodeInterval)
 			}
 		},
-		onLoad() {
-			
+		onLoad(options) {
+			if(options.delta) this.delta = options.delta
+			if(options.from) this.from = options.from
 		},
 		onShow() {
 			uni.setStorageSync('isLogin',0)	
@@ -304,9 +322,23 @@
 		          uni.setStorageSync('nickName', res.data.nickName)
 		          uni.setStorageSync('headImgUrl', res.data.headImgUrl)
 				  // 返回上一页
-				  uni.navigateBack({
-					  delta:1
-				  })
+				  if(this.from == 'order'){
+					  if(uni.getStorageSync('pagePath') == 'main'){
+						  uni.switchTab({
+						  	url:'/pages/main/main'
+						  })
+					  }else{
+						  uni.switchTab({
+						  	url:'/pages/user/user'
+						  }) 
+					  }
+					  
+				  } else {
+					  uni.navigateBack({
+					  	 delta: parseInt(this.delta)
+					  })
+				  }
+				  
 		        }
 		      }).catch((err) => {
 				T.tips(err.message || '获取用户信息错误')

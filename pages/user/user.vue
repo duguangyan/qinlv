@@ -14,8 +14,8 @@
 				</view>
 			  <view class="content">
 			    <view v-if="isLogin" @click="goInfo">
-			      <view class="uid fs28" v-if="nickName">{{nickName}}</view>
-			      <view class="uid fs28" v-if="!nickName">ID:{{uid}}</view>
+			      <view class="uid fs28">{{nickName || '游客'}}</view>
+			      <!-- <view class="uid fs28" v-if="!nickName">ID:{{uid}}</view> -->
 			      <view class="phone fs24  mgt-30">{{dPhone}}</view>
 			    </view>
 			    <view class="fs30 mgl-20" v-if="!isLogin" @click="goLogin">点击登录</view>
@@ -80,8 +80,11 @@
             }
         },
 		components:{TabBar},
+		onTabItemTap(e){
+			uni.setStorageSync('pagePath','user')
+		},
 		onLoad() {
-			
+			uni.setStorageSync('pagePath','user')
 		},
 		onShow() {
 			// 设备样式兼容
@@ -103,9 +106,17 @@
         methods: {
 			// 去收藏页面
 			goCollection(){
-				uni.navigateTo({
-					url:'/pages/user/collection/collection'
-				})
+				
+				if(!uni.getStorageSync('access_token')) {
+					uni.navigateTo({
+						url:'/pages/login/login'
+					})
+				} else{
+					uni.navigateTo({
+						url:'/pages/user/collection/collection'
+					})
+				}
+				
 			},
 			// 去设置页面
 			goSettingPage(){
@@ -115,16 +126,27 @@
 			},
             // 去订单页面
 			goOrderList(index) {
-			  let i = index === '' ? '' : index + 1
-			  uni.setStorageSync('orderNavIndex', i)
-			  uni.navigateTo({
-			  	url:'/pages/user/order/list'
-			  })
+			  if(uni.getStorageSync('access_token')){
+				  let i = index === '' ? '' : index + 1
+				  uni.setStorageSync('orderNavIndex', i)
+				  uni.navigateTo({
+				  	url:'/pages/user/order/list'
+				  })
+			  } else {
+				  uni.navigateTo({
+				  	url:'/pages/login/login'
+				  })
+			  }	
+			
 			},
 			goInfo() {
 				if(this.isLogin) {
 					uni.navigateTo({
 						url:'/pages/user/info/info'
+					})
+				}else{
+					uni.navigateTo({
+						url:'/pages/login/login'
 					})
 				}
 			},

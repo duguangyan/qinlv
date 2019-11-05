@@ -204,8 +204,11 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   components: { TabBar: TabBar },
+  onTabItemTap: function onTabItemTap(e) {
+    uni.setStorageSync('pagePath', 'user');
+  },
   onLoad: function onLoad() {
-
+    uni.setStorageSync('pagePath', 'user');
   },
   onShow: function onShow() {
     // 设备样式兼容
@@ -227,8 +230,16 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     // 去收藏页面
     goCollection: function goCollection() {
-      uni.navigateTo({
-        url: '/pages/user/collection/collection' });
+
+      if (!uni.getStorageSync('access_token')) {
+        uni.navigateTo({
+          url: '/pages/login/login' });
+
+      } else {
+        uni.navigateTo({
+          url: '/pages/user/collection/collection' });
+
+      }
 
     },
     // 去设置页面
@@ -239,16 +250,27 @@ __webpack_require__.r(__webpack_exports__);
     },
     // 去订单页面
     goOrderList: function goOrderList(index) {
-      var i = index === '' ? '' : index + 1;
-      uni.setStorageSync('orderNavIndex', i);
-      uni.navigateTo({
-        url: '/pages/user/order/list' });
+      if (uni.getStorageSync('access_token')) {
+        var i = index === '' ? '' : index + 1;
+        uni.setStorageSync('orderNavIndex', i);
+        uni.navigateTo({
+          url: '/pages/user/order/list' });
+
+      } else {
+        uni.navigateTo({
+          url: '/pages/login/login' });
+
+      }
 
     },
     goInfo: function goInfo() {
       if (this.isLogin) {
         uni.navigateTo({
           url: '/pages/user/info/info' });
+
+      } else {
+        uni.navigateTo({
+          url: '/pages/login/login' });
 
       }
     },
