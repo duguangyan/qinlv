@@ -119,7 +119,7 @@
 		onLoad() {
 			uni.setStorageSync('pagePath','main')
 			// 版本更新 （APP）
-			// #ifdef APP-PLUS
+			// #ifdef APP-PLUS || MP-WEIXIN
 			this.updataApp()
 			// #endif	
 
@@ -128,6 +128,7 @@
 			this.platform = uni.getStorageSync('platform');
 		},
 		onShow() {
+			uni.setStorageSync('wxLogin','1')
 			uni.hideLoading();
 			// 获取首页banner
 			this.getHomeList()
@@ -145,7 +146,7 @@
 
 			// 更新版本
 			updataApp() {
-				// #ifdef APP-PLUS
+				// #ifdef APP-PLUS 
 				// 安卓
 				let data = {
 					code: '001'
@@ -293,7 +294,7 @@
 			// nav 去搜索页面
 			goSearchPage(name) {
 				uni.navigateTo({
-					url: '/pages/order/goodsList/goodsList?search=' + name
+					url: '/pages/order/goodsList/goodsList?attrValueList=' + name
 				})
 			},
 			// 去搜索页面
@@ -323,7 +324,7 @@
 
 				if (item.type == 5) {
 					uni.navigateTo({
-						url: '/pages/order/goodsDetail/goodsDetail?shopId=' + item.shopId + '&goodsId=' + item.id
+						url: '/pages/order/goodsDetail/goodsDetail?shopId=' + item.shopId + '&goodsId=' + item.url
 					});
 				} else if (item.type == 1) {
 					uni.navigateTo({
@@ -488,11 +489,10 @@
 				width: 240upx;
 				height: 40upx;
 				margin: 30upx auto;
-				background-image: url('~@/static/img/default-shouye.png');
-				background-repeat: no-repeat;
-				background-size: 100% 100%;
-				-moz-background-size: 100% 100%;
-
+				// background-image: url('~@/static/img/default-shouye.png');
+				// background-repeat: no-repeat;
+				// background-size: 100% 100%;
+				// -moz-background-size: 100% 100%;
 				>image {
 					width: 100%;
 					height: 100%;

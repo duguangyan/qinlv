@@ -71,7 +71,8 @@ export default {
 		top: -12upx;
 	}
 	.navigationBar{
-		height: 160upx;
+		padding-top: var(--status-bar-height);
+		height: 80upx;
 		position: fixed;
 		top: 0;
 		width: 100%;

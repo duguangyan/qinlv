@@ -56,7 +56,8 @@
       height: 48rpx;
       position: absolute;
       right: 30rpx;
-      top: 130rpx;
+      top: 150rpx;
+      z-index: 999999;
 }
 .mine .top .setting > image.data-v-5daecc58 {
         width: 100%;
@@ -115,6 +116,13 @@
 .mine .order .title .img > image.data-v-5daecc58 {
           width: 100%;
           height: 100%;
+}
+.mine .order .title .img.data-v-5daecc58 {
+        position: relative;
+        top: 10rpx;
+}
+.mine .order .title .opo.data-v-5daecc58 {
+        top: 6rpx;
 }
 .mine .order .title > .p2.data-v-5daecc58 {
         color: #999;

@@ -423,9 +423,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
 var _iconCollect = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-collect.png */ 196));
 var _iconCollect2 = _interopRequireDefault(__webpack_require__(/*! @/static/img/icon-collect2.png */ 197));
 var _goodsApi = __webpack_require__(/*! @/api/goodsApi.js */ 198);
@@ -505,6 +502,17 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     this.goodsId = options.goodsId;
   },
   onShow: function onShow() {var _this = this;
+    // try{
+    // 	this.good.goods.detail = util.formatRichText(this.good.goods.detail);
+    // }catch(e){
+    // 	//TODO handle the exception
+    // }
+    console.log('onshow');
+    console.log(this.good.goods.detail);
+
+
+
+
 
 
     if (uni.getStorageSync("access_token")) {
@@ -603,10 +611,13 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
             }
             // 顺便处理规格
             if (isSection) {
-              d.standardList[exIndex].push("".concat(val.value).concat(d.goods.unitName, "\u8D77\u6279"));
-              d.standardList[exIndex].push(
-              // `${val.value}${sufName}/${d.goods.unitName}`
-              "".concat(val.value).concat(sufName));
+              d.standardList[exIndex].push("".concat(
+              sku.startNum).concat(d.goods.unitName, "\u8D77\u6279"));
+
+              d.standardList[exIndex].push("".concat(
+              val.value).concat(
+              +d.goods.showStyle !== 3 ? sufName : ""));
+
 
             } else {
               d.standardList[exIndex].push(val.value);
@@ -620,6 +631,11 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
         d.tree = tree;
         d.isInvalid = isInvalid;
 
+        if (d.isInvalid) {
+          _this.isGoodsTitle = true;
+          _this.goodsTitle = '库存不足,请浏览别的商品吧~';
+          // T.tips("库存不足,请浏览别的商品吧~");
+        }
         if (d.goods.status != 3) {
           _tips.default.tips("商品已下架啦,看下其它的吧");
         }
@@ -627,9 +643,8 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
         if (d.goods.showStyle == 2) {
           var sku = d.goodsSkuList[0].attrValueList[0];
           d.goodsList = [];
-          // let grades = JSON.parse(d.goodsSkuList[0].priceExp);
-
-          grades.forEach(function (item, index) {
+          var _grades = JSON.parse(d.goodsSkuList[0].priceExp);
+          _grades.forEach(function (item, index) {
             d.goodsList.push({
               startNum: item.startQuantity,
               price: item.price,
@@ -660,7 +675,8 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
           _this.postType = data.data.type;
         });
 
-
+        _this.good.goods.detail = _util.default.formatRichText(_this.good.goods.detail);
+        console.log(_this.good.goods.detail);
         // 判断商品是否备收藏
         if (uni.getStorageSync('access_token')) {
           _this.getHasCollect(_this.goodsId);
@@ -674,7 +690,7 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     imgLoad: function imgLoad(e) {var _this2 = this;
       setTimeout(function () {
         _this2.imgLoading = false;
-      }, 500);
+      }, 300);
     },
     // 判断是否备收藏
     getHasCollect: function getHasCollect(id) {var _this3 = this;
@@ -740,50 +756,54 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     },
     calcPrice: function calcPrice(reset) {var _this4 = this;
 
+      try {
+        var node = this.good.tree;
+        if (this.good.goods.showStyle != 2) {
+          this.curs.forEach(function (cur, index) {
+            node = node[cur["key"]];
+            if (index === _this4.curs.length - 1) {
+              _this4.totalPrice = parseFloat(node.price || 0);
+              _this4.stock = node.stock;
+              !reset && (_this4.nums = node.disabled ? 0 : node.startNum);
+              _this4.startNum = node.startNum || 0;
+              cur.disabled = node.disabled;
+              _this4.curDisable = node.disabled;
+            }
+          });
+        } else {
+          this.curs.forEach(function (cur, index) {
+            node = node[cur["key"]];
+            if (index == _this4.curs.length - 1) {
+              _this4.stock = node.stock;
+              !reset && (_this4.nums = node.disabled ? 0 : node.startNum);
+              cur.disabled = node.disabled;
 
-      var node = this.good.tree;
-      if (this.good.goods.showStyle != 2) {
-        this.curs.forEach(function (cur, index) {
-          node = node[cur["key"]];
-          if (index === _this4.curs.length - 1) {
-            _this4.totalPrice = parseFloat(node.price || 0);
-            _this4.stock = node.stock;
-            !reset && (_this4.nums = node.disabled ? 0 : node.startNum);
-            _this4.startNum = node.startNum || 0;
-            cur.disabled = node.disabled;
-            _this4.curDisable = node.disabled;
-          }
-        });
-      } else {
-        this.curs.forEach(function (cur, index) {
-          node = node[cur["key"]];
-          if (index == _this4.curs.length - 1) {
-            _this4.stock = node.stock;
-            !reset && (_this4.nums = node.disabled ? 0 : node.startNum);
-            cur.disabled = node.disabled;
+            }
+          });
 
-          }
-        });
+          var list = _toConsumableArray(this.good.goodsList);
+          var first = list[0];
+          var last = list[list.length - 1];
+          list.push({
+            startNum: Math.pow(2, 25),
+            price: last.price });
 
-        var list = _toConsumableArray(this.good.goodsList);
-        var first = list[0];
-        var last = list[list.length - 1];
-        list.push({
-          startNum: Math.pow(2, 25),
-          price: last.price });
-
-        list.unshift({
-          startNum: first.startNum,
-          price: first.price });
+          list.unshift({
+            startNum: first.startNum,
+            price: first.price });
 
 
-        this.startNum = first.startNum;
-        for (var i = 1, l = list.length - 1; i < l; i++) {
-          if (this.nums >= list[i].startNum && this.nums < list[i + 1].startNum) {
-            this.totalPrice = list[i].price;
+          this.startNum = first.startNum;
+          for (var i = 1, l = list.length - 1; i < l; i++) {
+            if (this.nums >= list[i].startNum && this.nums < list[i + 1].startNum) {
+              this.totalPrice = list[i].price;
+            }
           }
         }
+      } catch (e) {
+        //TODO handle the exception
       }
+
 
 
 

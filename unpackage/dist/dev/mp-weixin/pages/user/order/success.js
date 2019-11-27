@@ -169,6 +169,7 @@ __webpack_require__.r(__webpack_exports__);
   onLoad: function onLoad(options) {
     this.orderId = options.orderId;
     this.shopId = options.shopId;
+    debugger;
   },
   methods: {
     // 广告位url跳转

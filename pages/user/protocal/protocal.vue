@@ -1,5 +1,4 @@
 <template>
-	
 	<web-view src="https://m.qinlvny.com/static/protocal.html"></web-view>
 </template>
 

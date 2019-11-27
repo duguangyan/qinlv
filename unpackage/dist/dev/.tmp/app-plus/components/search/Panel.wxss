@@ -1,10 +1,4 @@
 @charset "UTF-8";
-.Android > ._span.data-v-179b0d2c {
-  display: inline-block !important;
-  height: 2rpx !important;
-  width: 20rpx !important;
-  background: #333 !important;
-}
 .panel.data-v-179b0d2c {
   position: fixed;
   top: 0;
@@ -61,7 +55,7 @@
       margin-left: 16rpx;
       margin-right: 16rpx;
       position: relative;
-      top: -28rpx;
+      top: -4rpx;
       display: inline-block;
       width: 20rpx;
       height: 2rpx;

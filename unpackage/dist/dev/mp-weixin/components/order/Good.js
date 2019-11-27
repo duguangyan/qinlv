@@ -142,7 +142,13 @@ var _default =
     // 设备样式兼容
     this.platform = uni.getStorageSync('platform');
     // console.log('platform:',this.platform)
-  } };exports.default = _default;
+  },
+  methods: {
+    goDetail: function goDetail() {
+      uni.navigateTo({
+        url: '/pages/order/goodsDetail/goodsDetail?goodsId=' + this.item.goodsId + '&shopId=' + this.item.shopId });
+
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

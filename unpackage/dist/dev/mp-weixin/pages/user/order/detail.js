@@ -279,6 +279,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 25);
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 26));
 var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var Good = function Good() {return __webpack_require__.e(/*! import() | components/order/Good */ "components/order/Good").then(__webpack_require__.bind(null, /*! @/components/order/Good */ 328));};var Pay = function Pay() {return Promise.all(/*! import() | components/common/Pay */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/common/Pay")]).then(__webpack_require__.bind(null, /*! @/components/common/Pay */ 335));};var Dialog = function Dialog() {return __webpack_require__.e(/*! import() | components/common/Dialog */ "components/common/Dialog").then(__webpack_require__.bind(null, /*! @/components/common/Dialog.vue */ 297));};var _default =
@@ -309,6 +311,10 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     Pay: Pay,
     Dialog: Dialog },
 
+  onBackPress: function onBackPress() {
+    console.log('-----');
+    if (this.timer != '') clearInterval(this.timer);
+  },
   onLoad: function onLoad(options) {
     this.orderId = options.orderId;
     this.shopId = options.shopId || 1;
@@ -391,10 +397,10 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
       this.isPayShow = !this.isPayShow;
     },
     // 去收货完成页面
-    goFinshPage: function goFinshPage(index) {
+    goFinshPage: function goFinshPage() {
       // orderId, shopId
       uni.navigateTo({
-        url: '/pages/user/order/success?orderId=' + this.order.shopOrder.orderId + '&shopId' + this.order.shopOrder.shopId });
+        url: '/pages/user/order/success?orderId=' + this.order.shopOrder.orderId + '&shopId=' + this.order.shopOrder.shopId });
 
     },
     // 确认收货
@@ -423,6 +429,7 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
     },
     // 获取订单详情
     getOrderDetailById: function getOrderDetailById(orderId, shopId) {var _this3 = this;
+      var _this = this;
       var data = {
         orderId: orderId };
 
@@ -434,12 +441,27 @@ var _util = _interopRequireDefault(__webpack_require__(/*! @/utils/util.js */ 56
           _this3.order = res.data[0];
 
           if (_this3.order.shopOrder.status == 0 || _this3.order.shopOrder.status == 3) {
-            var expiresTime = _this3.order.expiresTime;
+            var expiresTime = '';
+            var nowData = '';
+            if (_this.order.shopOrder.status == 0) {
+              nowData = parseInt(new Date().getTime() / 1000) * 1000;
+              expiresTime = _this3.order.expiresTime - nowData;
+            } else {
+              expiresTime = _this3.order.expiresTime;
+            }
+
+
             _this3.timer = setInterval(function () {
-              expiresTime = expiresTime - 1000;
-              _this3.expiresTime = _this3.order.shopOrder.status == 0 ? _util.default.MillisecondToDate(expiresTime) : _util.default.getLeftTime(expiresTime);
+              if (_this.order.shopOrder.status == 0) {
+                expiresTime = expiresTime - 1000;
+              }
+
+
+              _this.expiresTime = _this.order.shopOrder.status == 0 ? _util.default.MillisecondToDate(expiresTime) : _util.default.getLeftTime(expiresTime);
               if (expiresTime <= 0) {
-                clearInterval(_this3.timer);
+                clearInterval(_this.timer);
+                _this.isOrderDialog = 1;
+                _this.doConfirm();
               }
             }, 1000);
           }

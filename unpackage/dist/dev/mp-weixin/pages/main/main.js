@@ -315,13 +315,14 @@ var TabBar = function TabBar() {return __webpack_require__.e(/*! import() | comp
       advs: [], // 广告
       seles: [], // 精选
       indicatorDots: true, autoplay: true, interval: 3000, duration: 500, platform: 0 };}, components: { TabBar: TabBar }, onTabItemTap: function onTabItemTap(e) {uni.setStorageSync('pagePath', 'main');}, onLoad: function onLoad() {uni.setStorageSync('pagePath', 'main'); // 版本更新 （APP）
-    // 设备样式兼容
-    this.platform = uni.getStorageSync('platform');}, onShow: function onShow() {uni.hideLoading(); // 获取首页banner
+    this.updataApp(); // 设备样式兼容
+    this.platform = uni.getStorageSync('platform');}, onShow: function onShow() {uni.setStorageSync('wxLogin', '1');uni.hideLoading(); // 获取首页banner
     this.getHomeList();}, onPullDownRefresh: function onPullDownRefresh() {//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
     console.log('refresh'); // 获取首页banner
     this.getHomeList();setTimeout(function () {uni.stopPullDownRefresh(); //停止下拉刷新动画
     }, 1000);}, methods: { // 更新版本
     updataApp: function updataApp() {
+
 
 
 
@@ -428,7 +429,7 @@ var TabBar = function TabBar() {return __webpack_require__.e(/*! import() | comp
     // nav 去搜索页面
     goSearchPage: function goSearchPage(name) {
       uni.navigateTo({
-        url: '/pages/order/goodsList/goodsList?search=' + name });
+        url: '/pages/order/goodsList/goodsList?attrValueList=' + name });
 
     },
     // 去搜索页面
@@ -458,7 +459,7 @@ var TabBar = function TabBar() {return __webpack_require__.e(/*! import() | comp
 
       if (item.type == 5) {
         uni.navigateTo({
-          url: '/pages/order/goodsDetail/goodsDetail?shopId=' + item.shopId + '&goodsId=' + item.id });
+          url: '/pages/order/goodsDetail/goodsDetail?shopId=' + item.shopId + '&goodsId=' + item.url });
 
       } else if (item.type == 1) {
         uni.navigateTo({

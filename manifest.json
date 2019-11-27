@@ -2,8 +2,8 @@
     "name" : "上上农夫",
     "appid" : "__UNI__E3A114F",
     "description" : "上上农夫专业的红薯销售平台，提供全国最优质的红薯",
-    "versionName" : "1.0.8",
-    "versionCode" : 108,
+    "versionName" : "1.1.2",
+    "versionCode" : 112,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -150,6 +150,10 @@
                     }
                 }
             }
+        },
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : false,
+            "waiting" : true
         }
     },
     /* 快应用特有相关 */

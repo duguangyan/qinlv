@@ -100,7 +100,7 @@ __webpack_require__.r(__webpack_exports__);
 {
   onLaunch: function onLaunch() {
     console.log('App Launch');
-
+    // console.log('ClientInfo',plus.push.getClientInfo())
     // 获取 appid
     uni.setStorageSync('appid', 'wxf89e01a251ab43f7');
 

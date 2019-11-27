@@ -34,10 +34,8 @@
 .cart .edit .icon.data-v-109e8254 {
       position: absolute;
       top: 84rpx;
-      right: 215rpx;
+      left: 30rpx;
       text-underline: underline;
-      border: 1rpx solid #e2e2e2;
-      border-radius: 10rpx;
       padding: 10rpx;
 }
 .cart .list.data-v-109e8254 {

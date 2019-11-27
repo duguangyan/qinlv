@@ -127,32 +127,57 @@
 		onTabItemTap(e){
 			
 			// #ifdef  MP-WEIXIN
-			if(!uni.getStorageSync('access_token')){
-				uni.navigateTo({
-					url:'/pages/login/login'
-				})
-			}
+			console.log('11111111111111111111')
+			// if(!uni.getStorageSync('access_token')){
+			// 	uni.navigateTo({
+			// 		url:'/pages/login/login?from=order'
+			// 	})
+			// }
 			// #endif
 			
 		},
 		onLoad() {
+			console.log('2222222222222222222')
 			console.log('onLoad')
+			this.platform = uni.getStorageSync('platform')
+			uni.setStorageSync('wxLogin','1')
 		},
 		onShow() {
 			// #ifdef  MP-WEIXIN
+			console.log('33333333333333333')
+			// uni.showModal({
+			//     title: '提示',
+			//     content: uni.getStorageSync('wxLogin'),
+			//     success: function (res) {
+			//         if (res.confirm) {
+			//             console.log('用户点击确定');
+			//         } else if (res.cancel) {
+			//             console.log('用户点击取消');
+			//         }
+			//     }
+			// });
 			if(!uni.getStorageSync('access_token')){
-				if(uni.getStorageSync('pagePath') == 'main'){
-					uni.switchTab({
-						url:'/pages/main/main'
+				if(uni.getStorageSync('wxLogin') == '1') {
+					uni.navigateTo({
+						url:'/pages/login/login?from=order'
 					})
-				}else if(uni.getStorageSync('pagePath') == 'user'){
-					uni.switchTab({
-						url:'/pages/user/user'
-					})
-				} else{
-					uni.switchTab({
-						url:'/pages/main/main'
-					})
+					
+					
+				}else{
+					if(uni.getStorageSync('pagePath') == 'main'){
+						uni.switchTab({
+							url:'/pages/main/main'
+						})
+					}else if(uni.getStorageSync('pagePath') == 'user'){
+						uni.switchTab({
+							url:'/pages/user/user'
+						})
+					} else{
+						uni.switchTab({
+							url:'/pages/main/main'
+						})
+					}
+									
 				}
 			}else{
 				// 获取进货单列表
@@ -530,10 +555,8 @@
 			.icon {
 				position: absolute;
 				top: 84upx;
-				right: 215upx;
+				left: 30upx;
 				text-underline: underline ;
-				border: 1upx solid #e2e2e2;
-				border-radius: 10upx;
 				padding: 10upx;
 			}
 			/* #endif */

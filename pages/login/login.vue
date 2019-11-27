@@ -15,7 +15,8 @@
 			</view>
 			<view class="protocal">
 				登录表示同意
-				<text @click="goProtocal">用户服务协议</text>
+				<text @click="goProtocal">用户服务协议</text>和
+				<text @click="goPrivacy">隐私政策</text>
 			</view>
 		</view>
 		<view :class="{'bg-theme':isRight}" @click="dologin" class="btn fs32">立即登录</view>
@@ -98,8 +99,15 @@
 		},
 		onShow() {
 			uni.setStorageSync('isLogin',0)	
+			uni.setStorageSync('wxLogin','2')	
 		},
 		methods: {
+			// 隐私协议
+			goPrivacy(){
+				uni.navigateTo({
+					url:'/pages/user/privacy/privacy'
+				})
+			},
 			// 去用户协议
 			goProtocal(){
 				uni.navigateTo({
@@ -316,6 +324,7 @@
 			  
 		      getUserInfoData().then((res) => {
 		        if (res.code === '1000') {
+					uni.setStorageSync('wxLogin','1')	
 				  if(res.data.phone){
 					uni.setStorageSync('phone', res.data.phone)
 				  }	

@@ -322,13 +322,19 @@ function timestampToTime(timestamp) {
 
 // 剩余天时分秒
  function getLeftTime(endtime){
-	let nowtime = new Date().getTime();
-	let lasttime = (endtime - nowtime)/1000;
+	let nowtime = parseInt(new Date().getTime()/1000) * 1000 ;
+	let lasttime = parseInt((endtime - nowtime)/1000);
+	console.log('endtime',endtime)
+	console.log('nowtime',nowtime)
+	
 	if(lasttime > 0){
 		let lastdate = parseInt(lasttime/3600/24);
+		
 		let lasthours = parseInt(lasttime/3600%24);
 		let lastminutes = parseInt(lasttime/60%60);
 		let lastseconds = parseInt(lasttime%60);
+		//console.log('lasttime',lasttime)
+		//console.log('lastseconds',lastseconds)
 		let strtime = lastdate + '' + '天' + '' + lasthours + '' + '时' + '' + lastminutes + '' + '分'+ '' + lastseconds + '' + '秒';
 		return strtime
 	}
@@ -336,27 +342,41 @@ function timestampToTime(timestamp) {
 }
 
 // 时间戳转时分
-function MillisecondToDate(msd) {
-    var time = (parseFloat(msd) - Date.parse(new Date()))  / 1000;
-    if (null != time && "" != time) {
-        if (time > 60 && time < 60 * 60) {
-            time = parseInt(time / 60.0) + ":" + parseInt((parseFloat(time / 60.0) -
-                parseInt(time / 60.0)) * 60) + " ";
-        }
-        // else if (time >= 60 * 60 && time < 60 * 60 * 24) {
-        else if (time >= 60 * 60) {
-            time = parseInt(time / 3600.0) + ":" + parseInt((parseFloat(time / 3600.0) -
-                parseInt(time / 3600.0)) * 60) + ":" +
-                parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
-                parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + " ";
-        }
-        else {
-            time = parseInt(time) + " ";
-        }
-    }
-    return time;
+function MillisecondToDate(mss) {
+    var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = (mss % (1000 * 60)) / 1000;
+    return minutes+":"+seconds;
 }
+
+/**
+ * 处理富文本里的图片宽度自适应
+ * 1.去掉img标签里的style、width、height属性
+ * 2.img标签添加style属性：max-width:100%;height:auto
+ * 3.修改所有style里的width属性为max-width:100%
+ * 4.去掉<br/>标签
+ * @param html
+ * @returns {void|string|*}
+ */
+function formatRichText(html){
+  let newContent= html.replace(/<img[^>]*>/gi,function(match,capture){
+    match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+    match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+    match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+    return match;
+  });
+  newContent = newContent.replace(/style="[^"]+"/gi,function(match,capture){
+    match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
+    return match;
+  });
+  newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+  newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0;"');
+  return newContent;
+}
+  
+
+
 module.exports = {
+	formatRichText,
 	getLeftTime,
 	MillisecondToDate,
   timestampToTime,

@@ -73,24 +73,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var a0 = {
-    Android: _vm.platform == 3
-  }
-
   if (!_vm._isMounted) {
     _vm.e0 = function($event) {
       _vm.isMoreLocat = !_vm.isMoreLocat
     }
   }
-
-  _vm.$mp.data = Object.assign(
-    {},
-    {
-      $root: {
-        a0: a0
-      }
-    }
-  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -208,7 +195,8 @@ var _default = { name: "panel", props: { show: { type: Boolean, default: false }
   },
   methods: {
     getAreas: function getAreas(area) {
-      this.filter.place = area;
+      this.filter.place = area.name;
+      this.filter.areaId = area.id;
     },
     close: function close() {
       this.$emit("close", false);

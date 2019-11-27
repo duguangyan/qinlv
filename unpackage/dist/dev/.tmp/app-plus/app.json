@@ -34,8 +34,7 @@
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "沁绿农业APP",
     "navigationBarBackgroundColor": "#FFFFFF",
-    "backgroundColor": "#FFFFFF",
-    "onReachBottomDistance": 151
+    "backgroundColor": "#FFFFFF"
   },
   "tabBar": {
     "color": "#D9D9D9",
@@ -63,13 +62,13 @@
       }
     ]
   },
-  "nvueCompiler": "weex",
+  "nvueCompiler": "uni-app",
   "renderer": "auto",
   "splashscreen": {
-    "alwaysShowBeforeRender": true,
-    "autoclose": false
+    "alwaysShowBeforeRender": false,
+    "autoclose": true
   },
   "appname": "上上农夫",
-  "compilerVersion": "2.3.7",
+  "compilerVersion": "2.4.2",
   "usingComponents": {}
 }

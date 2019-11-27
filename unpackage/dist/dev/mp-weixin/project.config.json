@@ -7,9 +7,9 @@
 		"urlCheck": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.7.0",
+	"libVersion": "2.9.2",
 	"appid": "touristappid",
-	"projectname": "上上农夫",
+	"projectname": "%E4%B8%8A%E4%B8%8A%E5%86%9C%E5%A4%AB",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {

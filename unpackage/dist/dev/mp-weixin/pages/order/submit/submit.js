@@ -263,11 +263,9 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 26
   components: {
     Pay: Pay },
 
-  onLoad: function onLoad(options) {
+  onLoad: function onLoad(options) {var _this = this;
     this.submitData = options.submitData;
     this.isBuyNow = options.isBuyNow;
-  },
-  onShow: function onShow() {var _this = this;
     // 设备样式兼容
     this.platform = uni.getStorageSync('platform');
     // 上一级传递参数：结算返回的数据
@@ -315,6 +313,9 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 26
         this.getAddressDefAddress();
       }
     }
+  },
+  onShow: function onShow() {
+
   },
   methods: {
 

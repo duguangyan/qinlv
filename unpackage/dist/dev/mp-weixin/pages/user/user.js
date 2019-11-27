@@ -184,7 +184,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 {
   data: function data() {
     return {
@@ -211,6 +210,7 @@ __webpack_require__.r(__webpack_exports__);
     uni.setStorageSync('pagePath', 'user');
   },
   onShow: function onShow() {
+    uni.setStorageSync('wxLogin', '1');
     // 设备样式兼容
     this.platform = uni.getStorageSync('platform');
     // 获取phone 和 uid

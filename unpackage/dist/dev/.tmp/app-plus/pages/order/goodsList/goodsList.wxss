@@ -47,7 +47,7 @@
         height: 36rpx;
         position: absolute;
         left: 22rpx;
-        top: 6rpx;
+        top: 15rpx;
 }
 .list .top .search .icon-30 > ._img.data-v-65b013e1 {
           width: 100%;

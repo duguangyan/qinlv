@@ -129,8 +129,6 @@
 		onLoad(options) {
 			this.submitData = options.submitData;
 			this.isBuyNow = options.isBuyNow;
-		},
-		onShow() {
 			// 设备样式兼容
 			this.platform = uni.getStorageSync('platform');
 			// 上一级传递参数：结算返回的数据
@@ -178,6 +176,9 @@
 					this.getAddressDefAddress();
 				  }
 				}
+		},
+		onShow() {
+			
 		},
 		methods: {
 			

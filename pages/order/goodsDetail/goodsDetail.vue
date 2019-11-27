@@ -1,5 +1,5 @@
 <template>
-	<div class="good-detail" v-if="opt">
+	<scroll-view class="good-detail" v-if="opt">
 		<!-- <div>
 			<img slot="tag" class="tag" width="27" height="27" src="@/static/img/tag-back3.png" @click="$router.go(-1)" />
 			<div>
@@ -28,7 +28,7 @@
 				</view>
 			</view>
 			<!-- 轮播图 -->
-			<scroll-view class="index-top-warp">
+			<view class="index-top-warp">
 				<view class="uni-padding-wrap">
 					<view class="page-section swiper">
 						<view class="page-section-spacing">
@@ -47,7 +47,7 @@
 						</view>
 					</view>
 				</view>
-			</scroll-view>
+			</view>
 			<SwiperDot class="dot" :current="cur" :list="imageList"></SwiperDot>
 		</view>
 		
@@ -61,7 +61,7 @@
 				</span>
 			</div>
 			<div v-if="good.goods.showStyle==2" class="cf goodsPrice">
-				<div v-for="(item,index) in good.goodsList" :key="index" class="fll">
+				<div v-for="(item,index) in good.goodsList" :key="index" class="fll" :class="{'left1': good.goodsList.length == 1, 'left2': good.goodsList.length == 2}">
 					<div class="multi-price">
 						{{item.price || 0}}</span>
 						<span v-if="good.goods.unitName">/{{good.goods.unitName}}</span>
@@ -97,7 +97,6 @@
 				</div>
 			  </div>
 		    </div>
-
 		<div class="line" v-if="good.goods.showStyle==3 || good.goods.showStyle==1 && good.goodsSkuList.length > 1"></div>
 		<div class="props">
 			<div class="tag1">
@@ -109,21 +108,19 @@
 				<span v-else v-for="attr in item.goodsDetailAttrValueList" :key="attr.id">{{attr.value}}&ensp;</span>
 			</li>
 		</div>
-
 		<div class="line" v-if="good.goodsDetailAttrList.length>0"></div>
-
 		<div class="det">
 			<div class="tag1">
 				<span>—</span>  <span>商品详情</span> <span>—</span>
 			</div>
-			<div class="txt">{{good.goods.detail}}</div>
-			<div class="tag2" v-for="(item,index) in imageList" :key="index" >
-				<!-- <div v-if="item.type==3" :class="{'img-con':item.type==3}" @click="play(item)">
-					<image class='img2' src="../../../static/img/play.png" mode=""></image>
-				</div> -->
-				<img class="img" mode="widthFix" :src="item.imgUrl" width="100%" alt />
-			</div>
 			
+			<!-- <div class="txt">{{good.goods.detail}}</div>
+			<div class="tag2" v-for="(item,index) in imageList" :key="index" >
+				<img class="img" mode="widthFix" :src="item.imgUrl" width="100%" alt />
+			</div> -->
+			<div class="rich-text">
+				<rich-text :nodes="good.goods.detail"></rich-text>
+			</div>
 		</div>
 
 		<div class="goodsTitle" v-if="isGoodsTitle">{{goodsTitle}}</div>
@@ -146,11 +143,11 @@
 			</div>
 
 			
-			<div class="flex-2" v-if="good.isInvalid || good.goods.status!==3">
+			<div class="flex-2" v-if="good.isInvalid || good.goods.status!=3">
 				<div class="add" @click="goHome">再去逛逛</div>
 			</div>
-			<div v-if="good.goods.status!=4">
-				<div class="flex-2 flex" v-if="!good.isInvalid || good.goods.status===3">
+			<div class="flex-2" v-if="!good.isInvalid && good.goods.status==3">
+				<div class=" flex">
 					<!--  #ifdef  H5 || APP-PLUS -->
 					<div class="add flex-1" @click="showConfirm('/cart')">加入进货单</div>
 					<div class="buy flex-1" @click="showConfirm('/submit')">立即购买</div>
@@ -232,7 +229,7 @@
 		<Share :img='imageList[0].imgUrl' :name="good.goods.name" :shopId='shopId' :goodsId='goodsId' :show="isShare" @close="isShare = false" />
 		<Standard v-if="good.standardList.length>3" :show="isStandard" :list="good.standardList" @close="isStandard = false" />
 		
-	</div>
+	</scroll-view>
 </template>
 
 <script>
@@ -318,7 +315,18 @@
 			this.goodsId = options.goodsId;
 		},
 		onShow() {
-			
+			// try{
+			// 	this.good.goods.detail = util.formatRichText(this.good.goods.detail);
+			// }catch(e){
+			// 	//TODO handle the exception
+			// }
+			console.log('onshow')
+			console.log(this.good.goods.detail)
+			// #ifdef APP-PLUS  
+			if(this.good.goods.detail){
+				this.onShow()
+			} 
+			// #endif 
 			
 			if (uni.getStorageSync("access_token")) {
 				getGoodNums({
@@ -415,15 +423,18 @@
 								curNode.startNum = sku.startNum;
 							}
 							// 顺便处理规格
-							if (isSection) {
-								d.standardList[exIndex].push(`${val.value}${d.goods.unitName}起批`);
+							 if (isSection) {
 								d.standardList[exIndex].push(
-									// `${val.value}${sufName}/${d.goods.unitName}`
-									`${val.value}${sufName}`
+								  `${sku.startNum}${d.goods.unitName}起批`
 								);
-							} else {
+								d.standardList[exIndex].push(
+								  `${val.value}${
+									+d.goods.showStyle !== 3 ? sufName : ""
+								  }`
+								);
+							  } else {
 								d.standardList[exIndex].push(val.value);
-							}
+							  }
 					
 							// 累计无效次
 							isInvalid = isInvalid && curNode.disabled;
@@ -433,6 +444,11 @@
 					d.tree = tree;
 					d.isInvalid = isInvalid;
 					
+					if (d.isInvalid) {
+						this.isGoodsTitle = true
+						this.goodsTitle = '库存不足,请浏览别的商品吧~'
+						// T.tips("库存不足,请浏览别的商品吧~");
+					}
 					if (d.goods.status != 3) {
 						T.tips("商品已下架啦,看下其它的吧");
 					}
@@ -440,8 +456,7 @@
 					if (d.goods.showStyle == 2) {
 						let sku = d.goodsSkuList[0].attrValueList[0];
 						d.goodsList = [];
-						// let grades = JSON.parse(d.goodsSkuList[0].priceExp);
-					
+						let grades = JSON.parse(d.goodsSkuList[0].priceExp);
 						grades.forEach((item, index) => {
 							d.goodsList.push({
 								startNum: item.startQuantity,
@@ -473,7 +488,8 @@
 						this.postType = data.data.type;
 					});
 					
-					
+					this.good.goods.detail = util.formatRichText(this.good.goods.detail);
+					console.log(this.good.goods.detail)
 					// 判断商品是否备收藏
 					if(uni.getStorageSync('access_token')){
 						this.getHasCollect(this.goodsId)
@@ -487,7 +503,7 @@
 			imgLoad(e){
 				setTimeout(()=>{
 					this.imgLoading = false
-				},500)
+				},300)
 			},
 			// 判断是否备收藏
 			getHasCollect(id){
@@ -553,50 +569,54 @@
 			},
 			calcPrice(reset) {
 				
-
-					let node = this.good.tree;
-					if (this.good.goods.showStyle != 2) {
-						this.curs.forEach((cur, index) => {
-							node = node[cur["key"]];
-							if (index === this.curs.length - 1) {
-								this.totalPrice = parseFloat(node.price || 0);
-								this.stock = node.stock;
-								!reset && (this.nums = node.disabled ? 0 : node.startNum);
-								this.startNum = node.startNum || 0;
-								cur.disabled = node.disabled;
-								this.curDisable = node.disabled;
-							}
-						});
-					} else {
-						this.curs.forEach((cur, index) => {
-							node = node[cur["key"]];
-							if (index == this.curs.length - 1) {
-								this.stock = node.stock;
-								!reset && (this.nums = node.disabled ? 0 : node.startNum);
-								cur.disabled = node.disabled;
-					
-							}
-						});
-					
-						let list = [...this.good.goodsList];
-						let first = list[0];
-						let last = list[list.length - 1];
-						list.push({
-							startNum: Math.pow(2, 25),
-							price: last.price
-						});
-						list.unshift({
-							startNum: first.startNum,
-							price: first.price
-						});
-					
-						this.startNum = first.startNum;
-						for (let i = 1, l = list.length - 1; i < l; i++) {
-							if (this.nums >= list[i].startNum && this.nums < list[i + 1].startNum) {
-								this.totalPrice = list[i].price;
+					try{
+						let node = this.good.tree;
+						if (this.good.goods.showStyle != 2) {
+							this.curs.forEach((cur, index) => {
+								node = node[cur["key"]];
+								if (index === this.curs.length - 1) {
+									this.totalPrice = parseFloat(node.price || 0);
+									this.stock = node.stock;
+									!reset && (this.nums = node.disabled ? 0 : node.startNum);
+									this.startNum = node.startNum || 0;
+									cur.disabled = node.disabled;
+									this.curDisable = node.disabled;
+								}
+							});
+						} else {
+							this.curs.forEach((cur, index) => {
+								node = node[cur["key"]];
+								if (index == this.curs.length - 1) {
+									this.stock = node.stock;
+									!reset && (this.nums = node.disabled ? 0 : node.startNum);
+									cur.disabled = node.disabled;
+						
+								}
+							});
+						
+							let list = [...this.good.goodsList];
+							let first = list[0];
+							let last = list[list.length - 1];
+							list.push({
+								startNum: Math.pow(2, 25),
+								price: last.price
+							});
+							list.unshift({
+								startNum: first.startNum,
+								price: first.price
+							});
+						
+							this.startNum = first.startNum;
+							for (let i = 1, l = list.length - 1; i < l; i++) {
+								if (this.nums >= list[i].startNum && this.nums < list[i + 1].startNum) {
+									this.totalPrice = list[i].price;
+								}
 							}
 						}
+					}catch(e){
+						//TODO handle the exception
 					}
+					
 				
 				
 				
@@ -773,6 +793,19 @@
 	// 	height: 750upx;
 	// 	top: 0;
 	// }
+	.rich-text{
+		width: 690upx;
+		overflow: hidden;
+		margin: 0 auto;
+	}
+	rich-text{
+		width: 690upx;
+		.img{
+			width: 690upx !important;
+			height: auto !important;
+		}
+	}
+	
 	.dot{
 		position: absolute;
 		z-index: 9999;
@@ -797,7 +830,6 @@
 		width: 750upx;
 		overflow-x: hidden;
 		background: #fff;
-		height: 100vh;
 		.img-con {
 			position: absolute;
 			width: 100upx;
@@ -924,7 +956,18 @@
 
 		.overall {
 			.goodsPrice{
-				width: 33%;
+				.fll{
+					width: 33%;
+				}
+				.left1{
+					position: relative;
+					left: -60upx;
+				}
+				.left2{
+					position: relative;
+					left: -40upx;
+				}
+				
 			}
 			.flex-l {
 				justify-content: flex-start;
@@ -1065,6 +1108,8 @@
 		}
 		.tag2{
 			position: relative;
+			padding-bottom: 200upx;
+			margin: 0 30upx;
 			.img2{
 				width: 100upx !important;
 				height: 100upx !important;
@@ -1140,7 +1185,6 @@
 		.det {
 			text-align: center;
 			padding-bottom: 120upx;
-			height: 100vh;
 			padding-top: 30upx;
 			background-color: #fff !important;
 			.img {

@@ -3,7 +3,8 @@
   top: -12rpx;
 }
 .navigationBar.data-v-14107270 {
-  height: 160rpx;
+  padding-top: 25px;
+  height: 80rpx;
   position: fixed;
   top: 0;
   width: 100%;

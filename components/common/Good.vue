@@ -9,11 +9,11 @@
 			<img :src="good.imgUri">
 		</div>
 		<div class="content">
-			<div class="name .ellipsis-line2">{{good.name}}</div>
+			<div class="name .ellipsis-line2">{{good.name || ''}}</div>
 
 			<!-- 规格 -->
-			<div v-if="level===1" class="standard">{{good.standard}}</div>
-			<div v-if="level === 2" class="ad">{{good.place}}</div>
+			<div v-if="level===1" class="standard">{{good.standard || ''}}</div>
+			<div v-if="level === 2" class="ad">{{good.place || ''}}</div>
 
 			<!-- 单价 -->
 			<div class="price">

@@ -1,8 +1,8 @@
 <template>
 	<div class="list">
 		<div class="top cf">
-			<div class="search fll">
-				<div class="icon-30">
+			<div class="search fll" :class="{'Android': platform == 1}">
+				<div class="icon-30" >
 					<img src="@/static/img/icon-search2.png" width="15" height="15" alt />
 				</div>
 				<input class="fs28" type='text' confirm-type="search" @confirm="doSearch($event)" v-model="search.keywords" :placeholder="search.keywords || '请输入搜索内容'" />
@@ -12,7 +12,7 @@
 			</div>
 		</div>
 
-		<div class="sort-bar" :class="{'platform':platform==2, 'Android': platform == 1}">
+		<div class="sort-bar" :class="{'platform':platform==2 , 'Android': platform == 1}">
 			<div :class="['general',curOpt==='gen-asc' || curOpt==='gen-desc'?'actived':'']" @click="doUniSort">
 				<span>综合排序</span>
 				<!-- <img class="upon" :src="curOpt==='gen-asc'?icon.UponAct:icon.Upon" />
@@ -21,8 +21,8 @@
 			<div :class="['fil-price',(curOpt==='pri-desc'||curOpt==='pri-asc')?'actived':'']" @click="doPriceSort">
 				<span>价格</span>
 				
-				<img class="upon" :src="curOpt==='pri-asc'?icon.UponAct:icon.Upon"/>
-				<img class="downon" :src="curOpt==='pri-desc'?icon.DownonAct:icon.Downon"/>
+				<img class="upon" :class="{'AndroidUpon': platform == 1}" :src="curOpt==='pri-asc'?icon.UponAct:icon.Upon"/>
+				<img class="downon" :class="{'AndroidDownon': platform == 1}" :src="curOpt==='pri-desc'?icon.DownonAct:icon.Downon"/>
 			</div>
 			<div :class="['filter',(search.priceBegin || search.priceEnd || search.place)?'actived':'']" @click="isShow = true">
 				<span>筛选</span>
@@ -63,6 +63,7 @@
 				hasData: false,
 				search: {
 					// attrValueList: ["string"],
+					attrValueList:[],
 					platform:0,
 					keywords: '',
 					pageIndex: 1,
@@ -70,6 +71,7 @@
 					place: "",
 					priceBegin: "",
 					priceEnd: "",
+					sortMark:"",
 					sortColumn: /* 综合:universal 价格：price */ "universal",
 					sortType: /* 排序类型（0.降序 1.升序） */ 0
 				},
@@ -84,14 +86,20 @@
 				},
 				curOpt: "gen-desc",
 				isShow: false,
-				platform: 0
+				platform: 0,
+				platformAndroid:''
 			};
 		},
 		components: {
 			Panel,Good
 		},
 		onLoad(options) {
-			this.search.keywords = options.search
+			if(options.search){
+				this.search.keywords = options.search;
+			}else{
+				this.search.attrValueList = [];
+				this.search.attrValueList.push(options.attrValueList);
+			}
 			// 设备样式兼容
 			this.platform = uni.getStorageSync('platform');
 			this.load();
@@ -102,7 +110,8 @@
 		methods: {
 			
 			doSearch(){
-				this.pageIndex = 1
+				this.search.attrValueList = []
+				this.search.pageIndex = 1
 				this.list = []
 				this.load();
 			},
@@ -115,6 +124,7 @@
 			},
 			doPriceSort() {
 				this.search.sortColumn = "price";
+				this.search.sortMark = 1;
 				if (this.curOpt === "pri-desc") {
 					this.curOpt = "pri-asc";
 					this.search.sortType = 1;
@@ -129,6 +139,7 @@
 			},
 			doUniSort() {
 				this.search.sortColumn = "universal";
+				this.search.sortMark = 2;
 				if (this.curOpt === "gen-desc") {
 					this.curOpt = "gen-asc";
 					//this.search.sortType = 1;
@@ -229,7 +240,7 @@
 					height: 36upx;
 					position: absolute;
 					left: 22upx;
-					top: 6upx;
+					top: 15upx;
 
 					>img {
 						width: 100%;
@@ -237,7 +248,15 @@
 					}
 				}
 			}
-
+			
+			/*  #ifdef  MP-WEIXIN */
+			 .Android{
+			 	.icon-30{
+			 		top: 12upx !important;
+			 	}
+			 }
+			/*  #endif  */
+			
 			.fll {
 				text-align: center;
 			}
@@ -298,11 +317,11 @@
 				width: 12upx;
 				height: 8upx;
 			}
-
+			/* #ifdef APP-PLUS || H5 */  
 			.upon {
 				top: 12upx;
 			}
-
+			
 			.downon {
 				bottom: 12upx;
 			}
@@ -316,15 +335,24 @@
 					bottom: 8upx;
 				}
 			}
+			/* #endif */
 			
-			/* #ifdef APP-PLUS */  
-			// .upon {
-			// 	top: 8upx !important;
-			// }
 			
-			// .downon {
-			// 	bottom: 8upx !important;
-			// }
+			/* #ifdef MP-WEIXIN */  
+			.upon {
+				top:10upx ;
+			}
+			
+			.downon {
+				bottom: 10upx;
+			}
+			.AndroidUpon {
+				top: 6upx !important;
+			}
+			
+			.AndroidDownon {
+				bottom: 6upx !important;
+			}
 			/* #endif */
 		
 		}

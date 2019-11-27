@@ -282,6 +282,7 @@ var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 26
     }
     // 获取订单列表
     this.orders = [];
+    this.pageIndex = 1;
     this.getOrders();
   },
   methods: {

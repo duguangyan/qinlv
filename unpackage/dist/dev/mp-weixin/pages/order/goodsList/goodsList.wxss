@@ -47,11 +47,14 @@
         height: 36rpx;
         position: absolute;
         left: 22rpx;
-        top: 6rpx;
+        top: 15rpx;
 }
 .list .top .search .icon-30 > ._img.data-v-65b013e1 {
           width: 100%;
           height: 100%;
+}
+.list .top .Android .icon-30.data-v-65b013e1 {
+      top: 12rpx !important;
 }
 .list .top .fll.data-v-65b013e1 {
       text-align: center;
@@ -117,15 +120,15 @@
       height: 8rpx;
 }
 .list .sort-bar .upon.data-v-65b013e1 {
-      top: 12rpx;
+      top: 10rpx;
 }
 .list .sort-bar .downon.data-v-65b013e1 {
-      bottom: 12rpx;
+      bottom: 10rpx;
 }
-.list .sort-bar .Android .upon.data-v-65b013e1 {
-      top: 8rpx;
+.list .sort-bar .AndroidUpon.data-v-65b013e1 {
+      top: 6rpx !important;
 }
-.list .sort-bar .Android .downon.data-v-65b013e1 {
-      bottom: 8rpx;
+.list .sort-bar .AndroidDownon.data-v-65b013e1 {
+      bottom: 6rpx !important;
 }
 

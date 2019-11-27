@@ -8,12 +8,12 @@
         <!-- 产地 -->
         <div :class="['location',isMoreLocat?'scale':'']">
           <section ref="area">
-            <li
+            <li v-if='area.name!=null'
               v-for="area in list"
-              :class="{actived:filter.place==area}"
+              :class="{actived:filter.place==area.name}"
               :key="area"
               @click="getAreas(area)"
-            >{{area}}</li>
+            >{{area.name || ''}}</li>
           </section>
         </div>
         <div v-if="isMoreBtn" class="more" @click="isMoreLocat = !isMoreLocat">
@@ -21,9 +21,9 @@
         </div>
 
         <!-- 价格区间 -->
-        <div class="price-area"  :calss="{'Android': platform == 3}">
+        <div class="price-area">
           <input v-model="filter.priceBegin" type="number" placeholder="最低价" @blur="valiPriceBegin" />
-          <span></span>
+          <span class="span" :class="{'and': platform == 1}"></span>
           <input v-model="filter.priceEnd" type="number" placeholder="最高价" @blur="valiPriceEnd" />
         </div>
         <div class="weight"></div>
@@ -83,7 +83,8 @@ export default {
   },
   methods: {
 	  getAreas(area){
-		  this.filter.place=area
+		  this.filter.place=area.name
+		  this.filter.areaId=area.id
 	  },
     close() {
       this.$emit("close", false);
@@ -129,14 +130,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- .Android{
-	  >span{
-		  display: inline-block !important;
-		  height: 2upx !important;
-		  width: 20upx !important;
-		  background: #333 !important;
-	  }
-  }
+
 .panel {
   position: fixed;
   top: 0;
@@ -185,7 +179,7 @@ export default {
       margin-left: 16upx;
       margin-right: 16upx;
 	  position: relative;
-	  top: -28upx;
+	  top: -4upx;
 	  display: inline-block;
 	  width: 20upx;
 	  height: 2upx;
@@ -197,7 +191,19 @@ export default {
 		 top: -8upx;
 	}
 	/*  #endif  */
+	/*  #ifdef  MP-WEIXIN */
+	span{
+		 top: -8upx;
+	}
+	.and{
+		top: -28upx !important;
+	}
+	/*  #endif  */
   }
+
+ 
+  
+  
   .mask {
     position: fixed;
     top: 0;
@@ -326,4 +332,6 @@ export default {
     opacity: 1;
   }
 }
+
+
 </style>

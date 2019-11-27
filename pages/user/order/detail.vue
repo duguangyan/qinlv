@@ -16,11 +16,12 @@
         <div class="title" v-if="order.shopOrder">{{statusText}}</div>
 <!--        <div class="sub">大口大口大口大口</div>-->
         <div class="sub tick cf" v-if="order.expiresTime && order.expiresTime>0">
-			<div class="icon fll" :class="{'Android': platform == 1}">
+			<div class="icon fll" :class="{'Android': platform == 1}" v-if="isOrderDialog == 0 && status != 3">
 				<img src="@/static/img/icon-tick.png" width="10" height="10" alt="">
 			</div>
 			<span v-if="status == 0" class="fll fs24">剩{{expiresTime}}自动关闭</span>
-			<span v-if="status == 3" class="fll fs24">剩{{expiresTime}}系统将自动确认收货</span>
+			<span v-if="status == 3" class="fll fs24">剩{{expiresTime}}</span><br>
+			<span v-if="status == 3" class="fll fs24">系统将自动确认收货</span>
         </div>
       </div>
     </div>
@@ -91,6 +92,7 @@
         <div class="item">创建时间：{{order.shopOrder.createTime || ''}}</div>
         <div class="item" v-if="order.shopOrder.payTime">付款时间：{{order.shopOrder.payTime || ''}}</div>
         <div class="item" v-if="order.shopOrder.sendTime">发货时间：{{order.shopOrder.sendTime || ''}}</div>
+        <div class="item" v-if="order.shopOrder.finishTime">发货时间：{{order.shopOrder.finishTime || ''}}</div>
       </div>
     </div>
 
@@ -138,6 +140,10 @@ export default {
     Good,
     Pay,
 	Dialog
+  },
+  onBackPress() {
+	  console.log('-----')
+  	  if(this.timer !='') clearInterval(this.timer)
   },
   onLoad(options) {
 	  this.orderId = options.orderId
@@ -221,10 +227,10 @@ export default {
       this.isPayShow = !this.isPayShow
     },
     // 去收货完成页面
-    goFinshPage(index) {
+    goFinshPage() {
       // orderId, shopId
 	  uni.navigateTo({
-	  	url:'/pages/user/order/success?orderId='+this.order.shopOrder.orderId+'&shopId'+this.order.shopOrder.shopId
+	  	url:'/pages/user/order/success?orderId='+this.order.shopOrder.orderId+'&shopId='+this.order.shopOrder.shopId
 	  })
     },
     // 确认收货
@@ -253,6 +259,7 @@ export default {
     },
     // 获取订单详情
     getOrderDetailById(orderId,shopId){
+		let _this = this
       let data = {
         orderId
       }
@@ -264,12 +271,27 @@ export default {
           this.order = res.data[0]
 
 		 if(this.order.shopOrder.status == 0 || this.order.shopOrder.status == 3){
-			 let expiresTime = this.order.expiresTime
+			 let expiresTime = ''
+			 let nowData = ''
+			 if(_this.order.shopOrder.status == 0){
+				nowData =  parseInt((new Date()).getTime() / 1000) * 1000
+				expiresTime = this.order.expiresTime - nowData
+			 }else{
+				expiresTime = this.order.expiresTime
+			 }
+			
+			
 			 this.timer = setInterval(()=>{
-				  expiresTime = expiresTime - 1000
-				  this.expiresTime =  this.order.shopOrder.status == 0 ? util.MillisecondToDate(expiresTime) : util.getLeftTime(expiresTime)
+				 if(_this.order.shopOrder.status == 0){
+					 expiresTime = expiresTime - 1000;
+				 }
+				  
+			
+				  _this.expiresTime = _this.order.shopOrder.status == 0 ? util.MillisecondToDate(expiresTime) : util.getLeftTime(expiresTime);
 				  if(expiresTime<= 0){
-					  clearInterval(this.timer)
+					  clearInterval(_this.timer)
+					  _this.isOrderDialog = 1
+					  _this.doConfirm()
 				  }
 			 },1000)
 		 }
@@ -379,7 +401,7 @@ export default {
   padding-bottom: 140upx;
   .annoc {
     color: #fefefe;
-    margin-top: 40upx;
+    margin-top: 30upx;
     position: absolute;
     left: 30upx;
     top: 20upx;

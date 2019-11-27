@@ -18,7 +18,7 @@
     margin: 0 30rpx;
 }
 .goods .items ._ul ._li.data-v-37cf186e:nth-of-type(even) {
-      margin-left: 16rpx;
+      margin-left: 14rpx;
 }
 .goods .items ._ul ._li.data-v-37cf186e {
       background: #fff;

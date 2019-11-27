@@ -300,26 +300,35 @@ var vm = { name: 'pay', props: { show: { type: Boolean, default: false }, isWx: 
           if (res.code === '1000') {
             console.log(JSON.stringify(res));
             var wxPayResp = res.data.wxPayResp;
-            var obj = {
-              appid: wxPayResp.appId,
-              noncestr: wxPayResp.noncestr,
-              package: 'Sign=WXPay', // 固定值，以微信支付文档为主
-              partnerid: wxPayResp.partnerId,
-              prepayid: wxPayResp.prepayId,
-              timestamp: wxPayResp.timestamp,
-              sign: wxPayResp.sign // 根据签名算法生成签名
-            };
-            orderInfo = JSON.stringify(obj);
+            // let obj = {
+            // 	appid: wxPayResp.appId,
+            // 	noncestr: wxPayResp.noncestr,
+            // 	package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+            // 	partnerid: wxPayResp.partnerId,
+            // 	prepayid: wxPayResp.prepayId,
+            // 	timestamp: wxPayResp.timestamp,
+            // 	sign: wxPayResp.sign // 根据签名算法生成签名
+            // }
+            // let orderInfo = JSON.stringify(obj);
 
-            console.log('orderInfo', orderInfo);
             uni.requestPayment({
               provider: 'wxpay',
-              orderInfo: orderInfo, //微信、支付宝订单数据
+              // appid: wxPayResp.appId,
+              nonceStr: wxPayResp.noncestr,
+              package: wxPayResp.packageName, // 固定值，以微信支付文档为主
+              // partnerid: wxPayResp.partnerId,
+              // prepayid: wxPayResp.prepayId,
+              signType: wxPayResp.signType,
+              timeStamp: wxPayResp.timestamp,
+              paySign: wxPayResp.sign, // 根据签名算法生成签名
               success: function success(res) {
                 _this.clock = true;
                 console.log('success:' + JSON.stringify(res));
-                uni.reLaunch({
-                  url: '/pages/user/pay/success?payPrice=' + _this.price + '&orderId=' + _this.orderId });
+                setTimeout(function () {
+                  uni.reLaunch({
+                    url: '/pages/user/pay/success?payPrice=' + _this.price + '&orderId=' + _this.orderId });
+
+                }, 200);
 
 
               },
@@ -358,7 +367,7 @@ var vm = { name: 'pay', props: { show: { type: Boolean, default: false }, isWx: 
           if (res.code === '1000') {
             console.log(JSON.stringify(res));
             var wxPayResp = res.data.wxPayResp;
-            var _orderInfo = '';
+            var orderInfo = '';
             if (payChannelEnum == 'WEIXIN_PAY') {
               var obj = {
                 appid: wxPayResp.appId,
@@ -369,15 +378,15 @@ var vm = { name: 'pay', props: { show: { type: Boolean, default: false }, isWx: 
                 timestamp: wxPayResp.timestamp,
                 sign: wxPayResp.sign // 根据签名算法生成签名
               };
-              _orderInfo = JSON.stringify(obj);
+              orderInfo = JSON.stringify(obj);
             } else {
-              _orderInfo = res.data.returnHtml;
+              orderInfo = res.data.returnHtml;
             }
 
-            console.log('orderInfo', _orderInfo);
+            console.log('orderInfo', orderInfo);
             uni.requestPayment({
               provider: payChannelEnum == 'WEIXIN_PAY' ? 'wxpay' : 'alipay',
-              orderInfo: _orderInfo, //微信、支付宝订单数据
+              orderInfo: orderInfo, //微信、支付宝订单数据
               success: function success(res) {
                 _this.clock = true;
                 console.log('success:' + JSON.stringify(res));

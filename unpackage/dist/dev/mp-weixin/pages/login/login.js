@@ -174,9 +174,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var _validator = _interopRequireDefault(__webpack_require__(/*! ../../utils/validator.js */ 35));
 var _tips = _interopRequireDefault(__webpack_require__(/*! @/utils/tips.js */ 26));
 var _userApi = __webpack_require__(/*! @/api/userApi.js */ 25);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+//
 //
 //
 //
@@ -231,9 +233,15 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
       isRight: false, // 是否完成输入
       setCodeInterval: '', // 定时器
       deviceId: '', // 数据传值deviceId
-      appID: 'wxb8afa388fa540c2a', weixinCode: '', delta: 1, from: '' };}, components: {}, onBackPress: function onBackPress() {if (!uni.getStorageSync('access_token')) {if (uni.getStorageSync('pagePath') == 'main') {uni.switchTab({ url: '/pages/main/main' });} else {uni.switchTab({ url: '/pages/user/user' });}}console.log('onBackPress');}, onHide: function onHide() {console.log('onHide');if (this.setCodeInterval != '') {clearInterval(this.setCodeInterval);}}, onLoad: function onLoad(options) {if (options.delta) this.delta = options.delta;if (options.from) this.from = options.from;}, onShow: function onShow() {uni.setStorageSync('isLogin', 0);}, methods: { // 去用户协议
-    goProtocal: function goProtocal() {uni.navigateTo({ url: '/pages/user/protocal/protocal' });}, // 获取openid
-    getOpenIdByCode: function getOpenIdByCode() {uni.login({ provider: 'weixin',
+      appID: 'wxb8afa388fa540c2a', weixinCode: '', delta: 1, from: '' };}, components: {}, onBackPress: function onBackPress() {if (!uni.getStorageSync('access_token')) {if (uni.getStorageSync('pagePath') == 'main') {uni.switchTab({ url: '/pages/main/main' });} else {uni.switchTab({ url: '/pages/user/user' });}}console.log('onBackPress');}, onHide: function onHide() {console.log('onHide');if (this.setCodeInterval != '') {clearInterval(this.setCodeInterval);}}, onLoad: function onLoad(options) {if (options.delta) this.delta = options.delta;if (options.from) this.from = options.from;}, onShow: function onShow() {uni.setStorageSync('isLogin', 0);uni.setStorageSync('wxLogin', '2');}, methods: { // 隐私协议
+    goPrivacy: function goPrivacy() {uni.navigateTo({ url: '/pages/user/privacy/privacy' });}, // 去用户协议
+    goProtocal: function goProtocal() {uni.navigateTo({ url: '/pages/user/protocal/protocal' });
+
+    },
+    // 获取openid
+    getOpenIdByCode: function getOpenIdByCode() {
+      uni.login({
+        provider: 'weixin',
         success: function success(e) {
           console.log('code', JSON.stringify(e.code));
           var data = {
@@ -440,6 +448,7 @@ var _default = { data: function data() {return { phone: '', code: '', codeText: 
 
       (0, _userApi.getUserInfoData)().then(function (res) {
         if (res.code === '1000') {
+          uni.setStorageSync('wxLogin', '1');
           if (res.data.phone) {
             uni.setStorageSync('phone', res.data.phone);
           }

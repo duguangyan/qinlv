@@ -18,17 +18,16 @@
 			      <!-- <view class="uid fs28" v-if="!nickName">ID:{{uid}}</view> -->
 			      <view class="phone fs24  mgt-30">{{dPhone}}</view>
 			    </view>
-			    <view class="fs30 mgl-20" v-if="!isLogin" @click="goLogin">点击登录</view>
+			    <view class="fs34 mgl-10" v-if="!isLogin" @click="goLogin">点击登录</view>
 			  </view>
 			</view>
 		</view>
-		
 		
         <!-- 我的订单 -->
         <view class="order">
           <view class="title cf" @click="goOrderList('')" :class="{'Android1': platform == 1}">
             <view class="p1 fll fs28">我的订单</view>
-			<view class="img flr">
+			<view class="img flr" :class="{'opo':platform == 1}">
 				<image src="../../static/img/tag-go.png"/>
 			</view>
 			<view class="p2 text-999 fs24 flr">全部订单</view>
@@ -38,8 +37,8 @@
 				<view class="img" :class="{'Android4': platform == 1}">
 					<image :src="item.u"/>
 				</view>
-              
-              <view class="fs24" :class="{'Android3': platform == 1}">{{item.t}}</view>
+				<view class="span"></view>
+				<view class="fs24" :class="{'Android3': platform == 1}">{{item.t}}</view>
             </view>
           </view>
         </view>
@@ -87,6 +86,7 @@
 			uni.setStorageSync('pagePath','user')
 		},
 		onShow() {
+			uni.setStorageSync('wxLogin','1')
 			// 设备样式兼容
 			this.platform = uni.getStorageSync('platform');
 			// 获取phone 和 uid
@@ -262,7 +262,8 @@
 			  height: 48upx;
 			  position: absolute;
 			  right: 30upx;
-			  top: 130upx;
+			  top: 150upx;
+			  z-index: 999999;
 			  >image{
 				  width: 100%;
 				  height: 100%;
@@ -319,6 +320,15 @@
 			  height: 100%;
 		  }
 	  }
+	  /*  #ifdef  MP-WEIXIN  */
+	  .img{
+	  	position: relative;
+		top: 10upx;
+	  }
+	  .opo{
+		top: 6upx; 
+	  }
+	  /*  #endif  */
       & > .p2 {
         color: #999;
         margin-right: 4upx;
@@ -336,6 +346,7 @@
         margin-left: 4upx;
       }
     }
+	
     .tags {
       display: flex;
       padding: 20upx 50upx;

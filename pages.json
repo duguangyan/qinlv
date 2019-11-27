@@ -176,6 +176,12 @@
 				"navigationBarTitleText": "视频播放" 
 			}
         }
+        ,{
+            "path" : "pages/user/privacy/privacy",
+            "style" : {
+				"navigationBarTitleText": "上上农夫隐私政策" 
+			}
+        }
     ],
 	"tabBar": {
 		"color": "#D9D9D9",
@@ -203,8 +209,8 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "沁绿农业APP",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
 		// "enablePullDownRefresh": true,
-		"onReachBottomDistance": 151
+		// "onReachBottomDistance": 151
 	}
 }

@@ -251,7 +251,7 @@
 		
 		
 		/*  #ifdef  MP-WEIXIN  */
-		padding-top: 120upx;
+		padding-top: 160upx;
 		padding-bottom: 200upx;
 		/*  #endif  */
 		

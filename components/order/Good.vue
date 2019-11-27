@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<scroll-view class="item cf">
+		<scroll-view class="item cf" @click="goDetail">
 		  <div class="photo fll">
 		    <image :src="item.imgUrl" :lazy-load="true" />
 		  </div>
@@ -35,6 +35,13 @@ export default {
   	// 设备样式兼容
   	this.platform = uni.getStorageSync('platform');
 	// console.log('platform:',this.platform)
+  },
+  methods:{
+	  goDetail(){
+		  uni.navigateTo({
+		  	url:'/pages/order/goodsDetail/goodsDetail?goodsId='+this.item.goodsId + '&shopId='+this.item.shopId
+		  })
+	  }
   }
 }
 </script>

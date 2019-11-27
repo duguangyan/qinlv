@@ -1,9 +1,9 @@
- const apiUrl = 'http://m.qinlvny.com'; // 正式
+ const apiUrl = 'https://m.qinlvny.com'; // 正式
 // let apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
-// let apiUrl = 'http://192.168.0.202:7000'; // 开发
-const versionNumber = 'V1.0.8'; //版本号
+// let apiUrl = 'http://192.168.0.202:8000'; // 开发
+const versionNumber = 'V1.1.2'; //版本号
 
-if (apiUrl == 'http://192.168.0.202:7000') {
+if (apiUrl == 'http://192.168.0.201:7000') {
 	uni.setStorageSync('v', versionNumber);
 	uni.setStorageSync('s', ' 开发');
 } else {

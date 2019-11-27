@@ -145,6 +145,7 @@ export default {
 	}
 	// 获取订单列表
 	this.orders = []
+	this.pageIndex = 1
 	this.getOrders()
   },
   methods: {

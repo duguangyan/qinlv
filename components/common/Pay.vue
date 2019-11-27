@@ -7,8 +7,8 @@
 			<div v-if="show" class="body">
 				<div class="h1">
 					确认支付
-					<div class="close-icon flr">
-						<img @click="close" src="@/static/img/tag-close.png" />
+					<div class="close-icon flr" @click="close">
+						<img src="@/static/img/tag-close.png" />
 					</div>
 					
 				</div>
@@ -180,27 +180,36 @@
 						if (res.code === '1000') {
 							console.log(JSON.stringify(res))
 							let wxPayResp = res.data.wxPayResp;
-							let obj = {
-								appid: wxPayResp.appId,
-								noncestr: wxPayResp.noncestr,
-								package: 'Sign=WXPay', // 固定值，以微信支付文档为主
-								partnerid: wxPayResp.partnerId,
-								prepayid: wxPayResp.prepayId,
-								timestamp: wxPayResp.timestamp,
-								sign: wxPayResp.sign // 根据签名算法生成签名
-							}
-							orderInfo = JSON.stringify(obj);
+							// let obj = {
+							// 	appid: wxPayResp.appId,
+							// 	noncestr: wxPayResp.noncestr,
+							// 	package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+							// 	partnerid: wxPayResp.partnerId,
+							// 	prepayid: wxPayResp.prepayId,
+							// 	timestamp: wxPayResp.timestamp,
+							// 	sign: wxPayResp.sign // 根据签名算法生成签名
+							// }
+							// let orderInfo = JSON.stringify(obj);
 							
-							console.log('orderInfo',orderInfo)
 							uni.requestPayment({
 							    provider: 'wxpay',
-							    orderInfo, //微信、支付宝订单数据
+							    // appid: wxPayResp.appId,
+							    nonceStr: wxPayResp.noncestr,
+							    package: wxPayResp.packageName, // 固定值，以微信支付文档为主
+							    // partnerid: wxPayResp.partnerId,
+							    // prepayid: wxPayResp.prepayId,
+								signType:wxPayResp.signType,
+							    timeStamp: wxPayResp.timestamp,
+							    paySign: wxPayResp.sign, // 根据签名算法生成签名
 							    success: function (res) {
 									_this.clock = true
 							        console.log('success:' + JSON.stringify(res));
-									uni.reLaunch({
-										url:'/pages/user/pay/success?payPrice='+_this.price+'&orderId='+_this.orderId
-									})
+									setTimeout(()=>{
+										uni.reLaunch({
+											url:'/pages/user/pay/success?payPrice='+_this.price+'&orderId='+_this.orderId
+										})
+									},200)
+									
 									
 							    },
 							    fail: function (err) {
@@ -358,13 +367,17 @@
 	}
 	
 	.close-icon{
-		width: 30upx;
-		height: 30upx;
+		width: 60upx;
+		height: 60upx;
 		position: relative;
 		right: 60upx;
+		top: -15upx;
+		z-index: 99999;
 		>img{
-			width: 100%;
-			height: 100%;
+			width: 30upx;
+			height: 30upx;
+			position: relative;
+			top: 15upx;
 		}
 	}
 	.pay {
