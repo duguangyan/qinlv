@@ -49,8 +49,7 @@ rich-text .img.data-v-438a4b87 {
     max-width: 200rpx;
     display: inline-block;
     overflow: hidden;
-    -o-text-overflow: ellipsis;
-       text-overflow: ellipsis;
+    text-overflow: ellipsis;
     white-space: nowrap;
     line-clamp: 1;
 }
@@ -110,7 +109,6 @@ rich-text .img.data-v-438a4b87 {
         display: block;
         font-size: 20rpx;
         -webkit-transform: scale(0.8);
-            -ms-transform: scale(0.8);
                 transform: scale(0.8);
 }
 .good-detail .overall.data-v-438a4b87 {
@@ -121,7 +119,6 @@ rich-text .img.data-v-438a4b87 {
     color: #FC2D2D;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
 }
 .good-detail .overall .goodsPrice .fll.data-v-438a4b87 {
@@ -138,13 +135,11 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .overall .flex-l.data-v-438a4b87 {
       -webkit-box-pack: start;
       -webkit-justify-content: flex-start;
-          -ms-flex-pack: start;
               justify-content: flex-start;
 }
 .good-detail .overall .flexb-c.data-v-438a4b87 {
       -webkit-box-pack: justify;
       -webkit-justify-content: space-between;
-          -ms-flex-pack: justify;
               justify-content: space-between;
 }
 .good-detail .overall > ._div.data-v-438a4b87 {
@@ -154,15 +149,12 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .overall .title.data-v-438a4b87 {
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: center;
       -webkit-justify-content: center;
-          -ms-flex-pack: center;
               justify-content: center;
       -webkit-box-align: end;
       -webkit-align-items: flex-end;
-          -ms-flex-align: end;
               align-items: flex-end;
       font-size: 24rpx;
 }
@@ -180,7 +172,6 @@ rich-text .img.data-v-438a4b87 {
       font-size: 24rpx;
       line-height: 40rpx;
       -webkit-transform: translateY(2rpx);
-          -ms-transform: translateY(2rpx);
               transform: translateY(2rpx);
 }
 .good-detail .overall .multi-price.data-v-438a4b87 {
@@ -223,11 +214,9 @@ rich-text .img.data-v-438a4b87 {
     color: #49c173;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
             justify-content: space-between;
     border-radius: 3px;
     overflow: hidden;
@@ -257,11 +246,9 @@ rich-text .img.data-v-438a4b87 {
       color: #999;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: justify;
       -webkit-justify-content: space-between;
-          -ms-flex-pack: justify;
               justify-content: space-between;
       position: relative;
 }
@@ -274,7 +261,6 @@ rich-text .img.data-v-438a4b87 {
         background-color: #f0f0f0;
         width: 100%;
         -webkit-transform: scaleY(0.5);
-            -ms-transform: scaleY(0.5);
                 transform: scaleY(0.5);
 }
 .good-detail .tag2.data-v-438a4b87 {
@@ -321,7 +307,6 @@ rich-text .img.data-v-438a4b87 {
       color: #999;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       position: relative;
       border-bottom: 1rpx solid #f0f0f0;
@@ -381,11 +366,9 @@ rich-text .img.data-v-438a4b87 {
     left: 0;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     z-index: 2;
     text-align: center;
@@ -416,14 +399,11 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .operator .fir.data-v-438a4b87 {
       -webkit-box-flex: 1;
       -webkit-flex-grow: 1;
-          -ms-flex-positive: 1;
               flex-grow: 1;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-justify-content: space-around;
-          -ms-flex-pack: distribute;
               justify-content: space-around;
       font-size: 20rpx;
       color: #000;
@@ -554,7 +534,6 @@ rich-text .img.data-v-438a4b87 {
       font-size: 24rpx;
       border: 1rpx solid #D9D9D9;
       -webkit-transition: all 0.5s;
-      -o-transition: all 0.5s;
       transition: all 0.5s;
 }
 .good-detail .good-confirm .sta-item ._span.actived.data-v-438a4b87 {
@@ -589,15 +568,12 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .good-confirm .body .good.data-v-438a4b87 {
         display: -webkit-box;
         display: -webkit-flex;
-        display: -ms-flexbox;
         display: flex;
         -webkit-box-align: start;
         -webkit-align-items: flex-start;
-            -ms-flex-align: start;
                 align-items: flex-start;
         -webkit-box-pack: start;
         -webkit-justify-content: flex-start;
-            -ms-flex-pack: start;
                 justify-content: flex-start;
 }
 .good-detail .good-confirm .body .good .photo.data-v-438a4b87 {
@@ -624,15 +600,12 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .good-confirm .body .count.data-v-438a4b87 {
         display: -webkit-box;
         display: -webkit-flex;
-        display: -ms-flexbox;
         display: flex;
         -webkit-box-align: center;
         -webkit-align-items: center;
-            -ms-flex-align: center;
                 align-items: center;
         -webkit-box-pack: start;
         -webkit-justify-content: flex-start;
-            -ms-flex-pack: start;
                 justify-content: flex-start;
         padding-bottom: 46rpx;
         border-bottom: #f0f0f0 solid 1rpx;
@@ -666,15 +639,12 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .good-confirm .body .money.data-v-438a4b87 {
         display: -webkit-box;
         display: -webkit-flex;
-        display: -ms-flexbox;
         display: flex;
         -webkit-box-align: center;
         -webkit-align-items: center;
-            -ms-flex-align: center;
                 align-items: center;
         -webkit-box-pack: justify;
         -webkit-justify-content: space-between;
-            -ms-flex-pack: justify;
                 justify-content: space-between;
         margin-top: 48rpx;
         font-size: 30rpx;
@@ -705,7 +675,6 @@ rich-text .img.data-v-438a4b87 {
     .good-detail .good-confirm .body-enter-active.data-v-438a4b87,
     .good-detail .good-confirm .body-leave-active.data-v-438a4b87 {
       -webkit-transition: all 0.5s;
-      -o-transition: all 0.5s;
       transition: all 0.5s;
 }
 .good-detail .good-confirm .mask-enter.data-v-438a4b87,
@@ -717,13 +686,11 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .good-confirm .body-enter.data-v-438a4b87,
     .good-detail .good-confirm .body-leave-to.data-v-438a4b87 {
       -webkit-transform: translateY(100%);
-          -ms-transform: translateY(100%);
               transform: translateY(100%);
 }
 .good-detail .good-confirm .body-enter-to.data-v-438a4b87,
     .good-detail .good-confirm .body-leave.data-v-438a4b87 {
       -webkit-transform: translateY(0%);
-          -ms-transform: translateY(0%);
               transform: translateY(0%);
 }
 .good-detail .good-confirm .mask-enter-to.data-v-438a4b87,
@@ -741,7 +708,6 @@ rich-text .img.data-v-438a4b87 {
 .good-detail .fg1.data-v-438a4b87 {
     -webkit-box-flex: 1;
     -webkit-flex-grow: 1;
-        -ms-flex-positive: 1;
             flex-grow: 1;
 }
 .good-detail .icon-plus.invalid.data-v-438a4b87::after, .good-detail .icon-plus.invalid.data-v-438a4b87::before {
@@ -755,7 +721,6 @@ rich-text .img.data-v-438a4b87 {
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
             transform: translateY(-50%);
     background-color: #666;
 }
@@ -767,7 +732,6 @@ rich-text .img.data-v-438a4b87 {
     position: absolute;
     left: 50%;
     -webkit-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
             transform: translateX(-50%);
     background-color: #666;
 }
@@ -779,7 +743,6 @@ rich-text .img.data-v-438a4b87 {
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
             transform: translateY(-50%);
     background-color: #666;
 }

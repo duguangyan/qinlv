@@ -59,7 +59,6 @@
 }
 .edit .pr.data-v-74a1e6a2 {
     -webkit-transform: translateX(-5rpx);
-        -ms-transform: translateX(-5rpx);
             transform: translateX(-5rpx);
 }
 .edit .mt10.data-v-74a1e6a2, .edit .del.data-v-74a1e6a2 {

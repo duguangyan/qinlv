@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<title>Video Example</title>
+	<script type="text/javascript">
+// H5 plus事件处理
+function plusReady(){
+	// 创建视频播放控件
+	var video = new plus.video.VideoPlayer('video',{
+		src:'rtmp://play.du1888.cn/live/du'
+	});
+	// 监听开始播放事件
+	video.addEventListener('play', function(e){
+		plus.nativeUI.alert('Video play');
+	}, false)
+	// 监听播放进度更新事件
+	video.addEventListener('timeupdate', function(e){
+		console.log(JSON.stringify(e));
+	}, false);
+	// 监听播放结束事件
+	video.addEventListener('ended', function(e){
+		plus.nativeUI.alert('Video ended');
+	}, false);
+}
+document.addEventListener('plusready', plusReady, false);
+	</script>
+	</head>
+	<body style="margin:0;padding:0;text-align:center;">
+		视频播放控件
+		<br/><br/>
+		<div id="video" style="width:100%;height:300px;background-color:#000000;margin:auto"></div>
+	</body>
+</html>
+	

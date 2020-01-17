@@ -4,6 +4,7 @@
   "navigationStyle": "custom",
   "backgroundColor": "#F5F5F5",
   "usingComponents": {
-    "tab-bar": "/components/common/TabBar"
+    "tab-bar": "/components/common/TabBar",
+    "dialog": "/components/common/Dialog"
   }
 }

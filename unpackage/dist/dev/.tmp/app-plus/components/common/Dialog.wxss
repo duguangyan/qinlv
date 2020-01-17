@@ -16,13 +16,18 @@
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 20rpx;
   width: 500rpx;
   padding: 76rpx 30rpx 30rpx;
   text-align: center;
+}
+.dialog .body .slot.data-v-39b96aa2 {
+    position: relative;
+    text-align: left;
+    font-size: 24rpx;
+    top: -50rpx;
 }
 .dialog .body .title.data-v-39b96aa2 {
     font-size: 32rpx;
@@ -32,15 +37,12 @@
 .dialog .body .footer.data-v-39b96aa2 {
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
             justify-content: space-between;
 }
 .dialog .body .btn.data-v-39b96aa2 {
@@ -61,10 +63,8 @@
 .dialog .mask-enter-active.data-v-39b96aa2,
 .dialog .body-enter-active.data-v-39b96aa2 {
   -webkit-transition: all 0.5s;
-  -o-transition: all 0.5s;
   transition: all 0.5s;
   -webkit-transform-origin: left;
-      -ms-transform-origin: left;
           transform-origin: left;
 }
 .dialog .mask-enter.data-v-39b96aa2,
@@ -73,12 +73,10 @@
 }
 .dialog .body-enter.data-v-39b96aa2 {
   -webkit-transform: scale(0.5) translate(-50%, -50%);
-      -ms-transform: scale(0.5) translate(-50%, -50%);
           transform: scale(0.5) translate(-50%, -50%);
 }
 .dialog .body-enter-to.data-v-39b96aa2 {
   -webkit-transform: scale(1) translate(-50%, -50%);
-      -ms-transform: scale(1) translate(-50%, -50%);
           transform: scale(1) translate(-50%, -50%);
 }
 .dialog .mask-enter-to.data-v-39b96aa2,

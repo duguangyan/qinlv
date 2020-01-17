@@ -2,8 +2,8 @@
     "name" : "上上农夫",
     "appid" : "__UNI__E3A114F",
     "description" : "上上农夫专业的红薯销售平台，提供全国最优质的红薯",
-    "versionName" : "1.1.2",
-    "versionCode" : 112,
+    "versionName" : "1.1.6",
+    "versionCode" : 116,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -14,7 +14,9 @@
             "VideoPlayer" : {},
             "OAuth" : {},
             "Payment" : {},
-            "Share" : {}
+            "Share" : {},
+            "Push" : {},
+            "LivePusher" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -68,7 +70,8 @@
                     "NSLocationWhenInUseUsageDescription" : "上上农业需要打开您的地理位置获取地址定位信息",
                     "NSLocationAlwaysUsageDescription" : "上上农业需要打开您的地理位置获取地址定位信息",
                     "NSLocationAlwaysAndWhenInUseUsageDescription" : "上上农业需要打开您的地理位置获取地址定位信息"
-                }
+                },
+                "idfa" : false
             },
             /* SDK配置 */
             "sdkConfigs" : {
@@ -154,6 +157,47 @@
         "splashscreen" : {
             "alwaysShowBeforeRender" : false,
             "waiting" : true
+        },
+        "nativePlugins" : {
+            "JY-JPush" : {
+                "android_channel" : "android",
+                "ios_appkey" : "8e240745884e0cffa5558dd7",
+                "android_appkey" : "8e240745884e0cffa5558dd7",
+                "ios_channel" : "ios",
+                "__plugin_info__" : {
+                    "name" : "JYJPush极光推送插件 - 支持iOS/Android - [试用版，仅用于自定义调试基座]",
+                    "description" : "极光推送Uni版本",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=741",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 0,
+                    "pid" : "741",
+                    "parameters" : {
+                        "android_channel" : {
+                            "des" : "极光推送的渠道名称",
+                            "key" : "JPUSH_CHANNEL",
+                            "value" : ""
+                        },
+                        "ios_appkey" : {
+                            "des" : "极光推送的APPKEY",
+                            "key" : "JPUSH_APPKEY",
+                            "value" : ""
+                        },
+                        "android_appkey" : {
+                            "des" : "极光推送的APPKEY",
+                            "key" : "JPUSH_APPKEY",
+                            "value" : ""
+                        },
+                        "ios_channel" : {
+                            "des" : "极光推送的渠道名称",
+                            "key" : "JPUSH_CHANNEL",
+                            "value" : ""
+                        }
+                    }
+                }
+            }
         }
     },
     /* 快应用特有相关 */

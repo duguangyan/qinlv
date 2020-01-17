@@ -56,11 +56,9 @@
       color: #999;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: justify;
       -webkit-justify-content: space-between;
-          -ms-flex-pack: justify;
               justify-content: space-between;
       position: relative;
 }
@@ -73,7 +71,6 @@
         background-color: #f0f0f0;
         width: 100%;
         -webkit-transform: scaleY(0.5);
-            -ms-transform: scaleY(0.5);
                 transform: scaleY(0.5);
 }
 .standard .mask-enter-active.data-v-2236d712,
@@ -81,7 +78,6 @@
   .standard .body-enter-active.data-v-2236d712,
   .standard .body-leave-active.data-v-2236d712 {
     -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
     transition: all 0.5s;
 }
 .standard .mask-enter.data-v-2236d712,
@@ -93,13 +89,11 @@
 .standard .body-enter.data-v-2236d712,
   .standard .body-leave-to.data-v-2236d712 {
     -webkit-transform: translateY(100%);
-        -ms-transform: translateY(100%);
             transform: translateY(100%);
 }
 .standard .body-enter-to.data-v-2236d712,
   .standard .body-leave.data-v-2236d712 {
     -webkit-transform: translateY(0%);
-        -ms-transform: translateY(0%);
             transform: translateY(0%);
 }
 .standard .mask-enter-to.data-v-2236d712,

@@ -11,6 +11,17 @@
 					"titleView":false
 				}
 			}
+		},
+		{
+			"path": "pages/main/play",
+			"style": {
+				"navigationBarTitleText": "播放视频"
+			}
+		}, {
+			"path": "pages/main/push",
+			"style": {
+				"navigationBarTitleText": "推送视频"
+			}
 		}, {
 			"path": "pages/login/login",
 			"style": {

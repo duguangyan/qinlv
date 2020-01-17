@@ -1,7 +1,7 @@
  const apiUrl = 'https://m.qinlvny.com'; // 正式
 // let apiUrl = 'http://duu-u.imwork.net:27307'; // 开发
 // let apiUrl = 'http://192.168.0.202:8000'; // 开发
-const versionNumber = 'V1.1.2'; //版本号
+const versionNumber = 'V1.1.6'; //版本号
 
 if (apiUrl == 'http://192.168.0.201:7000') {
 	uni.setStorageSync('v', versionNumber);
@@ -197,18 +197,18 @@ const request = function(params = {}) {
 							}
 						})
 					} else {
-						if(res.code != '9999') {
-							if(!uni.getStorageSync('access_token')){
-								// 防止重复进入错误页面
-								if(uni.getStorageSync('err') != 1){
-									uni.navigateTo({
-										url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
-									})
-								}
-							}
-						}
+						// if(res.code != '9999') {
+						// 	if(!uni.getStorageSync('access_token')){
+						// 		// 防止重复进入错误页面
+						// 		if(uni.getStorageSync('err') != 1){
+						// 			uni.navigateTo({
+						// 				url:'/pages/common/err/err?redirect=' + JSON.stringify(params)
+						// 			})
+						// 		}
+						// 	}
+						// }
 					}
-					resolve(res);
+					reject(res);
 				}
 			},
 			fail(err) {

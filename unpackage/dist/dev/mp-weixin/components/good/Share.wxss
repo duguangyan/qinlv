@@ -34,15 +34,12 @@
     bottom: 0;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
             justify-content: space-between;
     font-size: 28rpx;
     text-align: center;
@@ -65,7 +62,6 @@
   .share .body-enter-active.data-v-49e0ffda,
   .share .body-leave-active.data-v-49e0ffda {
     -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
     transition: all 0.5s;
 }
 .share .mask-enter.data-v-49e0ffda,
@@ -77,13 +73,11 @@
 .share .body-enter.data-v-49e0ffda,
   .share .body-leave-to.data-v-49e0ffda {
     -webkit-transform: translateY(100%);
-        -ms-transform: translateY(100%);
             transform: translateY(100%);
 }
 .share .body-enter-to.data-v-49e0ffda,
   .share .body-leave.data-v-49e0ffda {
     -webkit-transform: translateY(0%);
-        -ms-transform: translateY(0%);
             transform: translateY(0%);
 }
 .share .mask-enter-to.data-v-49e0ffda,

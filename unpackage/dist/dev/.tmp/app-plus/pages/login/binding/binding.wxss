@@ -37,14 +37,6 @@
   color: #ccc;
   font-size: 30rpx;
 }
-.login.data-v-2a9a02c4 ::-moz-placeholder {
-  color: #ccc;
-  font-size: 30rpx;
-}
-.login.data-v-2a9a02c4 ::-ms-input-placeholder {
-  color: #ccc;
-  font-size: 30rpx;
-}
 .login.data-v-2a9a02c4 ::placeholder {
   color: #ccc;
   font-size: 30rpx;
@@ -64,7 +56,6 @@
     right: 0rpx;
     top: 50%;
     -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
             transform: translateY(-50%);
     z-index: 99999;
 }

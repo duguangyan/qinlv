@@ -60,15 +60,12 @@
     padding: 28rpx 30rpx 30rpx 30rpx;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
             justify-content: space-between;
 }
 .list ._li.data-v-faa6081c:not(:last-child)::after {
@@ -86,8 +83,7 @@
 }
 .list ._li .low.data-v-faa6081c {
       max-width: 750rpx;
-      -o-text-overflow: ellipsis;
-         text-overflow: ellipsis;
+      text-overflow: ellipsis;
       line-clamp: 1;
       white-space: nowrap;
       overflow: hidden;
@@ -97,8 +93,7 @@
       line-height: 30rpx;
       color: #000;
       max-width: 300rpx;
-      -o-text-overflow: ellipsis;
-         text-overflow: ellipsis;
+      text-overflow: ellipsis;
       line-clamp: 1;
       white-space: nowrap;
       overflow: hidden;
@@ -111,7 +106,6 @@
       margin-left: 28rpx;
       display: inline-block;
       -webkit-transform: translateY(-2rpx);
-          -ms-transform: translateY(-2rpx);
               transform: translateY(-2rpx);
 }
 .list ._li .tag.data-v-faa6081c {
@@ -146,11 +140,9 @@
         position: absolute;
         background-color: transparent;
         left: 1rpx;
-        -webkit-box-shadow: -1rpx 0 0 0 #eaeaea;
-                box-shadow: -1rpx 0 0 0 #eaeaea;
+        box-shadow: -1rpx 0 0 0 #eaeaea;
         z-index: 2;
         -webkit-transform: scale(0.5, 1);
-            -ms-transform: scale(0.5, 1);
                 transform: scale(0.5, 1);
 }
 

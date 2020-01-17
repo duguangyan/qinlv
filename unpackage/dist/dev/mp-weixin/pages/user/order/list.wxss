@@ -62,7 +62,6 @@
       left: 60rpx;
       z-index: 2;
       -webkit-transition: left 0.5s;
-      -o-transition: left 0.5s;
       transition: left 0.5s;
 }
 .ordlist .list.data-v-7471f58c {
@@ -77,11 +76,9 @@
       padding: 0 0 5rpx 0;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: start;
       -webkit-justify-content: flex-start;
-          -ms-flex-pack: start;
               justify-content: flex-start;
       font-size: 24rpx;
 }
@@ -103,7 +100,6 @@
         margin-left: 5rpx;
         -webkit-box-flex: 1;
         -webkit-flex-grow: 1;
-            -ms-flex-positive: 1;
                 flex-grow: 1;
         color: #333;
 }
@@ -120,11 +116,9 @@
 .ordlist .list .operator.data-v-7471f58c {
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: end;
       -webkit-justify-content: flex-end;
-          -ms-flex-pack: end;
               justify-content: flex-end;
       margin-top: 30rpx;
 }

@@ -26,7 +26,7 @@
 <script>
 	import validator from '@/utils/validator.js'
 	import T from '@/utils/tips.js'
-	import { postUserLogin, getUserInfoData, postUserSms, weixinLogin } from '@/api/userApi.js'
+	import { postUserLogin, getUserInfoData, postUserSms, weixinLogin, openIdByCode } from '@/api/userApi.js'
 	export default {
 		data() {
 			return {
@@ -158,7 +158,33 @@
 		        })
 		      }
 		    },
+			// 获取openid
+			getOpenIdByCode(){
+				uni.login({
+					provider:'weixin',
+					success(e) {
+						console.log('code',JSON.stringify(e.code))
+						let data = {
+							code: e.code,
+							providerId: 'miniProgram' 
+						}
+						console.log(data)
+						openIdByCode(data).then(res => {
+							console.log(res)
+							if(res.code == '1000'){
+								uni.setStorageSync('openid',res.data)
+							}
+						})
+					}
+				})
+				
+			},
+			
 		    getUserInfo() {
+				// #ifdef  MP-WEIXIN
+				this.getOpenIdByCode();
+				// #endif
+				
 		      getUserInfoData().then((res) => {
 		        if (res.code == '1000') {
 					console.log(JSON.stringify(res))

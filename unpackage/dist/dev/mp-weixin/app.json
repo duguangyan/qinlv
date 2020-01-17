@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/main/main",
+    "pages/main/play",
+    "pages/main/push",
     "pages/login/login",
     "pages/user/user",
     "pages/order/order",
@@ -64,5 +66,6 @@
       }
     ]
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap92.json"
 }

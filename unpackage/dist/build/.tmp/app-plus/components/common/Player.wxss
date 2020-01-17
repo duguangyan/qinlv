@@ -66,7 +66,6 @@
   .player .body-enter-active.data-v-2776896e,
   .player .body-leave-active.data-v-2776896e {
     -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
     transition: all 0.5s;
 }
 .player .mask-enter.data-v-2776896e,
@@ -78,13 +77,11 @@
 .player .body-enter.data-v-2776896e,
   .player .body-leave-to.data-v-2776896e {
     -webkit-transform: translateY(100%);
-        -ms-transform: translateY(100%);
             transform: translateY(100%);
 }
 .player .body-enter-to.data-v-2776896e,
   .player .body-leave.data-v-2776896e {
     -webkit-transform: translateY(0%);
-        -ms-transform: translateY(0%);
             transform: translateY(0%);
 }
 .player .mask-enter-to.data-v-2776896e,

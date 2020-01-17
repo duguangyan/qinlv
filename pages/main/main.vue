@@ -77,8 +77,28 @@
 
 		</view>
 		<!-- <TabBar :checkIndex='checkIndex'></TabBar> -->
-
-	</view>
+		<Dialog :hasSlot="hasSlot" :title="dialogTitle" @doCancel="doCancel" @doConfirm="doConfirm" :isShow="dialogIsShow" :cancelText="cancelText" :confirmText="confirmText">
+			<view>
+				<view>请你务必审阅、充分理解“服务协议”和“隐私政策”各条款，包括不限于：为了向你提供即时通讯、内容分享登服务，我们需要收集你的设备信息、操作日志登个人信息。你可以在“设置”中查看、变更、删除个人信息并管理你的授权。</view>
+				<view>你可阅读 <text class="dialog-txt" @click="goProtocal">《服务协议》</text>和<text class="dialog-txt" @click="goPrivacy">《隐私政策》</text>了解详细信息。如你同意，请点击“同意”开始接受我们的服务</view>
+			</view>
+		</Dialog>
+		
+		
+		<view class="" @click="getRegisterID()">
+			获取RegisterID
+		</view>
+		
+		<view class="" @click="setupJYJPush()">
+			设置Alias
+		</view>
+		<view @click="play">
+			play
+		</view>
+		<view @click="push">
+			push
+		</view>
+		</view>
 </template>
 
 <script>
@@ -94,9 +114,15 @@
 	} from '../../api/userApi.js'
 	import T from '@/utils/tips.js'
 	import TabBar from '@/components/common/TabBar.vue'
+	import Dialog from '@/components/common/Dialog.vue'
 	export default {
 		data() {
 			return {
+				hasSlot:true,
+				dialogTitle:'服务协议和隐私政策',
+				dialogIsShow:true,
+				cancelText:'暂不使用',
+				confirmText:'同意',
 				checkIndex: 0,
 				homeList: {},
 				banner: [], // 轮播图
@@ -111,27 +137,55 @@
 			}
 		},
 		components: {
-			TabBar
+			TabBar,Dialog
 		},
 		onTabItemTap(e){
 			uni.setStorageSync('pagePath','main')
 		},
 		onLoad() {
 			uni.setStorageSync('pagePath','main')
+			// 设备样式兼容
+			this.platform = uni.getStorageSync('platform');
 			// 版本更新 （APP）
 			// #ifdef APP-PLUS || MP-WEIXIN
 			this.updataApp()
 			// #endif	
-
-
-			// 设备样式兼容
-			this.platform = uni.getStorageSync('platform');
+			
+			// 是否同意隐私政策 1不同意 2同意
+			// uni.setStorageSync('dialogIsShow',1)
 		},
 		onShow() {
 			uni.setStorageSync('wxLogin','1')
 			uni.hideLoading();
 			// 获取首页banner
 			this.getHomeList()
+			// 判断是否体同意协议
+			let dialogIsShow = uni.getStorageSync('dialogIsShow')
+			if(dialogIsShow == 1 || dialogIsShow == ''){
+				this.dialogIsShow = true
+				uni.setStorageSync('dialogIsShow',1)
+			}else{
+				this.dialogIsShow = false
+				uni.setStorageSync('dialogIsShow',2)
+			}
+			console.log(this.dialogIsShow)
+			
+			
+			
+			// 极光推送
+			//#ifdef APP-PLUS  
+			if(uni.getStorageSync('access_token')){
+				// 设置alias
+				// this.setupJYJPush()	
+				// this.getRegisterID()
+				// 监听极光推送返回事件
+				
+				
+			}
+			// this.addJYJPushReceiveNotificationListener();
+			// this.addJYJPushReceiveOpenNotificationListener();
+			//#endif  
+		
 		},
 		onPullDownRefresh() {
 			//监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
@@ -143,7 +197,92 @@
 			}, 1000);
 		},
 		methods: {
-
+			push(){
+				uni.navigateTo({
+					url:'/pages/main/push'
+				})
+			},
+			play(){
+				uni.navigateTo({
+					url:'/pages/main/play'
+				})
+			},
+			addJYJPushReceiveNotificationListener() {
+				let _this = this
+				const jyJPush = uni.requireNativePlugin('JY-JPush');
+				jyJPush.addJYJPushReceiveNotificationListener(result => {
+					uni.showToast({
+						icon: 'none',
+						title: JSON.stringify(result)
+					})
+					_this.addJYJPushReceiveNotificationListeners = JSON.stringify(result)
+					console.log('addJYJPushReceiveNotificationListener',JSON.stringify(result))
+					
+				});
+			},
+			addJYJPushReceiveOpenNotificationListener() {
+				let _this = this
+				const jyJPush = uni.requireNativePlugin('JY-JPush');
+				jyJPush.addJYJPushReceiveOpenNotificationListener(result => {
+					uni.showToast({
+						icon: 'none',
+						title: JSON.stringify(result)
+					})
+					_this.addJYJPushReceiveOpenNotificationListeners = JSON.stringify(result)
+					console.log('addJYJPushReceiveOpenNotificationListener',JSON.stringify(result))
+					plus.push.createMessage("您有一条新消息");
+					var options = {cover:false};    
+					var str = dateToStr(new Date());    
+					str += ": 欢迎使用Html5 Plus创建本地消息！";    
+					plus.push.createMessage(str, "LocalMSG", options);  
+				});
+			},
+			getRegisterID() {
+				console.log('获取RegisterID');
+				const jyJPush = uni.requireNativePlugin('JY-JPush');
+				jyJPush.getRegistrationID(result => {
+					uni.showToast({
+						icon: 'none',
+						title: JSON.stringify(result)
+					})
+					console.log(JSON.stringify(result))
+				});
+			},
+			setupJYJPush() {
+				console.log('setupJYJPush');
+				const jyJPush = uni.requireNativePlugin('JY-JPush');
+			
+				jyJPush.setJYJPushAlias({
+					userAlias: "Alias"
+				}, result => {
+					console.log(JSON.stringify(result));
+					
+					uni.showToast({
+						icon: 'none',
+						title: JSON.stringify(result)
+					})
+				});
+			},
+			// 隐私协议
+			goPrivacy(){
+				uni.navigateTo({
+					url:'/pages/user/privacy/privacy'
+				})
+			},
+			// 去用户协议
+			goProtocal(){
+				uni.navigateTo({
+					url:'/pages/user/protocal/protocal'
+				})
+			},
+			doConfirm(){
+				this.dialogIsShow = false
+				uni.setStorageSync('dialogIsShow',2)
+			},
+			doCancel(){
+				this.dialogIsShow = false
+				uni.setStorageSync('dialogIsShow',1)
+			},
 			// 更新版本
 			updataApp() {
 				// #ifdef APP-PLUS 
@@ -155,6 +294,7 @@
 				if(this.platform == '2'){
 					data.code = '002'
 				}
+				console.log('code',data.code)
 				appUpdate(data).then(res => {
 					console.log(res)
 					if (res.code == '1000') {
@@ -342,8 +482,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.dialog-txt{
+		color: #1AAD19;
+	}
 	.main {
-
 		// padding-bottom: 100upx;
 		.bb1 {
 			position: fixed;

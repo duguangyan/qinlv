@@ -66,7 +66,6 @@
   .province .body-enter-active.data-v-c29521a8,
   .province .body-leave-active.data-v-c29521a8 {
     -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
     transition: all 0.5s;
 }
 .province .mask-enter.data-v-c29521a8,
@@ -78,13 +77,11 @@
 .province .body-enter.data-v-c29521a8,
   .province .body-leave-to.data-v-c29521a8 {
     -webkit-transform: translateY(100%);
-        -ms-transform: translateY(100%);
             transform: translateY(100%);
 }
 .province .body-enter-to.data-v-c29521a8,
   .province .body-leave.data-v-c29521a8 {
     -webkit-transform: translateY(0%);
-        -ms-transform: translateY(0%);
             transform: translateY(0%);
 }
 .province .mask-enter-to.data-v-c29521a8,

@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/main/main",
+    "pages/main/play",
+    "pages/main/push",
     "pages/login/login",
     "pages/user/user",
     "pages/order/order",
@@ -70,6 +72,6 @@
     "autoclose": true
   },
   "appname": "上上农夫",
-  "compilerVersion": "2.4.2",
+  "compilerVersion": "2.5.1",
   "usingComponents": {}
 }

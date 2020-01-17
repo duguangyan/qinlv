@@ -77,15 +77,12 @@
 .search .history .title.data-v-4b2599a0 {
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: justify;
       -webkit-justify-content: space-between;
-          -ms-flex-pack: justify;
               justify-content: space-between;
       -webkit-box-align: center;
       -webkit-align-items: center;
-          -ms-flex-align: center;
               align-items: center;
       padding-bottom: 32rpx;
       font-size: 24rpx;
@@ -97,10 +94,8 @@
 .search .history .records.data-v-4b2599a0 {
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-flex-wrap: wrap;
-          -ms-flex-wrap: wrap;
               flex-wrap: wrap;
 }
 .search .history ._li.data-v-4b2599a0 {

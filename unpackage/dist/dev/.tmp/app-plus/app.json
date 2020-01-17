@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/main/main",
+    "pages/main/play",
+    "pages/main/push",
     "pages/login/login",
     "pages/user/user",
     "pages/order/order",
@@ -28,7 +30,8 @@
     "pages/common/err/err",
     "pages/common/webview/webview",
     "pages/login/binding/binding",
-    "pages/order/goodsDetail/video/video"
+    "pages/order/goodsDetail/video/video",
+    "pages/user/privacy/privacy"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -69,6 +72,6 @@
     "autoclose": true
   },
   "appname": "上上农夫",
-  "compilerVersion": "2.4.2",
+  "compilerVersion": "2.5.1",
   "usingComponents": {}
 }

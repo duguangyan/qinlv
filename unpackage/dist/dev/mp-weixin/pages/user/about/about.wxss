@@ -1,13 +1,20 @@
 .about.data-v-1b9c0ae4 {
+  height: 100vh;
+  position: relative;
   text-align: center;
   color: #999;
   font-size: 28rpx;
+}
+.about .call.data-v-1b9c0ae4 {
+    margin: 0 auto;
+    position: absolute;
+    bottom: 40rpx;
 }
 .about .img.data-v-1b9c0ae4 {
     width: 100rpx;
     height: 100rpx;
     margin: 0 auto;
-    margin-top: 340rpx;
+    padding-top: 340rpx;
 }
 .about .img > ._img.data-v-1b9c0ae4 {
       width: 100%;

@@ -1,3 +1,6 @@
+.dialog-txt.data-v-e7c23868 {
+  color: #1AAD19;
+}
 .login.data-v-e7c23868 {
   height: 100vh;
   background: #fff;
@@ -41,14 +44,6 @@
     color: #ccc;
     font-size: 30rpx;
 }
-.login.data-v-e7c23868 ::-moz-placeholder {
-    color: #ccc;
-    font-size: 30rpx;
-}
-.login.data-v-e7c23868 ::-ms-input-placeholder {
-    color: #ccc;
-    font-size: 30rpx;
-}
 .login.data-v-e7c23868 ::placeholder {
     color: #ccc;
     font-size: 30rpx;
@@ -68,13 +63,11 @@
       right: 0rpx;
       top: 50%;
       -webkit-transform: translateY(-50%);
-          -ms-transform: translateY(-50%);
               transform: translateY(-50%);
       z-index: 99999;
 }
 .login .protocal.data-v-e7c23868 {
     margin-top: 20rpx;
-    font-size: 20rpx;
     color: #999999;
 }
 .login .protocal text.data-v-e7c23868 {

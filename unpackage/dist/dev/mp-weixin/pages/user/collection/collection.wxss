@@ -113,20 +113,16 @@
     background-color: #fff;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     padding: 0 30rpx;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
-        -ms-flex-pack: start;
             justify-content: flex-start;
     height: 100rpx;
     -webkit-transition: all .5s linear;
-    -o-transition: all .5s linear;
     transition: all .5s linear;
 }
 .collection .footer .icon.data-v-a87cda1c {
@@ -140,7 +136,6 @@
 .collection .footer > ._span.data-v-a87cda1c {
       -webkit-box-flex: 1;
       -webkit-flex-grow: 1;
-          -ms-flex-positive: 1;
               flex-grow: 1;
       color: #000;
       font-size: 24rpx;
@@ -163,20 +158,17 @@
 .collection .footer-enter-active.data-v-a87cda1c,
   .collection .footer-leave-active.data-v-a87cda1c {
     -webkit-transition: 0.5s;
-    -o-transition: 0.5s;
     transition: 0.5s;
 }
 .collection .footer-enter.data-v-a87cda1c,
   .collection .footer-leave-to.data-v-a87cda1c {
     opacity: 0;
     -webkit-transform: translateY(100%);
-        -ms-transform: translateY(100%);
             transform: translateY(100%);
 }
 .collection .footer-enter-to.data-v-a87cda1c,
   .collection .footer-leave.data-v-a87cda1c {
     -webkit-transform: translateY(0%);
-        -ms-transform: translateY(0%);
             transform: translateY(0%);
     opacity: 1;
 }

@@ -161,24 +161,24 @@
 					this.cartIdList = submitData.cartIdList;
 					this.totalCount = submitData.totalCount;
 				  }
-				  // 判断是否有地址
-				  if (uni.getStorageSync("address")) {
-					// 获取缓存地址
-					this.address = JSON.parse(uni.getStorageSync("address"));
-					// 根据地址获取运费
-					this.getOrderCartByAddress(this.address.id);
-					setTimeout(()=>{
-						uni.setStorageSync('address','')
-					},300)
-					
-				  } else {
-					// 获取默认地址
-					this.getAddressDefAddress();
-				  }
+				  
 				}
 		},
 		onShow() {
-			
+			// 判断是否有地址
+			if (uni.getStorageSync("address")) {
+				// 获取缓存地址
+				this.address = JSON.parse(uni.getStorageSync("address"));
+				// 根据地址获取运费
+				this.getOrderCartByAddress(this.address.id);
+				setTimeout(()=>{
+					uni.setStorageSync('address','')
+				},300)
+								
+			} else {
+				// 获取默认地址
+				this.getAddressDefAddress();
+			}
 		},
 		methods: {
 			

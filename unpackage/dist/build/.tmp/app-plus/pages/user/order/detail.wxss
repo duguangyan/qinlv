@@ -86,15 +86,12 @@
     padding: 24rpx 30rpx;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
-        -ms-flex-pack: start;
             justify-content: flex-start;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     background-color: #fff;
     margin-bottom: 20rpx;
@@ -128,15 +125,12 @@
 .detail .flex.data-v-493d5d16, .detail .list .freight.data-v-493d5d16, .detail .list .goods-price.data-v-493d5d16, .detail .list .total-price.data-v-493d5d16 {
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
             justify-content: space-between;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
 }
 .detail .list.data-v-493d5d16 {
@@ -148,11 +142,9 @@
       padding: 0 0 10rpx 0;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: start;
       -webkit-justify-content: flex-start;
-          -ms-flex-pack: start;
               justify-content: flex-start;
       font-size: 24rpx;
 }
@@ -161,7 +153,6 @@
         margin-left: 10rpx;
         -webkit-box-flex: 1;
         -webkit-flex-grow: 1;
-            -ms-flex-positive: 1;
                 flex-grow: 1;
         font-size: 28rpx;
         margin-left: 10rpx;
@@ -201,15 +192,12 @@
       font-size: 28rpx;
       display: -webkit-box;
       display: -webkit-flex;
-      display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: start;
       -webkit-justify-content: flex-start;
-          -ms-flex-pack: start;
               justify-content: flex-start;
       -webkit-box-align: center;
       -webkit-align-items: center;
-          -ms-flex-align: center;
               align-items: center;
 }
 .detail .list .msg .span-1.data-v-493d5d16 {
@@ -237,15 +225,12 @@
     height: 100rpx;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: end;
     -webkit-justify-content: flex-end;
-        -ms-flex-pack: end;
             justify-content: flex-end;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
             align-items: center;
     position: fixed;
     bottom: 0;
